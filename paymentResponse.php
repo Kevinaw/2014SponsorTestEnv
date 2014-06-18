@@ -1,0 +1,476 @@
+<?php
+session_start();
+$closeit = date('Y-m-d');
+
+if (!isset($_SESSION['registrationStep'])) {
+    header('Location: error.php');
+    die();
+} else if ($closeit > '2015-05-12') {
+    header('Location: closed.php');
+    die();
+} else {
+    include ('config_include/connect.php');
+    include('config_include/eventVariables.php');
+    include('config_include/gatewayConfig.php');
+    include ('mimemail.inc');
+    ?>
+    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+    <html>
+        <head>
+            <link href="css/asmebanffstyles.css" rel="stylesheet" type="text/css">
+            <script type="text/javascript" src="jquery/jquery-1.7.1.min.js"></script>
+            <script type="text/javascript" src="jquery/colorbox/jquery.colorbox-min.js"></script>
+            <script type="text/javascript" src="js/regForm.php"></script>
+            <link href="jquery/colorbox/colorbox.css" rel="stylesheet" type="text/css">
+            <link href="css/regform.css" rel="stylesheet" type="text/css">
+            <script language="JavaScript" type="text/JavaScript">
+
+                function checkPay(form) { 
+                //alert('test');
+                if(document.murapay.payOpt.value=="CC"){ 
+                document.murapay.action="<?php echo $beanstreamTransactionAddress; ?>";
+                //document.murapay.enctype="multipart/form-data";
+                //document.murapay.encoding="multipart/form-data";
+                } else {
+                document.murapay.enctype="multipart/form-data";
+                document.murapay.encoding="multipart/form-data";
+                if(document.murapay.payOpt.value=="cancel") {
+                document.murapay.action="cancelRegistration.php";
+                } else if(document.murapay.payOpt.value=="LOGOUT"){
+                document.murapay.action="logout.php";
+                } else if(document.murapay.payOpt.value==""){
+                document.murapay.action="payment.php";
+                }
+                }
+                //alert(document.murapay.action);
+                return true; 
+                }
+                <!-- Begin
+                function NewWindow(mypage, myname, w, h, scroll) {
+                var winl = (screen.width - w) / 2;
+                var wint = (screen.height - h) / 2;
+                winprops = 'height='+h+',width='+w+',top='+wint+',left='+winl+',scrollbars='+scroll+',resizable'
+                win = window.open(mypage, myname, winprops)
+                if (parseInt(navigator.appVersion) >= 4) { win.window.focus(); }
+                }
+                //  End -->
+
+            </script>
+        </head>
+        <body>
+            <div id="wrapper">
+                <?php include('includes/header.php'); ?>
+                <div id="content">
+                    <?php
+//echo "<p>original BS response<br>";
+                    $q = explode("&", $_SERVER["QUERY_STRING"]);
+                    //echo "<p>";
+                    foreach ($q as $qi) {
+                        if ($qi != "") {
+                            $qa = explode("=", $qi);
+                            list ($key, $val) = $qa;
+                            if ($val)
+                                $$key = urldecode($val);
+                            // echo $key.": ".$$key."<br>";
+                        }
+                    }
+                    //echo "=============================================</p>";
+
+                    reset($_POST);
+                    while (list ($key, $val) = each($_POST)) {
+                        if ($val) {
+                            $$key = $val;
+                            //echo $key.": ".$$key."<br>";
+                        }
+                    }
+
+                    if (isset($cardType) && $cardType != "") {
+                        $payOpt = $cardType;
+                    } else if (isset($promoCode) && $promoCode != "") {
+                        $payOpt = "PROMO";
+                    }
+                    //echo "</p>";
+//trnApproved: 1
+//trnId: 10000004
+//messageId: 1
+//messageText: Approved
+//authCode: TEST
+//responseType: T
+//trnAmount: 425.00
+//trnDate: 5/10/2012 12:02:42 PM
+//trnOrderNumber: 7
+//trnLanguage: eng
+//trnCustomerName: Mike Powney
+//trnEmailAddress: mike@idassociates.ab.ca
+//trnPhoneNumber: 780-428-4343
+//avsProcessed: 1
+//avsId: N
+//avsResult: 
+//avsAddrMatch: 
+//avsPostalMatch: 
+//avsMessage: Street address and Postal/ZIP do not match.
+//cvdId: 1
+//cardType: VI
+//trnType: P
+//paymentMethod: CC
+//ref1: 
+//ref2: 
+//ref3: 
+//ref4: 
+//ref5: 
+                    $vid = substr($trnOrderNumber, 4);
+                    $response = strtoupper($messageText);
+                    $amount1 = $trnAmount;
+                    $selectStmt = "SELECT * FROM $tablesponsor WHERE sid = '$vid'";
+                    $selectresult = mysql_query($selectStmt) or die("Picking VID Query failed. Please screen print this message and send to heidi@idassocites.ab.ca : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
+                    $row = mysql_fetch_assoc($selectresult);
+                    $myamt = $row['totalcharged'] . '.00';
+                    $myvid = $row['vid'];//-- no vid, only sid
+                    $invoicedate = date('Y-m-d');
+                    $responseId = $trnId;
+                    $datepaid = date('Y-m-d');
+                    $timepaid = date('H:i');
+
+//	$cvdId="3"; ///////////// uncomment to test cvd failure check
+
+                    if (($trnApproved == 1 && $cvdId == 1 && $messageId == 1) || (isset($promoCode) && $promoCode != "") || (isset($payOpt) && $payOpt === "RESEND")) {  //===========APPROVED //-- money order ??
+                        //echo "<p>approved</p>";
+                        //if($messageId == 1) { //===========approval ID
+                        // update entry
+                        $totaldue = $row['totaldue'] - $amount1;
+                        $totalpaid = $row['totalpaid'] + $amount1;
+
+                        $updatestmt = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = '$totalpaid', totaldue = '$totaldue', paytype = '$payOpt', miraresponse = '$response', miraamt = '$amount1', datepaid = '$datepaid' WHERE sid = '$vid' ";
+                        //echo "<p>$updatestmt</p>";
+                        mysql_query($updatestmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
+
+                        $sponcode = $row['sponcode'];
+
+ // not generate promo codes for cheque option
+if(!(isset($payOpt) && $payOpt === "RESEND")){
+                        if ($sponcode == 'PTRN') {
+                            $coupons = 3;
+                        } else {
+                            $coupons = 2;
+                        }
+                        for ($i = 0; $i < $coupons; $i++) {
+                            $uuid = substr(uniqid(), -6);
+                            $promoCode = strtoupper($sponcode . $uuid);
+                            $sponsorId = $row['sid'];
+                            $insertPromostmt = "INSERT INTO $tablepromo (promoCode,invoiceSponsor,dateCreated,timeCreated,enabled,company) values ('$promoCode','$sponsorId','$datepaid','$timepaid',1,'$sponcode')";
+                            mysql_query($insertPromostmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
+                        }
+}
+                        ?>
+                        <h1>Thank you, your registration was successful. </h1>
+                        <BR>
+                        <h2><strong>An invoice was sent to your email address. </strong></h2>
+                        <?php
+                            $insertstmt = "INSERT INTO $tablePaymentSponsor (sid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values ('$vid', '$amount1', '$datepaid', '$timepaid', 'CC', '$response', '$responseId')";
+                            //echo "<p>$insertstmt</p>";
+                            $insresult = mysql_query($insertstmt) or die("Insert Query failed due to this error: " . mysql_error() . ". <BR><BR>The query data is: " . $insertstmt);
+                            ?>
+                            <p>Please print out your invoice and present it at the Banff/2013 Pipeline Workshop pre-registration desk to eliminate any processing delays.</p>
+
+                        <div id="conditions">
+                            <p><em><strong>Cancellation requests must be received in writing no later than March 8, 2013.  There will be a $10 handling fee assessed for each refund.</strong></em> Please email to <a href="mailto:support@idassociates.ab.ca">support@idassociates.ab.ca</a> for any cancellation requests.
+                            </p>
+                        </div>
+                        <?php if (isset($_SESSION['login']) && $_SESSION['login']) { ?>
+                            <h2>Your login session has been closed, if you wish to make additional changes you will need to log in.</h2>
+                        <?php } ?>
+                        <hr>
+                        <p>&nbsp;</p>
+                        <?php
+                        //remove for option of cheque
+                        //$payOpt = "CC";
+                        include('emailbody.php');
+                        //echo "<p>=======================================</p>";
+                        // kill session
+                        session_unset();
+                        session_destroy();
+                        //}
+                    } else if ($trnApproved == 0 && $messageId == "16") { // duplicate transaction ID 
+                        ?>
+                        <h1>We're sorry. There has already been a payment processed against this invoice number.</h1>
+                        <BR>
+                        <p><strong>Please email support at <a href="mailto:support@idassociates.ab.ca">support@idassociates.ab.ca</a> and let us know you received a duplicate transaction error and quote invoice number <?php echo $trnOrderNumber; ?>.</strong></p>
+                        <p>
+                            <em><strong>You should receive a purchase receipt from the payment gateway. Once we have checked your invoice, you will receive further instructions or an updated invoice showing the correct payment information and banlance owing.</strong></em></p>
+                        <?php if (isset($_SESSION['login']) && $_SESSION['login']) { ?>
+                            <p><em><strong>Your login session has been closed, if you wish to make additional changes you will need to log in.</strong></em></p>
+                        <?php } ?>
+                        <hr>
+                        <?php
+                        // kill session
+                        session_unset();
+                        session_destroy();
+                    } else if ($trnApproved == 1 && $cvdId != 1) {
+                        /////////////////////////////////////////////////////////////////////////////
+                        // cvd error on approval
+                        /////////////////////////////////////////
+                        // update with initial approval response
+                        $totaldue = $row['totaldue'] - $amount1;
+                        $totalpaid = $row['totalpaid'] + $amount1;
+                        $updatestmt = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = '$totalpaid', totaldue = '$totaldue', paytype = 'CC', miraresponse = '$response', miraamt = '$amount1', datepaid = '$datepaid' WHERE '$vid' = vid ";
+                        //echo "<p>$updatestmt</p>";
+                        mysql_query($updatestmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
+                        /////////////////////////////////////////
+                        // insert initial approved payment into payment table
+
+                        $pay = "INSERT INTO $tablePaymentSponsor (vid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values ('$vid', '$amount1', '$datepaid', '$timepaid', 'CC', '$response', '$responseId')";
+                        //echo "<p>$insertstmt</p>";
+                        $payresult = mysql_query($pay) or die("Insert Query failed due to this error: " . mysql_error() . ". <BR><BR>The query data is: " . $pay);
+
+                        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        // CVD mismatch, cancel order and void transaction
+                        //
+									
+									// start void process
+                        // send changes to Beanstream
+                        //$XPost = "serviceVersion=1.1";
+                        $XPost = "requestType=BACKEND";
+                        $XPost .= "&trnType=VP";
+                        $XPost .= "&merchant_id=$beanstreamMerchantID";
+                        $XPost .= "&trnOrderNumber=BPS-$vid";
+                        $XPost .= "&trnAmount=$trnAmount";
+                        $XPost .= "&adjId=$trnId";
+                        //$XPost .= "&passCode=$beanstreamProfilePass";
+                        $XPost .= "&username=$beanstreamVPusername";
+                        $XPost .= "&password=$beanstreamVPpass";
+                        $XPost .= "&responseFormat=XML";
+
+                        //echo "<p>$XPost</p>";
+
+                        $url = $beanstreamProfileTransactionAddress;
+                        //echo "<p>url: $url</p>";
+
+                        $ch = curl_init();    // initialize curl handle
+                        curl_setopt($ch, CURLOPT_URL, $url); // set url to post to
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return into a variable
+                        curl_setopt($ch, CURLOPT_TIMEOUT, 40); // times out after 40s
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $XPost); // add POST fields
+                        $result = curl_exec($ch); // run the whole process
+                        if (curl_errno($ch)) {
+                            print curl_error($ch);
+                        } else {
+                            curl_close($ch);
+                        }
+
+                        //$VPtest = "VP var dump<br>";
+                        $q = explode("&", $result);
+                        foreach ($q as $qi) {
+                            if ($qi != "") {
+                                $qa = explode("=", $qi);
+                                list ($key, $val) = $qa;
+                                $$key = urldecode($val);
+                                //$VPtest.= $key.": ".$$key."<br>";
+                            }
+                        }
+                        $messageText = utf8_encode($messageText);
+//										echo "<p>$VPtest</p>";
+//										echo "<p>message text: $messageText</p>";
+                        $voidAmount = 0 - $trnAmount;
+
+                        if ($trnApproved == 1) {
+                            $responseValue = "VOIDED";
+                        } else {
+                            $responseValue = "VOID ERROR: PLEASE INVESTIGATE";
+                        }
+                        // update table to show 0 charged and mark record as voided
+                        //$updateorder = "update $tablesponsor set response='$responseValue', responseCode='$messageId', totalCharged='0.00', responseId='$trnId', ccType='$cardType', responseDate='$today', responseTime='$curTime' where oid='$oid'";
+                        $updateorder = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = totalpaid+$voidAmount, totaldue = totaldue-$voidAmount, paytype = 'VP', miraresponse = '$responseValue', miraamt = '$trnAmount', datepaid = '$datepaid', reg_status='CANCELLED' WHERE '$vid' = vid ";
+                        $orderresult = mysql_query($updateorder) or die("<h2>There was an error updating the purchase response.</h2>" . mysql_error() . "<p>$updateorder</p>");
+
+
+                        $up = "INSERT INTO $tablePaymentSponsor (vid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values 
+																	('$vid', '$voidAmount', '$datepaid', '$timepaid', 'VP', '$responseValue', '$trnId')";
+                        $res = mysql_query($up);
+                        // update purchase table to mark certificates as voided
+                        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        ?>
+                        <h1>There was a problem verifying your card CVD number. Your transaction has been voided.</h1>
+                        <p>Since the CVD cannot be verified, you will not be able to continue with the transaction. If you wish to register, you will need to start over.</p>
+                        <p><em><strong class="red">Please note:</strong> If you continue receiving this error, the CVD verification for this card cannot be established at this time and you will need to use a different credit card.
+                            </em></p>
+                        <hr />									
+                        <?php
+                        session_unset();
+                        session_destroy();
+
+
+                        /////////////////////////////////////////////////////////////////////////////
+                        /////////////////////////////////////////////////////////////////////////////
+                    } else {  //===========DECLINED and CANCELLED
+                        $_SESSION['registrationStep'] = 3;
+
+                        $updatestmt = "UPDATE $tablesponsor SET miraresponse = '$response', miraamt = 0, paytype = 'MAIL' WHERE sid = '$vid' ";
+                        mysql_query($updatestmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
+                        while (list ($key, $val) = each($row)) {
+                            if ($val)
+                                $$key = $val;
+                            //echo $key.": ".$$key."<br>";
+                        }
+
+                        if ($billing_email != "") {
+                            $miraemail = $billing_email;
+                        } else {
+                            $miraemail = $email;
+                        }
+                        ?>
+                        <h2>Your transaction was either CANCELED or DECLINED.
+                            <?php if (isset($errorMessage)) { ?>
+                                <br>
+                                The payment gateway returned a response of
+                                <?php
+                                echo $errorMessage;
+                            }
+                            ?>
+                        </h2>
+                        <form method="post" name="murapay">
+                            <input name="payOpt" type="hidden" id="payOpt">
+                            <?php
+                            if (!isset($_SESSION['payAttempts'])) {
+                                $_SESSION['payAttempts'] = 3;
+                            } else {
+                                $_SESSION['payAttempts'] --;
+                            }
+                            if ($_SESSION['payAttempts'] > 0) {
+                                ?>
+                                <TABLE align="center" WIDTH="90%" BORDER="0" CELLSPACING="3" CELLPADDING="10">
+                                    <tr>
+                                        <td width="50%" valign="top" align="left"><input type='hidden' name='vid' value='<?php echo $vid; ?>'>
+                                            <input type='hidden' name='email' value='<?php echo $email; ?>'>
+                                            <input type='hidden' name='billing_email' value='<?php echo $billing_email; ?>'>
+                                            <input type='hidden' name='totaldue' value='<?php echo $totaldue; ?>'>
+                                            <input type="hidden" name="trnOrderNumber" value="BPS-<?php echo $vid; ?>">
+                                            <input type="hidden" name="ordName" value="<?php
+                                            if ($billing_fname != "" && $billing_lname != "") {
+                                                echo $billing_fname, " ", $billing_lname;
+                                            } else {
+                                                echo $fname, " ", $lname;
+                                            }
+                                            ?>">
+                                            <input type="hidden" name="trnAmount" value="<?php printf("%.2f", $totaldue); ?>">
+                                            <input type="hidden" name="trnReturnCard" value="<?php echo 1; ?>">
+                                            <input type="hidden" name="ordPhoneNumber" value="<?php
+                                            if ($billing_phone != "") {
+                                                echo $billing_phoneArea, " ", $billing_phone;
+                                            } else {
+                                                echo $phoneArea, " ", $phone;
+                                            }
+                                            ?>">
+                                            <input type="hidden" name="ordAddress1" value="<?php
+                                            if ($billing_address1 != "") {
+                                                echo $billing_address1;
+                                            } else {
+                                                echo $address1;
+                                            }
+                                            ?>">
+                                            <input type="hidden" name="ordAddress2" value="<?php
+                                            if ($billing_address2 != "") {
+                                                echo $billing_address2;
+                                            } else {
+                                                echo $address2;
+                                            }
+                                            ?>">
+                                            <input type="hidden" name="ordCity" value="<?php
+                                            if ($billing_city != "") {
+                                                echo $billing_city;
+                                            } else {
+                                                echo $city;
+                                            }
+                                            ?>">
+                                            <input type="hidden" name="ordProvince" value="<?php
+                                            if ($billing_state != "") {
+                                                echo $billing_state;
+                                            } else {
+                                                echo $state;
+                                            }
+                                            ?>">
+                                            <input type="hidden" name="ordCountry" value="<?php
+                                            if ($billing_country != "") {
+                                                echo $billing_country;
+                                            } else {
+                                                echo $country;
+                                            }
+                                            ?>">
+                                            <input type="hidden" name="ordPostalCode" value="<?php
+                                            if ($billing_zip != "") {
+                                                echo $billing_zip;
+                                            } else {
+                                                echo $zip;
+                                            }
+                                            ?>">
+                                            <input type="hidden" name="ordEmailAddress" value="<?php
+                                            if ($billing_email != "") {
+                                                echo $billing_email;
+                                            } else {
+                                                echo $email;
+                                            }
+                                            ?>">
+                                            <input type="hidden" name="errorPage" value="<?php echo $beanstreamReturnAddress; ?>">
+                                            <input type="hidden" name="approvedPage" value="<?php echo $beanstreamReturnAddress; ?>">
+                                            <input type="hidden" name="declinedPage" value="<?php echo $beanstreamReturnAddress; ?>">
+                                            <h1>You can retry the process by selecting the Retry Process button below:</h1>
+                                            <p><b>Credit Card Payment Form</b><br>
+                                                <br>
+                                                <b>IMPORTANT: This process requires your pop-up blocker be disabled.</b><br>
+                                                <br>
+                                                The Amount to be processed is: $<?php printf("%.2f", $totaldue); ?></p>
+                                            <input type="hidden" name="Amount1" value='<?php printf("%.2f", $totaldue); ?>'>
+                                            <p>
+                                                <input name="button2" type="button" class="transformButtonStyle" ONCLICK='document.murapay.payOpt.value = "CC";
+                                                                    if (checkPay(this.form))
+                                                                        document.murapay.submit();
+                                                                    return false;' value="Retry Process">
+                                            </p>
+                                            <p><strong><em>You will be able to retry <?php echo $_SESSION['payAttempts']; ?> more time(s).</em></strong></p>
+                                            <p>&nbsp;</p>
+                                            <p>
+                                                <input name='backbutton2' type='submit' class="transformButtonStyle" id="backbutton2"  onClick='document.murapay.payOpt.value = "cancel";
+                                                                    if (checkPay(this.form))
+                                                                        document.murapay.submit();
+                                                                    return false;' value='Cancel Registration' />
+                                                <?php if (isset($_SESSION['login']) && $_SESSION['login']) { ?>
+                                                    <input name='logout' type='submit' class="transformButtonStyle" id="logout" style="margin-left:10px;"  onClick='document.murapay.payOpt.value = "LOGOUT";
+                                                                            if (checkPay(this.form))
+                                                                                document.murapay.submit();
+                                                                            return false;' value='Log Out' />
+            <?php } ?>
+                                            </p></td>
+                                    </tr>
+                                </table>
+                            <?php } else {
+                                ?>
+                                <input type='hidden' name='vid' value='<?php echo $vid; ?>'>
+                                <input type='hidden' name='email' value='<?php echo $email; ?>'>
+                                <input type='hidden' name='billing_email' value='<?php echo $billing_email; ?>'>
+                                <input type='hidden' name='totaldue' value='<?php echo $totaldue; ?>'>
+                                <h1>You have been declined 4 times. </h1>
+                                <p><strong>For security reasons you will not be able to continue with payment by credit card at this time.</strong></p>
+                                <p><em><strong>If you wish to try again, please wait at least 2 hours and contact your credit card issuer to make sure they have not put a block on the credit card.</strong></em></p>
+                                <p>&nbsp;&nbsp;
+                                    <?php
+                                    session_unset();
+                                    session_destroy();
+                                }
+                                ?>
+                            </p>
+                        </form>
+                        <?php
+                    }
+
+                    if (is_resource($link)) {
+                        mysql_close($link);
+                    }
+                    ?>
+                </div>
+                <div id="footer">
+                    <p>&nbsp;</p>
+                </div>
+            </div>
+        </body>
+    </html>
+<?php } ?>
