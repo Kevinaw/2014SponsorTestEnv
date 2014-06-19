@@ -23,10 +23,10 @@ if (!isset($_SESSION['registrationStep'])) {
     include('config_include/connect.php');
     include('config_include/eventVariables.php');
     include('config_include/gatewayConfig.php');
-    $insertArray = array();
+//    $insertArray = array();
     $wgArray = array();
     $wgcArray = array();
-    $commentArray = array();
+//    $commentArray = array();
     reset($_POST);
     //echo "<p>Post ///////////////////////////</p>";
     while (list ($key, $val) = each($_POST)) {
@@ -34,34 +34,39 @@ if (!isset($_SESSION['registrationStep'])) {
         $$key = $val;
         //echo $key.": ".$$key."<br>";
         //----HQ---- comment not useful for sponsorship
-        if ((substr($$key, 0, 2) == "TU" || substr($$key, 2, 2) === "WG") && $val != "" && $key != "regType") {
-            array_push($insertArray, mysql_real_escape_string($$key));
-            //echo "<p>set A $key for insert</p>";
-        } else if ($key == "amazing" && $val != "") {
-            //echo "<p>set B $key for insert</p>";
-            array_push($insertArray, "AMZWLK");
-        } else if (substr($key, 0, 6) === "wgcomm") {
-            //only if there is a value
-            if ($val != "") {
-                array_push($commentArray, $val);
-            }
-        }
+//        if ((substr($$key, 0, 2) == "TU" || substr($$key, 2, 2) === "WG") && $val != "" && $key != "regType") {
+//            array_push($insertArray, mysql_real_escape_string($$key));
+//            //echo "<p>set A $key for insert</p>";
+//        } else if ($key == "amazing" && $val != "") {
+//            //echo "<p>set B $key for insert</p>";
+//            array_push($insertArray, "AMZWLK");
+//        } else if (substr($key, 0, 6) === "wgcomm") {
+//            //only if there is a value
+//            if ($val != "") {
+//                array_push($commentArray, $val);
+//            }
+//        }
         //	}
     }
 
 
-    $insertArrayL = sizeof($insertArray);
-    $commentArrayL = sizeof($commentArray);
+//    $insertArrayL = sizeof($insertArray);
+//    $commentArrayL = sizeof($commentArray);
 
     if (!isset($billing_check)) {
         $billing = "No";
     }
     if (isset($regType) && $regType != "") {
-        $funccode = $regType;
+        $sponcode = $regType;    
+        if ($sponcode == 'CBRK') {
+            $sponcode = $tutorialB;
+        }
     } else {
-        $funccode = "";
+        $sponcode = "";
     }
 
+
+        
 //include('includes/formPosts.php');
     if ($country == "NG") {
         header('Location: nigerianRegistration.php');
@@ -71,16 +76,13 @@ if (!isset($_SESSION['registrationStep'])) {
     if (!$sid) {
         $checksid = "NO";
         // time to insert
-        // first timers with on VID
+        // first timers with on SID
         $totalpaid = number_format(0, 2);
         $totalcharged = number_format($totalcharged, 2, '.', '');
         $totaldue = $totalcharged + ($totalcharged * 0.05);
         $invoicedate = date('Y-m-d');
         $paytype = '';
-        //----HQ---- bug
-        if ($funccode == 'CBRK') {
-            $funccode = $tutorialB;
-        }
+        
         if ($_SESSION['registrationStep'] == 1) {
 
             $insertstmt = "INSERT INTO $tablesponsor 
@@ -122,7 +124,7 @@ if (!isset($_SESSION['registrationStep'])) {
 					  '" . mysql_real_escape_string($fax) . "', 
 					  '" . mysql_real_escape_string($email) . "', 
 					 
-					  '" . mysql_real_escape_string($funccode) . "', 
+					  '" . mysql_real_escape_string($sponcode) . "', 
 					  '" . mysql_real_escape_string($totalcharged) . "', 
 					  '" . mysql_real_escape_string($totalpaid) . "', 
 					  '" . mysql_real_escape_string($totaldue) . "', 
@@ -137,7 +139,7 @@ if (!isset($_SESSION['registrationStep'])) {
 
         $selectStmt = "SELECT max(sid) as sid FROM $tablesponsor WHERE lname = '" . mysql_real_escape_string($lname) . "' AND company = '" . mysql_real_escape_string($company) . "' AND email = '" . mysql_real_escape_string($email) . "' AND zip = '" . mysql_real_escape_string($zip) . "' order by sid desc limit 1";
 
-        $selectresult = mysql_query($selectStmt) or die("Picking VID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
+        $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 
         $row = mysql_fetch_array($selectresult);
 
@@ -211,40 +213,59 @@ if (!isset($_SESSION['registrationStep'])) {
             }
         } else {
 
-            $updatestmt = "UPDATE $tablesponsor SET sal = '" . mysql_real_escape_string($sal) . "', fname = '" . mysql_real_escape_string($fname) . "', lname = '" . mysql_real_escape_string($lname) . "', title = '" . mysql_real_escape_string($title) . "', nickname = '" . mysql_real_escape_string($nickname) . "', company = '" . mysql_real_escape_string($company) . "', businesstype = '" . mysql_real_escape_string($businesstype) . "', address1 = '" . mysql_real_escape_string($address1) . "', address2 = '" . mysql_real_escape_string($address2) . "', city = '" . mysql_real_escape_string($city) . "', state = '" . mysql_real_escape_string($state) . "', country = '" . mysql_real_escape_string($country) . "', zip = '" . mysql_real_escape_string($zip) . "', phone = '" . mysql_real_escape_string($phone) . "', fax = '" . mysql_real_escape_string($fax) . "', email = '" . mysql_real_escape_string($email) . "', user_password = '" . mysql_real_escape_string($user_password) . "', billing = '" . mysql_real_escape_string($billing_check) . "', billing_sal = '" . mysql_real_escape_string($billing_sal) . "', billing_fname = '" . mysql_real_escape_string($billing_fname) . "', billing_lname = '" . mysql_real_escape_string($billing_lname) . "', billing_company = '" . mysql_real_escape_string($billing_company) . "', billing_title = '" . mysql_real_escape_string($billing_title) . "', billing_address1 = '" . mysql_real_escape_string($billing_address1) . "', billing_address2 = '" . mysql_real_escape_string($billing_address2) . "', billing_city = '" . mysql_real_escape_string($billing_city) . "', billing_state = '" . mysql_real_escape_string($billing_state) . "', billing_country = '" . mysql_real_escape_string($billing_country) . "', billing_zip = '" . mysql_real_escape_string($billing_zip) . "', billing_phone = '" . mysql_real_escape_string($billing_phone) . "', billing_fax = '" . mysql_real_escape_string($billing_fax) . "', billing_email = '" . mysql_real_escape_string($billing_email) . "', funccode = '" . mysql_real_escape_string($funccode) . "', totalcharged = '" . mysql_real_escape_string($totalcharged) . "', totalpaid = '" . mysql_real_escape_string($totalpaid) . "', totaldue = '" . mysql_real_escape_string($totaldue) . "', invoicedate = '" . mysql_real_escape_string($invoicedate) . "' WHERE '$sid' = sid ";
+            $updatestmt = "UPDATE $tablesponsor SET sal = '" . mysql_real_escape_string($sal) . 
+                    "', fname = '" . mysql_real_escape_string($fname) . 
+                    "', lname = '" . mysql_real_escape_string($lname) . 
+                    "', title = '" . mysql_real_escape_string($title) . 
+                    "', company = '" . mysql_real_escape_string($company) . 
+                    "', address1 = '" . mysql_real_escape_string($address1) . 
+                    "', address2 = '" . mysql_real_escape_string($address2) . 
+                    "', city = '" . mysql_real_escape_string($city) . 
+                    "', state = '" . mysql_real_escape_string($state) . 
+                    "', country = '" . mysql_real_escape_string($country) . 
+                    "', zip = '" . mysql_real_escape_string($zip) . 
+                    "', phone = '" . mysql_real_escape_string($phone) . 
+                    "', fax = '" . mysql_real_escape_string($fax) . 
+                    "', email = '" . mysql_real_escape_string($email) . 
+                    "', sponcode = '" . mysql_real_escape_string($sponcode) . 
+                    "', totalcharged = '" . mysql_real_escape_string($totalcharged) . 
+                    "', totalpaid = '" . mysql_real_escape_string($totalpaid) . 
+                    "', totaldue = '" . mysql_real_escape_string($totaldue) . 
+                    "', invoicedate = '" . mysql_real_escape_string($invoicedate) . 
+                    "' WHERE '$sid' = sid ";
             mysql_query($updatestmt) or die("The main update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
             //echo "<p>$updatestmt</p>";
-
-            $selectDetails = "select * from $tabledetailname where sid = '$sid'";
-            $deresult = mysql_query($selectDetails) or die("The collection of old detail records statement failed with error: " . mysql_error());
-
-            $denum = mysql_num_rows($deresult);
-            while ($deline = mysql_fetch_array($deresult)) {
-                // insert old detail records in the hold detail table for safe keeping
-                $insertstmt = "INSERT INTO $holddetail (id, sid, funccode, funcid, charged, date_changed) values ('" . $deline['id'] . "','" . $deline['sid'] . "','" . $deline['funccode'] . "', '" . $deline['funcid'] . "', '" . $deline['charged'] . "', '" . date('Y-m-d') . "')";
-                mysql_query($insertstmt) or die("The holddetail statement failed to execute with error: " . mysql_error() . " the statement that failed was: " . $insertstmt);
-                // once they are safe in the hold detail table you can delete them
-                $id = $deline["id"];
-                $deletestmt = "delete from $tabledetailname where id = '$id'";
-                mysql_query($deletestmt) or die("The delete statement failed to execute with error: " . mysql_error() . "<BR<BR>The statement that failed was: " . $deletestmt);
-                // good news everyone
-                $itWentOK = 1;
-            } // while statement end
-            // remove all comments in case they were changed
-            if ($denum == 0) {
-                $itWentOK = 1;
-            }
-            if ($itWentOK == 1) {
-                // insert new records
-                include('includes/insertStmts.php');
-
-                $deletestmt = "delete from $tablecomments where invoice = '$sid'";
-                mysql_query($deletestmt) or die("The delete statement failed to execute with error: " . mysql_error() . "<BR<BR>The statement that failed was: " . $deletestmt);
-                include('includes/commentStmts.php');
-                //echo "<h3>insert details and comments</h3>";
-            }
-            //decide what to print
-            $sid = $holdid;
+//
+//            $selectDetails = "select * from $tabledetailname where sid = '$sid'";
+//            $deresult = mysql_query($selectDetails) or die("The collection of old detail records statement failed with error: " . mysql_error());
+//
+//            $denum = mysql_num_rows($deresult);
+//            while ($deline = mysql_fetch_array($deresult)) {
+//                // insert old detail records in the hold detail table for safe keeping
+//                $insertstmt = "INSERT INTO $holddetail (id, sid, funccode, funcid, charged, date_changed) values ('" . $deline['id'] . "','" . $deline['sid'] . "','" . $deline['funccode'] . "', '" . $deline['funcid'] . "', '" . $deline['charged'] . "', '" . date('Y-m-d') . "')";
+//                mysql_query($insertstmt) or die("The holddetail statement failed to execute with error: " . mysql_error() . " the statement that failed was: " . $insertstmt);
+//                // once they are safe in the hold detail table you can delete them
+//                $id = $deline["id"];
+//                $deletestmt = "delete from $tabledetailname where id = '$id'";
+//                mysql_query($deletestmt) or die("The delete statement failed to execute with error: " . mysql_error() . "<BR<BR>The statement that failed was: " . $deletestmt);
+//                // good news everyone
+//                $itWentOK = 1;
+//            } // while statement end
+//            // remove all comments in case they were changed
+//            if ($denum == 0) {
+//                $itWentOK = 1;
+//            }
+//            if ($itWentOK == 1) {
+//                // insert new records
+//                include('includes/insertStmts.php');
+//
+//                $deletestmt = "delete from $tablecomments where invoice = '$sid'";
+//                mysql_query($deletestmt) or die("The delete statement failed to execute with error: " . mysql_error() . "<BR<BR>The statement that failed was: " . $deletestmt);
+//                include('includes/commentStmts.php');
+//                //echo "<h3>insert details and comments</h3>";
+//            }
+//            //decide what to print
+//            $sid = $holdid;
         }
     }
 
@@ -556,9 +577,9 @@ if (!isset($_SESSION['registrationStep'])) {
 
 
                         $invoice_details .= "<tr><td colspan=\"3\" align=\"left\">";
-                        if ($funccode == "PTRN") {
+                        if ($sponcode == "PTRN") {
                             $invoice_details .= "<p><strong>Patron (includes 3 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
-                        } else if ($funccode == "SPNS") {
+                        } else if ($sponcode == "SPNS") {
                             $invoice_details .= "<p><strong>Sponsor (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
                         } else {
                             $invoice_details .= "<p><strong>Coffee Breaks (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
@@ -618,7 +639,7 @@ if (!isset($_SESSION['registrationStep'])) {
                             }
                             $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\"><p>&nbsp;</p></td><td colspan=\"2\" align=\"left\" valign=\"top\"><p>Lunch</p></td> <td align='right'><p>--</p></td></tr>";
                         }
-                        if ($funccode == "FULL") {
+                        if ($sponcode == "FULL") {
                             $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
                             $invoice_details .= "<tr><td colspan='4'><p><strong>Thursday, April 11</strong></p></td></tr>";
                             $invoice_details .= "<tr><td width=\"100\" class=\"dottheline\">&nbsp;</td><td colspan=\"2\" class=\"dottheline\"><p>Working Group Co-Chair Reports and Summaries</p></td>  <td align='right' class=\"dottheline\"><p>--</p></td></tr>";

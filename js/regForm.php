@@ -47,7 +47,7 @@ $verihash = sha1($veristring . $verisalt);
         ////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////
         // show billing fields if checked
-        
+
 //----HQ---- no billing_check here         
         $('#billing_check').click(function() {
             if ($(this).is(':checked')) {
@@ -116,7 +116,7 @@ $verihash = sha1($veristring . $verisalt);
                                     noSubmit = true;
                                 }
                             }
-                            
+
                             if ($(this).val() != $('#confirmemail').val()) {
                                 if (!$(this).parent().next().hasClass('errorfield')) {
                                     $(this).parent().after("<p class=\"errorfield\" style=\"clear:left;\">confirm email should be the same</p>");
@@ -306,7 +306,7 @@ $verihash = sha1($veristring . $verisalt);
         $('.regType').click(function() {
             var setDelay = 0;
 
-        var selectedDay = $(this).val();
+            var selectedDay = $(this).val();
 
             if ($('.registrationCategories').is(":visible")) {
                 $('.regDay').each(function(index) {
@@ -329,28 +329,28 @@ $verihash = sha1($veristring . $verisalt);
                 $('#' + $(this).val()).show();
             }
             $('.registrationCategories').delay(setDelay).slideDown(500, showConditions());
-            
-            if(selectedDay == 'PTRN')
+
+            if (selectedDay == 'PTRN')
             {
-                $('#TU3').attr('checked','checked');
+                $('#TU3').attr('checked', 'checked');
             }
             else if (selectedDay == 'CBRK')
             {
-                if($('#TU4').length)
+                if ($('#TU4').length)
                 {
-                    $('#TU4').attr('checked','checked');
+                    $('#TU4').attr('checked', 'checked');
                 }
-                else if($('#TU5').length)
+                else if ($('#TU5').length)
                 {
-                    $('#TU5').attr('checked','checked');
+                    $('#TU5').attr('checked', 'checked');
                 }
-                else if($('#TU6').length)
+                else if ($('#TU6').length)
                 {
-                    $('#TU6').attr('checked','checked');
+                    $('#TU6').attr('checked', 'checked');
                 }
             }
 
-        calcCost();    
+            calcCost();
         });
 
         ////////////////////////////////////////////////////////////////////////////////////
@@ -361,10 +361,10 @@ $verihash = sha1($veristring . $verisalt);
         });
 
         $('#patronAmount').blur(function() {
-            if ($('#patronAmount').val() < 5000) {
-                $('#patronAmount').val(5000);
-
-            }
+//            if ($('#patronAmount').val() < 5000) {
+//                $('#patronAmount').val(5000);
+//
+//            }
             calcCost();
         });
 
@@ -390,15 +390,15 @@ $verihash = sha1($veristring . $verisalt);
         // highlight selections / check tutorial selections
         $('.sessionButtons').click(function() {
             // remove errorfields associated with clicked item
-            var itemname = $(this).attr('name');
+            var itemvalue = $(this).value();
 
-            if (itemname == "defaultPatron") {
+            if (itemvalue == "defaultPatron") {
                 $('#TU2').removeAttr("checked");
                 $('#TU2').parent().parent().parent().removeClass("selected");
                 calcCost();
             }
 
-            if (itemname == "customPatron") {
+            if (itemvalue == "customPatron") {
                 $('#TU3').removeAttr("checked");
                 $('#TU3').parent().parent().parent().removeClass("selected");
                 calcCost();
@@ -437,24 +437,20 @@ $verihash = sha1($veristring . $verisalt);
 
             var regtype = $('input:radio[name="regType"]:checked').val();
             var obj = "";
-            if (regtype != "FULL") {
-                obj = '#' + regtype + ' .sessionButtons';
-            } else {
-                obj = '.sessionButtons';
-            }
+            obj = '#' + regtype + ' .sessionButtons';
+
             $(obj).each(function(index) {
                 if ($(this).attr('type') == "radio") {
                     var getitem = $(this).attr("name");
                     // find our reg type
                     if ($('input:radio[name=' + getitem + ']:checked').length == 0) { // if the radio button is not selected
                         // additional check to see if the full day tutorial was selected, not to display the error or proceed with checking if the current button being checked is not the full day tutorial
-                        if ((getitem == "tutorialB" && $('input:radio[name="tutorialA"]:checked').val() != "TU1" && regtype != "FULL") || (getitem == "tutorialA" && regtype != "FULL") || (getitem != "tutorialA" && getitem != "tutorialB")) {
-
+                        if (getitem == "tutorialB") {
                             if (!$('#' + getitem).children().hasClass('errorfield')) { // if no existing error for the column exists
-                                $('#' + getitem).append("<p class=\"errorfield\" style=\"clear:left;text-align:center;width:100px;margin:5px auto;\">Select a session from this column</p>");
-                                $('#processResponse').html("<p class=\"errorfield\">Please make sure every column in the workshop tables has a selection. All tutorials and/or sessions listed are covered under your registration category.</p>").delay(250).slideDown(250);
+                                $('#' + getitem).append("<p class=\"errorfield\" style=\"clear:left;text-align:center;width:100px;margin:5px auto;\">Selct a amount</p>");
+                                $('#processResponse').html("<p class=\"errorfield\">Please make sure your sponsorship category has a selection.</p>").delay(250).slideDown(250);
 
-                                //		noSubmit=true;
+                                noSubmit = true;
                             }
 
                         }
@@ -462,26 +458,44 @@ $verihash = sha1($veristring . $verisalt);
                     }
                 }
             });
-            var isCustomPatron = $('input:radio[name="customPatron"]').prop("checked");
-            var invalidPatronAmount = $('#patronAmount').val() < 5000;
-            if ((isCustomPatron == true) && (invalidPatronAmount == true)) {
-                $('#processResponse').html("<p class=\"errorfield\">Promotional Codes entitle you to a full registration. Please select the full registration and complete all categories.</p>").delay(250).slideDown(250);
-                $('#step2').after("<p class=\"errorfield\">Patron Sponsor Amount must higher that $5000</p>");
-                noSubmit = true;
+
+            if (regtype == "CBRK") {
+                if ($('#CBRK radio').length == 0) {
+                    $('#CBRK h3').first().append("<p class=\"errorfield\">All days have been sponsored</p>");
+                    $('#processResponse').html("<p class=\"errorfield\">You can not sponsor Coffee Break anymore, because all the three days are sponsored.</p>").delay(250).slideDown(250);
+
+                    noSubmit = true;
+                }
             }
 
-            $('.wgselection').each(function(index) {
-                var objnum = $(this).attr('id').replace('wg', '');
-                if ($(this).val() != "" && $('#wgc' + objnum).val() == "") {
-                    noSubmit = true;
-                    if (objnum > 1) {
-                        $(this).parent().parent().prepend("<p class=\"errorfield\">Please fill in a comment or remove this comment field.</p>");
-                    } else {
-                        $(this).parent().parent().prepend("<p class=\"errorfield\">Please fill in a comment or deselect the working group selection.</p>");
-                    }
-                    $('#processResponse').html($('#processResponse').html() + "<p class=\"errorfield\">Promotional Codes entitle you to a full registration. Please select the full registration and complete all categories.</p>").delay(250).slideDown(250);
-                }
-            });
+            var isCustomPatron = $('input:radio[value="customPatron"]').prop("checked");
+            var invalidPatronAmount = $('#patronAmount').val() < 5000;
+            if ((isCustomPatron == true) && (invalidPatronAmount == true)) {
+                $('#processResponse').html("<p class=\"errorfield\">Then Patron Sponsor Amount is wrong, it must be higher than $5000</p>").delay(250).slideDown(250);
+                $('#step2').after("<p class=\"errorfield\">Patron Sponsor Amount must higher than $5000</p>");
+                noSubmit = true;
+            }
+            
+            var isCustomPatron = $('input:radio[value="customPatron"]').prop("checked");
+            var isNum = $.isNumeric($('#patronAmount').val());
+            if ((isCustomPatron == true) && (isNum == false)) {
+                $('#processResponse').html("<p class=\"errorfield\">Then Patron Sponsor Amount is wrong, it must be a valid number</p>").delay(250).slideDown(250);
+                $('#step2').after("<p class=\"errorfield\">Patron Sponsor Amount must valid number</p>");
+                noSubmit = true;
+            }
+//
+//            $('.wgselection').each(function(index) {
+//                var objnum = $(this).attr('id').replace('wg', '');
+//                if ($(this).val() != "" && $('#wgc' + objnum).val() == "") {
+//                    noSubmit = true;
+//                    if (objnum > 1) {
+//                        $(this).parent().parent().prepend("<p class=\"errorfield\">Please fill in a comment or remove this comment field.</p>");
+//                    } else {
+//                        $(this).parent().parent().prepend("<p class=\"errorfield\">Please fill in a comment or deselect the working group selection.</p>");
+//                    }
+//                    $('#processResponse').html($('#processResponse').html() + "<p class=\"errorfield\">Promotional Codes entitle you to a full registration. Please select the full registration and complete all categories.</p>").delay(250).slideDown(250);
+//                }
+//            });
 
             if (noSubmit) {
                 $('.errorfield').delay(500).slideDown(0);

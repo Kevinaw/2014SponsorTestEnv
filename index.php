@@ -19,10 +19,10 @@ if ($closeit > '2015-05-12')
     $login = filter_input(INPUT_POST, 'login');
 
     $gvid = filter_input(INPUT_POST, 'gvid');
-    $vid = filter_input(INPUT_POST, 'vid');
+    $sid = filter_input(INPUT_POST, 'sid');
 
-    $billing_info = filter_input(INPUT_POST, 'billing_info');
-    $user_password = filter_input(INPUT_POST, 'user_password');
+//    $billing_info = filter_input(INPUT_POST, 'billing_info');
+//    $user_password = filter_input(INPUT_POST, 'user_password');
 
     /*
       $login = $_POST['login'];
@@ -61,8 +61,8 @@ if ($closeit > '2015-05-12')
     }
 
     //----HQ----vid should changed to sid, there is no vid in sponsor table 
-    if (isset($vid) && $vid != "") {
-        $selectstmt = "select * from $tablesponsor where vid = $vid";
+    if (isset($sid) && $sid != "") {
+        $selectstmt = "select * from $tablesponsor where sid = $sid";
         $finduser = mysql_query($selectstmt) or die("Refresh select query failed: " . mysql_error() . ". <BR><BR>The statement is: " . $selectstmt);
 
         $num = mysql_num_rows($finduser);
@@ -80,34 +80,34 @@ if ($closeit > '2015-05-12')
         }
 
         //----HQ----table detail seems useless for sponsor, it just here for visitor use
-        $details = "select * from $tabledetailname where vid = '$vid'";
-        $deresult = mysql_query($details) or die("The collection of old detail records statement failed with error: " . mysql_error() . $details);
-
-        while ($deline = mysql_fetch_array($deresult)) {
-            if (substr($deline['funccode'], 0, 2) == 'TU') {
-                if (substr($deline['funccode'], -1) >= 4) {
-                    $tutorialB = $deline['funccode'];
-                    //echo "<p>tutorial b is: $tutorialB</p>";
-                } else {
-                    $tutorialA = $deline['funccode'];
-                    //	echo "<p>tutorial a is: $tutorialA</p>";
-                }
-            } else if ($deline['funccode'] == 'AMZWLK') {
-                $amazing = "Yes";
-            } else {
-                ${substr($deline['funccode'], 0, 2)} = $deline['funccode'];
-                //echo "<p>".substr($deline['funccode'],0,2)." is: ".${substr($deline['funccode'],0,2)}."</p>";
-            }
-        }
+//        $details = "select * from $tabledetailname where vid = '$vid'";
+//        $deresult = mysql_query($details) or die("The collection of old detail records statement failed with error: " . mysql_error() . $details);
+//
+//        while ($deline = mysql_fetch_array($deresult)) {
+//            if (substr($deline['funccode'], 0, 2) == 'TU') {
+//                if (substr($deline['funccode'], -1) >= 4) {
+//                    $tutorialB = $deline['funccode'];
+//                    //echo "<p>tutorial b is: $tutorialB</p>";
+//                } else {
+//                    $tutorialA = $deline['funccode'];
+//                    //	echo "<p>tutorial a is: $tutorialA</p>";
+//                }
+//            } else if ($deline['funccode'] == 'AMZWLK') {
+//                $amazing = "Yes";
+//            } else {
+//                ${substr($deline['funccode'], 0, 2)} = $deline['funccode'];
+//                //echo "<p>".substr($deline['funccode'],0,2)." is: ".${substr($deline['funccode'],0,2)}."</p>";
+//            }
+//        }
         
         //----HQ----promotion code works for visitor only.
         // bring back our promo code
-        if (isset($_POST['promoCode'])) {
-            $promoCode = $_POST['promoCode'];
-        }
+//        if (isset($_POST['promoCode'])) {
+//            $promoCode = $_POST['promoCode'];
+//        }
     }
     
-    if ($login != "Yes" && (!isset($vid) && $vid == "")) {
+    if ($login != "Yes" && (!isset($sid) && $sid == "")) {
         // not being passed to the page, kill any open sessions
         session_destroy();
         session_start();
@@ -130,7 +130,7 @@ if ($closeit > '2015-05-12')
         <link href="css/asmebanffstyles.css" rel="stylesheet" type="text/css">
         <script>
 <?php
-if (isset($vid) && $vid != "") {
+if (isset($sid) && $sid != "") {
     echo "var vidloaded = true;";
 } else {
     echo "var vidloaded = false; ";
@@ -161,9 +161,8 @@ if (isset($vid) && $vid != "") {
                 </div>
                 <form name="registration" id="registration" method="post" action="">
                     <div id="registerInfo" <?php
-                    //----HQ----vid -> sid
-                    if (isset($vid) && $vid != "") {
-                        echo "style=\"display:none;\"";
+                    if (isset($sid) && $sid != "") {
+                        //echo "style=\"display:none;\"";
                     }
                     ?>>
                              <?php include('includes/regForm.php'); ?>

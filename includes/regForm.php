@@ -244,15 +244,13 @@ if (mysql_num_rows($selectresult) > 0) {
 </div>
 <p>
     <input name="continuebutton" type="button" class="transformButtonStyle" id="<?php
-    //----HQ---- vid sid ?
-    if (!isset($vid) || $vid == "") {
+    if (!isset($sid) || $sid == "") {
         echo "continuebutton";
     } else {
         echo "savechanges";
     }
     ?>" value="<?php
-            //----HQ---- vid sid ?
-           if (!isset($vid) || $vid == "") {
+           if (!isset($sid) || $sid == "") {
                echo "Continue";
            } else {
                echo "Save Changes";
@@ -261,8 +259,7 @@ if (mysql_num_rows($selectresult) > 0) {
 </p>
 </div>
 <div id="registrantSummary" class="formBlock" style="display:none" <?php
-//----HQ---- vid sid ?
-if (!isset($vid) || $vid == "") {
+if (!isset($sid) || $sid == "") {
     echo "style=\"display:none;\"";
 }
 ?>>
@@ -288,15 +285,13 @@ if (!isset($vid) || $vid == "") {
                                             </div>  -->
     <div style="clear:both;"></div>
     <input name="makeChanges" type="button" class="transformButtonStyle" id="<?php
-    //----HQ---- vid sid ?
-    if (!isset($vid) || $vid == "") {
+    if (!isset($sid) || $sid == "") {
         echo "makeChanges";
     } else {
         echo "editRegistrant";
     }
     ?>" value="<?php
-    //----HQ---- vid sid ?
-           if (!isset($vid) || $vid == "") {
+           if (!isset($sid) || $sid == "") {
                echo "Make Changes";
            } else {
                echo "Edit Registrant";
@@ -304,17 +299,15 @@ if (!isset($vid) || $vid == "") {
            ?>" style="width:auto;">
 </div>
 <div id="registrationType" class="formBlock" <?php
-//----HQ---- vid sid ?
-if (!isset($vid) || $vid == "") {
+//if (!isset($sid) || $sid == "") {
     echo "style=\"display:none;\"";
-}
+//}
 ?>>
     <input name="totalcharged" id="totalcharged" type="hidden" value="<?php echo $totalcharged; ?>">
     <input type="hidden" name="totalpaid"  value="<?php echo $totalpaid; ?>">
     <input type="hidden" name="totaldue"   value="<?php echo $totaldue; ?>">
     
-    <!----HQ---- vid sid ? -->    
-    <input type="hidden" name="vid" value="<?php echo $vid; ?>">
+    <input type="hidden" name="sid" value="<?php echo $sid; ?>">
     </td>
     <!----HQ---- no funccode 
                 sponcode ??? -->
@@ -365,10 +358,9 @@ if (!isset($vid) || $vid == "") {
 
 </div>
 <div class="registrationCategories" id="schedule" style="clear:left; <?php
-//----HQ---- vid sid ?
-if (!isset($vid) || $vid == "") {
+//if (!isset($sid) || $sid == "") {
     echo "display:none;";
-}
+//}
 ?>">
     <h2 style="float:left;">Sponsorship Details</h2>
     <div  id="PTRN" class="regDay" style="clear:left;">
@@ -377,7 +369,8 @@ if (!isset($vid) || $vid == "") {
             <div class="leftCol required" style="width:40%;">
                 <h3 style="float:none;">
                     <label>
-                        <input checked="checked" class="sessionButtons" id="TU3"  type="radio" name='defaultPatron'  value="defaultPatron">
+                        <!--checked="checked"-->
+                        <input  class="sessionButtons" id="TU3"  type="radio" name='radioPatron'  value="defaultPatron">
                         $5000
                     </label>
                 </h3>
@@ -386,7 +379,7 @@ if (!isset($vid) || $vid == "") {
             <div class="leftCol required" style="width:40%;">
                 <h3 style="float:none;">
                     <label>
-                        <input class="sessionButtons"  id="TU2"  type="radio" name='customPatron'  value="customPatron">
+                        <input class="sessionButtons"  id="TU2"  type="radio" name='radioPatron'  value="customPatron">
                         Other Amount:
                     </label>
                 </h3>
@@ -409,9 +402,7 @@ if (!isset($vid) || $vid == "") {
                 <h3 style="float:none;">
                     <label><?php if ($mondayAvail): ?>
                             <input <?php
-           //----HQ---- funccode ? sponcode ? -->
-            //----HQ---- if else : ? --> 
-                            if (!(strcmp("$funccode", "CBMO"))) {
+                            if (!(strcmp("$sponcode", "CBMO"))) {
                                 echo "checked=\"checked\"";
                             }
                             ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4" value="CBMO">
@@ -432,9 +423,7 @@ if (!isset($vid) || $vid == "") {
                     <label>
                         <?php if ($tuesdayAvail): ?>
                             <input <?php
-            //----HQ---- funccode ? sponcode ? -->
-            //----HQ---- if else : ? --> 
-                            if (!(strcmp("$funccode", "CBTU"))) {
+                            if (!(strcmp("$sponcode", "CBTU"))) {
                                 echo "checked=\"checked\"";
                             }
                             ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU5" value="CBTU">
@@ -452,10 +441,8 @@ if (!isset($vid) || $vid == "") {
                 <h3 style="float:none;">
                     <label>
                         <?php if ($wednesdayAvail): ?>
-                            <input <?php
-            //----HQ---- funccode ? sponcode ? -->
-            //----HQ---- if else : ? -->                             
-                            if (!(strcmp("$funccode", "CBWD"))) {
+                            <input <?php                          
+                            if (!(strcmp("$sponcode", "CBWD"))) {
                                 echo "checked=\"checked\"";
                             }
                             ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU6" value="CBWD">

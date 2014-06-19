@@ -41,6 +41,7 @@ if (!isset($_SESSION['registrationStep'])) {
                 } else if(document.murapay.payOpt.value==""){
                 document.murapay.action="payment.php";
                 }
+                document.murapay.action='paymentResponse.php';
                 }
                 //alert(document.murapay.action);
                 return true; 
@@ -122,7 +123,7 @@ if (!isset($_SESSION['registrationStep'])) {
                     $response = strtoupper($messageText);
                     $amount1 = $trnAmount;
                     $selectStmt = "SELECT * FROM $tablesponsor WHERE sid = '$sid'";
-                    $selectresult = mysql_query($selectStmt) or die("Picking VID Query failed. Please screen print this message and send to heidi@idassocites.ab.ca : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
+                    $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed. Please screen print this message and send to heidi@idassocites.ab.ca : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
                     $row = mysql_fetch_assoc($selectresult);
                     $myamt = $row['totalcharged'] . '.00';
                     $myvid = $row['vid']; //-- no vid, only sid
@@ -158,7 +159,7 @@ if (!isset($_SESSION['registrationStep'])) {
                                 mysql_query($insertPromostmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
                             }
                         } else { //----HQ---- if pay by cheque, keep paid zero.
-                            $updatestmt = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', paytype = '$payOpt'WHERE sid = '$sid' ";
+                            $updatestmt = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', paytype = '$payOpt', miraresponse = '', miraamt = 0 WHERE sid = '$sid' ";
                             mysql_query($updatestmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);                        
                         }
                         ?>
@@ -370,7 +371,7 @@ if (!isset($_SESSION['registrationStep'])) {
                         // update with initial approval response
                         $totaldue = $row['totaldue'] - $amount1;
                         $totalpaid = $row['totalpaid'] + $amount1;
-                        $updatestmt = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = '$totalpaid', totaldue = '$totaldue', paytype = 'CC', miraresponse = '$response', miraamt = '$amount1', datepaid = '$datepaid' WHERE '$sid' = vid ";
+                        $updatestmt = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = '$totalpaid', totaldue = '$totaldue', paytype = 'CC', miraresponse = '$response', miraamt = '$amount1', datepaid = '$datepaid' WHERE sid = '$sid'";
                         //echo "<p>$updatestmt</p>";
                         mysql_query($updatestmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
                         /////////////////////////////////////////
@@ -437,7 +438,7 @@ if (!isset($_SESSION['registrationStep'])) {
                         }
                         // update table to show 0 charged and mark record as voided
                         //$updateorder = "update $tablesponsor set response='$responseValue', responseCode='$messageId', totalCharged='0.00', responseId='$trnId', ccType='$cardType', responseDate='$today', responseTime='$curTime' where oid='$oid'";
-                        $updateorder = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = totalpaid+$voidAmount, totaldue = totaldue-$voidAmount, paytype = 'VP', miraresponse = '$responseValue', miraamt = '$trnAmount', datepaid = '$datepaid', reg_status='CANCELLED' WHERE '$sid' = vid ";
+                        $updateorder = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = totalpaid+$voidAmount, totaldue = totaldue-$voidAmount, paytype = 'VP', miraresponse = '$responseValue', miraamt = '$trnAmount', datepaid = '$datepaid', reg_status='CANCELLED' WHERE sid = '$sid' ";
                         $orderresult = mysql_query($updateorder) or die("<h2>There was an error updating the purchase response.</h2>" . mysql_error() . "<p>$updateorder</p>");
 
 
@@ -468,26 +469,42 @@ if (!isset($_SESSION['registrationStep'])) {
                         while (list ($key, $val) = each($row)) {
                             if ($val)
                                 $$key = $val;
-                            //echo $key.": ".$$key."<br>";
                         }
-
-                        if ($billing_email != "") {
-                            $miraemail = $billing_email;
-                        } else {
-                            $miraemail = $email;
-                        }
+                        $miraemail = $email;
                         ?>
                         <h2>Your transaction was either CANCELED or DECLINED.
-                            <?php if (isset($errorMessage)) { ?>
+                            <?php if (isset($miraresponse)) { ?>
                                 <br>
                                 The payment gateway returned a response of
                                 <?php
-                                echo $errorMessage;
+                                echo $miraresponse;
                             }
                             ?>
                         </h2>
                         <form method="post" name="murapay">
                             <input name="payOpt" type="hidden" id="payOpt">
+                            <TABLE align="center" WIDTH="90%" BORDER="0" CELLSPACING="3" CELLPADDING="10">
+                                    <tr>
+                                        <td width="50%" valign="top" align="left">
+                                            <input type='hidden' name='sid' value='<?php echo $sid; ?>'>
+                                            <input type='hidden' name='email' value='<?php echo $email; ?>'>
+                                            <!--input type='hidden' name='billing_email' value='<?php echo $billing_email; ?>'-->
+                                            <input type='hidden' name='totaldue' value='<?php echo $totaldue; ?>'>
+                                            <input type="hidden" name="trnOrderNumber" value="BPS-<?php echo $sid; ?>">
+                                            <input type="hidden" name="ordName" value="<?php echo $fname, " ", $lname; ?>">
+                                            <input type="hidden" name="trnAmount" value="<?php printf("%.2f", $totaldue); ?>">
+                                            <input type="hidden" name="trnReturnCard" value="<?php echo 1; ?>">
+                                            <input type="hidden" name="ordPhoneNumber" value="<?php echo $phoneArea, " ", $phone; ?>">
+                                            <input type="hidden" name="ordAddress1" value="<?php echo $address1; ?>">
+                                            <input type="hidden" name="ordAddress2" value="<?php echo $address2; ?>">
+                                            <input type="hidden" name="ordCity" value="<?php echo $city; ?>">
+                                            <input type="hidden" name="ordProvince" value="<?php echo $state; ?>">
+                                            <input type="hidden" name="ordCountry" value="<?php echo $country; ?>">
+                                            <input type="hidden" name="ordPostalCode" value="<?php echo $zip; ?>">
+                                            <input type="hidden" name="ordEmailAddress" value="<?php echo $email; ?>">
+                                            <input type="hidden" name="errorPage" value="<?php echo $beanstreamReturnAddress; ?>">
+                                            <input type="hidden" name="approvedPage" value="<?php echo $beanstreamReturnAddress; ?>">
+                                            <input type="hidden" name="declinedPage" value="<?php echo $beanstreamReturnAddress; ?>">
                             <?php
                             if (!isset($_SESSION['payAttempts'])) {
                                 $_SESSION['payAttempts'] = 3;
@@ -496,81 +513,6 @@ if (!isset($_SESSION['registrationStep'])) {
                             }
                             if ($_SESSION['payAttempts'] > 0) {
                                 ?>
-                                <TABLE align="center" WIDTH="90%" BORDER="0" CELLSPACING="3" CELLPADDING="10">
-                                    <tr>
-                                        <td width="50%" valign="top" align="left"><input type='hidden' name='vid' value='<?php echo $sid; ?>'>
-                                            <input type='hidden' name='email' value='<?php echo $email; ?>'>
-                                            <input type='hidden' name='billing_email' value='<?php echo $billing_email; ?>'>
-                                            <input type='hidden' name='totaldue' value='<?php echo $totaldue; ?>'>
-                                            <input type="hidden" name="trnOrderNumber" value="BPS-<?php echo $sid; ?>">
-                                            <input type="hidden" name="ordName" value="<?php
-                    if ($billing_fname != "" && $billing_lname != "") {
-                        echo $billing_fname, " ", $billing_lname;
-                    } else {
-                        echo $fname, " ", $lname;
-                    }
-                                ?>">
-                                            <input type="hidden" name="trnAmount" value="<?php printf("%.2f", $totaldue); ?>">
-                                            <input type="hidden" name="trnReturnCard" value="<?php echo 1; ?>">
-                                            <input type="hidden" name="ordPhoneNumber" value="<?php
-                                       if ($billing_phone != "") {
-                                           echo $billing_phoneArea, " ", $billing_phone;
-                                       } else {
-                                           echo $phoneArea, " ", $phone;
-                                       }
-                                ?>">
-                                            <input type="hidden" name="ordAddress1" value="<?php
-                                if ($billing_address1 != "") {
-                                    echo $billing_address1;
-                                } else {
-                                    echo $address1;
-                                }
-                                ?>">
-                                            <input type="hidden" name="ordAddress2" value="<?php
-                                if ($billing_address2 != "") {
-                                    echo $billing_address2;
-                                } else {
-                                    echo $address2;
-                                }
-                                ?>">
-                                            <input type="hidden" name="ordCity" value="<?php
-                                if ($billing_city != "") {
-                                    echo $billing_city;
-                                } else {
-                                    echo $city;
-                                }
-                                ?>">
-                                            <input type="hidden" name="ordProvince" value="<?php
-                                if ($billing_state != "") {
-                                    echo $billing_state;
-                                } else {
-                                    echo $state;
-                                }
-                                ?>">
-                                            <input type="hidden" name="ordCountry" value="<?php
-                                if ($billing_country != "") {
-                                    echo $billing_country;
-                                } else {
-                                    echo $country;
-                                }
-                                ?>">
-                                            <input type="hidden" name="ordPostalCode" value="<?php
-                                if ($billing_zip != "") {
-                                    echo $billing_zip;
-                                } else {
-                                    echo $zip;
-                                }
-                                ?>">
-                                            <input type="hidden" name="ordEmailAddress" value="<?php
-                                if ($billing_email != "") {
-                                    echo $billing_email;
-                                } else {
-                                    echo $email;
-                                }
-                                ?>">
-                                            <input type="hidden" name="errorPage" value="<?php echo $beanstreamReturnAddress; ?>">
-                                            <input type="hidden" name="approvedPage" value="<?php echo $beanstreamReturnAddress; ?>">
-                                            <input type="hidden" name="declinedPage" value="<?php echo $beanstreamReturnAddress; ?>">
                                             <h1>You can retry the process by selecting the Retry Process button below:</h1>
                                             <p><b>Credit Card Payment Form</b><br>
                                                 <br>
@@ -583,6 +525,10 @@ if (!isset($_SESSION['registrationStep'])) {
                                                                     if (checkPay(this.form))
                                                                         document.murapay.submit();
                                                                     return false;' value="Retry Process">
+                                                <input name="paymentByChequeButton" type="button" class="transformButtonStyle" ONCLICK='document.murapay.payOpt.value = "RESEND";
+                                                if (checkPay(this.form))
+                                                    document.murapay.submit();
+                                                return false;' value="Pay by Cheque/Money Order">
                                             </p>
                                             <p><strong><em>You will be able to retry <?php echo $_SESSION['payAttempts']; ?> more time(s).</em></strong></p>
                                             <p>&nbsp;</p>
@@ -602,20 +548,22 @@ if (!isset($_SESSION['registrationStep'])) {
                                 </table>
                             <?php } else {
                                 ?>
-                                <input type='hidden' name='vid' value='<?php echo $sid; ?>'>
-                                <input type='hidden' name='email' value='<?php echo $email; ?>'>
-                                <input type='hidden' name='billing_email' value='<?php echo $billing_email; ?>'>
-                                <input type='hidden' name='totaldue' value='<?php echo $totaldue; ?>'>
-                                <h1>You have been declined 4 times. </h1>
-                                <p><strong>For security reasons you will not be able to continue with payment by credit card at this time.</strong></p>
-                                <p><em><strong>If you wish to try again, please wait at least 2 hours and contact your credit card issuer to make sure they have not put a block on the credit card.</strong></em></p>
-                                <p>&nbsp;&nbsp;
+                                            <h1>You have been declined 4 times. </h1>
+                                            <p><strong>For security reasons you will not be able to continue with payment by credit card at this time.</strong></p>
+                                            <p><em><strong>If you wish to try again, please wait at least 2 hours and contact your credit card issuer to make sure they have not put a block on the credit card.</strong></em></p>
+                                            <p>&nbsp;&nbsp;
+                                            <input name="paymentByChequeButton" type="button" class="transformButtonStyle" ONCLICK='document.murapay.payOpt.value = "RESEND";
+                                                            if (checkPay(this.form))
+                                                                document.murapay.submit();
+                                                            return false;' value="Pay by Cheque/Money Order">
+                                             </p></td>
+                                    </tr>
+                                </table>
                                     <?php
-                                    session_unset();
-                                    session_destroy();
+                                    //session_unset();
+                                    //session_destroy();
                                 }
                                 ?>
-                            </p>
                         </form>
                         <?php
                     }
