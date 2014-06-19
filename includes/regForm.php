@@ -458,7 +458,7 @@ if (!isset($vid) || $vid == "") {
                             if (!(strcmp("$funccode", "CBTU"))) {
                                 echo "checked=\"checked\"";
                             }
-                            ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4" value="CBTU">
+                            ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU5" value="CBTU">
                             <?php else: ?>
                             (Taken)
                         <?php endif; ?>
@@ -477,7 +477,7 @@ if (!isset($vid) || $vid == "") {
                             if (!(strcmp("$funccode", "CBWD"))) {
                                 echo "checked=\"checked\"";
                             }
-                            ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4" value="CBWD">
+                            ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU6" value="CBWD">
                             <?php else: ?>
                             (Taken)
                         <?php endif; ?>
