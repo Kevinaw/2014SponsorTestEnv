@@ -300,8 +300,8 @@ if (!isset($vid) || $vid == "") {
     echo "style=\"display:none;\"";
 }
 ?>>
-    <!--				<div id="registrantFields" class="leftCol summaries" style="width:40%;">
-                                                            <h3>Contact Information</h3>
+    				<div id="registrantFields" class="leftCol summaries" style="width:40%;">
+                                                            <h3>Contact / Billing Information</h3>
                                                             <p id="regName">Name</p>
                                                             <p id="regCompany">company</p>
                                                             <p id="regAddress">address<br />
@@ -310,7 +310,7 @@ if (!isset($vid) || $vid == "") {
                                                             <p id="regEmail">email</p>
                                                             <p id="regPhone">phone</p>
                                             </div>
-                                            <div id="billingFields" class="leftCol summaries" style="width:40%;">
+<!--                                            <div id="billingFields" class="leftCol summaries" style="width:40%;">
                                                             <h3>Billing Information</h3>
                                                             <p id="billName">Name</p>
                                                             <p id="billCompany">company</p>
