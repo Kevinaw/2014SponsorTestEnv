@@ -587,7 +587,7 @@ if (isset($vid) && $vid != "") {
                         </div>
                         <div id="registrantSummary" class="formBlock" <?php
                         if (!isset($vid) || $vid == "") {
-                            echo "style=\"display:none;\"";
+                            echo "style=\"display:block;\"";
                         }
                         ?>>
                             <div id="registrantFields" class="leftCol summaries" style="width:40%;">

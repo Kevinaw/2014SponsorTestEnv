@@ -266,8 +266,8 @@ if (!isset($vid) || $vid == "") {
     echo "style=\"display:none;\"";
 }
 ?>>
-    <!--				<div id="registrantFields" class="leftCol summaries" style="width:40%;">
-                                                            <h3>Contact Information</h3>
+    				<div id="registrantFields" class="leftCol summaries" style="width:40%;">
+                                                            <h3>Contact / Billing Information</h3>
                                                             <p id="regName">Name</p>
                                                             <p id="regCompany">company</p>
                                                             <p id="regAddress">address<br />
@@ -276,7 +276,7 @@ if (!isset($vid) || $vid == "") {
                                                             <p id="regEmail">email</p>
                                                             <p id="regPhone">phone</p>
                                             </div>
-                                            <div id="billingFields" class="leftCol summaries" style="width:40%;">
+<!--                                            <div id="billingFields" class="leftCol summaries" style="width:40%;">
                                                             <h3>Billing Information</h3>
                                                             <p id="billName">Name</p>
                                                             <p id="billCompany">company</p>
@@ -437,7 +437,7 @@ if (!isset($vid) || $vid == "") {
                             if (!(strcmp("$funccode", "CBTU"))) {
                                 echo "checked=\"checked\"";
                             }
-                            ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4" value="CBTU">
+                            ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU5" value="CBTU">
                             <?php else: ?>
                             (Taken)
                         <?php endif; ?>
@@ -458,7 +458,7 @@ if (!isset($vid) || $vid == "") {
                             if (!(strcmp("$funccode", "CBWD"))) {
                                 echo "checked=\"checked\"";
                             }
-                            ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4" value="CBWD">
+                            ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU6" value="CBWD">
                             <?php else: ?>
                             (Taken)
                         <?php endif; ?>

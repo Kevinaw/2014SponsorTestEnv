@@ -305,49 +305,52 @@ $verihash = sha1($veristring . $verisalt);
         // registration type
         $('.regType').click(function() {
             var setDelay = 0;
-          //----HQ---- no value of FULL  
-            if ($(this).val() == "FULL") {
-                var er = $('#step2').next();
-                if (er.hasClass('errorfield')) {
-                    er.slideUp(250, function() {
-                        $(this).remove();
-                    });
-                }
-                if ($('.registrationCategories').is(":visible") && !$('#thursday').is(":visible")) {
-                    $('.registrationCategories').slideUp(500, function() {
-                        $('.regDay').show();
-                        setDelay = 500;
-                        $('.registrationCategories .errorfield').remove();
-                    });
-                    hideConditions();
-                }
-                $('.registrationCategories').delay(setDelay).slideDown(500, showConditions());
-                calcCost();
-            } else {
-                var selectedDay = $(this).val();
-                if ($('.registrationCategories').is(":visible")) {
-                    $('.regDay').each(function(index) {
-                        if ($(this).attr('id') != selectedDay) {
-                            $("#" + $(this).attr('id') + ' input[type=radio]').removeAttr('checked');
-                            $("#" + $(this).attr('id') + ' input[type=radio]').parent().parent().parent().removeClass('selected');
-                            $("#" + $(this).attr('id') + ' input[type=checkbox]').removeAttr('checked');
 
-                        }
-                    });
-                    //$('.registrationCategories input[type=radio]').removeAttr('checked');
-                    $('.registrationCategories').slideUp(500, function() {
-                        $('.regDay').hide();
-                        $('#' + selectedDay).show();
-                        setDelay = 500;
-                    });
-                    hideConditions();
-                } else {
+        var selectedDay = $(this).val();
+
+            if ($('.registrationCategories').is(":visible")) {
+                $('.regDay').each(function(index) {
+                    if ($(this).attr('id') != selectedDay) {
+                        $("#" + $(this).attr('id') + ' input[type=radio]').removeAttr('checked');
+                        $("#" + $(this).attr('id') + ' input[type=radio]').parent().parent().parent().removeClass('selected');
+                        $("#" + $(this).attr('id') + ' input[type=checkbox]').removeAttr('checked');
+
+                    }
+                });
+                //$('.registrationCategories input[type=radio]').removeAttr('checked');
+                $('.registrationCategories').slideUp(500, function() {
                     $('.regDay').hide();
-                    $('#' + $(this).val()).show();
-                }
-                $('.registrationCategories').delay(setDelay).slideDown(500, showConditions());
-                calcCost();
+                    $('#' + selectedDay).show();
+                    setDelay = 500;
+                });
+                hideConditions();
+            } else {
+                $('.regDay').hide();
+                $('#' + $(this).val()).show();
             }
+            $('.registrationCategories').delay(setDelay).slideDown(500, showConditions());
+            
+            if(selectedDay == 'PTRN')
+            {
+                $('#TU3').attr('checked','checked');
+            }
+            else if (selectedDay == 'CBRK')
+            {
+                if($('#TU4').length)
+                {
+                    $('#TU4').attr('checked','checked');
+                }
+                else if($('#TU5').length)
+                {
+                    $('#TU5').attr('checked','checked');
+                }
+                else if($('#TU6').length)
+                {
+                    $('#TU6').attr('checked','checked');
+                }
+            }
+
+        calcCost();    
         });
 
         ////////////////////////////////////////////////////////////////////////////////////
