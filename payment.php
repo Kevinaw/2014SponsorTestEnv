@@ -33,6 +33,7 @@ if (!isset($_SESSION['registrationStep'])) {
         //  if ($val){
         $$key = $val;
         //echo $key.": ".$$key."<br>";
+        //----HQ---- comment not useful for sponsorship
         if ((substr($$key, 0, 2) == "TU" || substr($$key, 2, 2) === "WG") && $val != "" && $key != "regType") {
             array_push($insertArray, mysql_real_escape_string($$key));
             //echo "<p>set A $key for insert</p>";
@@ -76,6 +77,7 @@ if (!isset($_SESSION['registrationStep'])) {
         $totaldue = $totalcharged + ($totalcharged * 0.05);
         $invoicedate = date('Y-m-d');
         $paytype = '';
+        //----HQ---- bug
         if ($funccode == 'CBRK') {
             $funccode = $tutorialB;
         }
@@ -144,17 +146,22 @@ if (!isset($_SESSION['registrationStep'])) {
 
 
         if ($_SESSION['registrationStep'] == 1) {
+            //----HQ---- useless
             // add invoice number to profile if it exists
             if ($user_password != "") {
                 $updateprofile = "update $tableprofile set invoicenum='BPS-$sid' where id='$user_password'";
                 $updateprofileR = mysql_query($updateprofile) or die("There was an error updating your login with the invoice number.<br>" . mysql_error() . "<br>$updateprofile");
             }
+            
+            //----HQ---- useless
             // insert statements
             include('includes/insertStmts.php');
             include('includes/commentStmts.php');
             //echo "<h3>insert details and comments</h3>";
         }
     } else {
+        
+        //----HQ---- sponsor logic can not reach this point
         $newone = '1';
         $itWentOK = 0;
         $holdid = $sid;
@@ -183,6 +190,8 @@ if (!isset($_SESSION['registrationStep'])) {
         //$totaldue = $totalcharged - $totalpaid;
         //}		
         $invoicedate = date('Y-m-d');
+        
+        //---- no reg_status here
         $pullstatus = "SELECT reg_status, paytype FROM $tablesponsor where sid='$sid'";
         $thestatus = mysql_query($pullstatus) or die("The record could not be found, error: " . mysql_error());
         $getstatus = mysql_fetch_array($thestatus);
@@ -239,12 +248,14 @@ if (!isset($_SESSION['registrationStep'])) {
         }
     }
 
+    //----HQ---- no amazing logic
     if ($amazing == "Yes") {
         $funccost = number_format($totalcharged - 30, 2);
     } else {
         $funccost = number_format($totalcharged, 2);
     }
 
+    //----HQ---- no promotion code usage
     if (isset($promoCode) && $promoCode != "") {
         // check if they need to pay for Amazing Walk
         //echo "promo: $promoCode, sid:$sid";
@@ -328,9 +339,10 @@ if (!isset($_SESSION['registrationStep'])) {
             }
         }
     } else {
+        //----HQ---- useless here
         // if a prmo code was orginally entered but they went back and changed their registration and removed the promo code
         // clear out any promo codes using current sid
-        $promo = "update $tablepromo set invoiceSponsor='' where invoiceSponsor='$sid'";
+        $promo = "update $tablepromo set invoice='' where invoiceSponsor='$sid'";
         $promores = mysql_query($promo);
         // delete any promo codes in payment record
         $delete = "delete from $tablePaymentSponsor where sid='$sid' and transaction_type='PROMO'";
@@ -364,7 +376,7 @@ if (!isset($_SESSION['registrationStep'])) {
                 } else {
                 if(document.invoice.payOpt.value=="LOGOUT"){
                 document.invoice.action="logout.php";
-                } else if(document.invoice.payOpt.value=="cancel") {
+                } else if(document.invoice.payOpt.value=="cancel") { //----HQ---- cancel should be delete ? 
                 document.invoice.action="cancelRegistration.php";
                 }
                 document.invoice.enctype="multipart/form-data";
@@ -388,6 +400,7 @@ if (!isset($_SESSION['registrationStep'])) {
                         <input type='hidden' name='email' value='<?php echo $email; ?>'>
                         <input type='hidden' name='billing_email' value='<?php echo 'Workshop Sponsor Registration_email'; ?>'>
                         <input type='hidden' name='totaldue' value='<?php echo $totaldue; ?>'>
+                        <!----HQ---- useless for sponsor -->
                         <input type='hidden' name='promoCode' value='<?php echo $promoCode; ?>'>
                         <input type="hidden" name="trnOrderNumber" value="BPS-<?php echo $sid; ?>">
                         <input type="hidden" name="ordName" value="<?php

@@ -118,14 +118,14 @@ if (!isset($_SESSION['registrationStep'])) {
 //ref3: 
 //ref4: 
 //ref5: 
-                    $vid = substr($trnOrderNumber, 4);
+                    $sid = substr($trnOrderNumber, 4);
                     $response = strtoupper($messageText);
                     $amount1 = $trnAmount;
-                    $selectStmt = "SELECT * FROM $tablesponsor WHERE sid = '$vid'";
+                    $selectStmt = "SELECT * FROM $tablesponsor WHERE sid = '$sid'";
                     $selectresult = mysql_query($selectStmt) or die("Picking VID Query failed. Please screen print this message and send to heidi@idassocites.ab.ca : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
                     $row = mysql_fetch_assoc($selectresult);
                     $myamt = $row['totalcharged'] . '.00';
-                    $myvid = $row['vid'];//-- no vid, only sid
+                    $myvid = $row['vid']; //-- no vid, only sid
                     $invoicedate = date('Y-m-d');
                     $responseId = $trnId;
                     $datepaid = date('Y-m-d');
@@ -134,44 +134,202 @@ if (!isset($_SESSION['registrationStep'])) {
 //	$cvdId="3"; ///////////// uncomment to test cvd failure check
 
                     if (($trnApproved == 1 && $cvdId == 1 && $messageId == 1) || (isset($promoCode) && $promoCode != "") || (isset($payOpt) && $payOpt === "RESEND")) {  //===========APPROVED //-- money order ??
-                        //echo "<p>approved</p>";
-                        //if($messageId == 1) { //===========approval ID
-                        // update entry
-                        $totaldue = $row['totaldue'] - $amount1;
-                        $totalpaid = $row['totalpaid'] + $amount1;
+                        // not generate promo codes for cheque option
+                        if (!(isset($payOpt) && $payOpt === "RESEND")) {                        
+                            $totaldue = $row['totaldue'] - $amount1;
+                            $totalpaid = $row['totalpaid'] + $amount1;
 
-                        $updatestmt = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = '$totalpaid', totaldue = '$totaldue', paytype = '$payOpt', miraresponse = '$response', miraamt = '$amount1', datepaid = '$datepaid' WHERE sid = '$vid' ";
-                        //echo "<p>$updatestmt</p>";
-                        mysql_query($updatestmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
+                            $updatestmt = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = '$totalpaid', totaldue = '$totaldue', paytype = '$payOpt', miraresponse = '$response', miraamt = '$amount1', datepaid = '$datepaid' WHERE sid = '$sid' ";
+                            //echo "<p>$updatestmt</p>";
+                            mysql_query($updatestmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
 
-                        $sponcode = $row['sponcode'];
-
- // not generate promo codes for cheque option
-if(!(isset($payOpt) && $payOpt === "RESEND")){
-                        if ($sponcode == 'PTRN') {
-                            $coupons = 3;
-                        } else {
-                            $coupons = 2;
+                            $sponcode = $row['sponcode'];
+                        
+                            if ($sponcode == 'PTRN') {
+                                $coupons = 3;
+                            } else {
+                                $coupons = 2;
+                            }
+                            for ($i = 0; $i < $coupons; $i++) {
+                                $uuid = substr(uniqid(), -6);
+                                $promoCode = strtoupper($sponcode . $uuid);
+                                $sponsorId = $row['sid'];
+                                $insertPromostmt = "INSERT INTO $tablepromo (promoCode,invoiceSponsor,dateCreated,timeCreated,enabled,company) values ('$promoCode','$sponsorId','$datepaid','$timepaid',1,'$sponcode')";
+                                mysql_query($insertPromostmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
+                            }
+                        } else { //----HQ---- if pay by cheque, keep paid zero.
+                            $updatestmt = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', paytype = '$payOpt'WHERE sid = '$sid' ";
+                            mysql_query($updatestmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);                        
                         }
-                        for ($i = 0; $i < $coupons; $i++) {
-                            $uuid = substr(uniqid(), -6);
-                            $promoCode = strtoupper($sponcode . $uuid);
-                            $sponsorId = $row['sid'];
-                            $insertPromostmt = "INSERT INTO $tablepromo (promoCode,invoiceSponsor,dateCreated,timeCreated,enabled,company) values ('$promoCode','$sponsorId','$datepaid','$timepaid',1,'$sponcode')";
-                            mysql_query($insertPromostmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
-                        }
-}
                         ?>
                         <h1>Thank you, your registration was successful. </h1>
                         <BR>
+                        <!----HQ---- show invoice -->
+                        <?php
+                        $selectStmt = "SELECT * FROM $tablesponsor WHERE sid = '$sid'";
+                        $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed. Please screen print this message and send to heidi@idassocites.ab.ca : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
+                        $row00 = mysql_fetch_assoc($selectresult);
+
+                        $sid = $sid;
+                        $fname = $row00['fname'];
+                        $lname = $row00['lname'];
+                        $address1 = $row00['address1'];
+                        $address1 = $row00['address1'];
+                        $company = $row00['company'];
+                        $city = $row00['city'];
+                        $state = $row00['state'];
+                        $zip = $row00['zip'];
+                        $country = $row00['country'];
+                        $invoicedate = $row00['invoicedate'];
+                        $totalcharged = $row00['totalcharged'];
+                        $totalpaid = $row00['totalpaid'];
+                        $paytype = $row00['paytype'];
+                        $miraresponse = $row00['miraresponse'];
+                        $regstatus = $row00['reg_status'];
+                        $paytype = $row00['paytype'];
+                        $sponcode = $row00['sponcode'];
+
+                        $invoice_info = implode('', file('includes/invoice_template2.php'));
+                        // strip in registrant info, invoice # and date
+                        $invoice_info = str_replace("{sid}", $sid, $invoice_info);
+                        $date = convertDate(date('Y-m-d'));
+                        $invoice_info = str_replace("{date}", $date, $invoice_info);
+                        $invoice_info = str_replace("{fname}", $fname, $invoice_info);
+                        $invoice_info = str_replace("{lname}", $lname, $invoice_info);
+                        $invoice_info = str_replace("{company}", $company, $invoice_info);
+                        $full_address = $address1;
+                        if ($address2) {
+                            $full_address .= ", " . $address2;
+                        }
+                        $full_address .="<br>" . $city;
+                        if ($state) {
+                            $full_address .= ", " . $state;
+                        }
+                        $full_address .= ", " . $country . "&nbsp;&nbsp;" . $zip;
+                        $invoice_info = str_replace("{full_address}", $full_address, $invoice_info);
+                        //----HQ---- billing_info no use ??
+                        $invoice_info = str_replace("{billing_info}", $billing_replace, $invoice_info);
+                        //////////////////////////////////////////////////////////////////////////////
+                        // strip in invoice details///////////////////////////////////////////////////
+                        if ($regstatus == "CANCELLED") {
+                            $invoice_info = str_replace("{special_notes}", "<p class='red'>THIS REGISTRATION HAS BEEN CANCELLED</p>", $invoice_info);
+                        } else if ($regstatus == "JUNK") {
+                            $invoice_info = str_replace("{special_notes}", "<p class='red'>THIS REGISTRATION HAS BEEN MARKED AS JUNK</p>", $invoice_info);
+                        } else {
+                            $invoice_info = str_replace("{special_notes}", "", $invoice_info);
+                        }
+                        $invoice_details = "";
+
+//----HQ---- $funccost where is it from?
+                        $funccost = number_format($totalcharged, 2);
+                        $invoice_details .= "<tr><td colspan=\"3\" align=\"left\">";
+                        if ($sponcode == "PTRN") {
+                            $invoice_details .= "<p><strong>Patron (includes 3 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                        } else if ($funccode == "SPNS") {
+                            $invoice_details .= "<p><strong>Sponsor (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                        } else {
+                            $invoice_details .= "<p><strong>Coffee Breaks (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                        }
+                        $invoice_details .= "</tr>";
+
+                        $invoice_info = str_replace("{invoice_details}", $invoice_details, $invoice_info);
+                        ///////////////////////// end of invoice details //////////////////////////////////
+                        //////////////////////////////////////////////////////////////////////////////
+                        if ($totalcharged) {
+                            $totaldue = ($totalcharged + ($totalcharged * 0.05)) - $totalpaid;
+                        }
+                        $gstcharged = sprintf("%01.2f", $totalcharged * 0.05);
+                        $totalcharged = sprintf("%01.2f", $totalcharged);
+                        $invoice_info = str_replace("{totalcharged}", $totalcharged, $invoice_info);
+                        $invoice_info = str_replace("{gstcharged}", $gstcharged, $invoice_info);
+                        $totalpaid = sprintf("%01.2f", $totalpaid);
+
+////////////////////////////////////////////////////////////////////////////////////
+//////////////////////// grab payment history //////////////////////////////////////		
+                        $paymenthist = "select * from $tablePaymentSponsor where sid='$sid' order by id asc";
+                        $paymenthistresult = mysql_query($paymenthist) or die("Query failed : " . mysql_error());
+
+                        $histnum = mysql_num_rows($paymenthistresult);
+                        $payment_line = '';
+                        if ($histnum == 0) {
+                            $payment_line .= '
+							<tr>
+								<td colspan="3" align="right">
+									<p><strong>Amount Paid:</strong></p>
+								</td>
+								<td align="right">
+									<p>' . $totalpaid . '</p>
+								</td>
+							</tr>';
+                        } else {
+                            while ($hist = mysql_fetch_array($paymenthistresult)) {
+                                if ($hist['pay_amount'] < 0) {
+                                    $payorrefund = '<strong>Refund Issued</strong> ';
+                                    $selectclass = ' class="red" ';
+                                    $special = '';
+                                } else if ($hist['transaction_type'] == 'CNCLFEE') {
+                                    $payorrefund = '<strong>Cancellation Fee</strong> ';
+                                    $selectclass = '';
+                                    $special = '<tr><td colspan="4" align="right"><em>Please note: When you receive your refund, the fee will already have been taken off the refund total</em></td></tr>';
+                                    $totaldue = $totaldue + 10;
+                                } else if ($hist['transaction_type'] == 'RFNDFEE') {
+                                    $payorrefund = '<strong>Refund Fee</strong>';
+                                    $selectclass = '';
+                                    $special = '<tr><td colspan="4" align="right"><em>Please note: When you receive your refund, the fee will already have been taken off the refund total</em></td></tr>';
+                                    $totaldue = $totaldue + 10;
+                                } else {
+                                    $payorrefund = '<strong>Payment Received</strong> ';
+                                    $selectclass = '';
+                                    $special = '';
+                                }
+
+                                $payment_line .= '
+									<tr>
+										<td colspan="3" align="right" valign="top"' . $selectclass . '>
+											<p>' . $payorrefund . ' ' . convertDate($hist['date_paid']) . ' (' . $hist['transaction_type'] . ' #' . $hist['response_id'] . '):</p>
+										</td>
+										<td align="right" valign="top"' . $selectclass . '>
+											<p>' . $hist['pay_amount'] . '</p>
+										</td>
+									</tr>' . $special;
+                            }
+                            $todaydate = date('Y-m-d');
+                        }
+                        $invoice_info = str_replace("{paymenthistory}", $payment_line, $invoice_info);
+///////////////////////end of payment history //////////////////////////////////////	
+
+                        if ($regstatus == 'CANCELLED') {
+                            $invoice_info = str_replace("{message_status}", "red", $invoice_info);
+                            $invoice_info = str_replace("{totaldue_message}", "<em>REGISTRATION CANCELLED</em>&nbsp;&nbsp;&nbsp; Total Owing:", $invoice_info);
+                            $invoice_info = str_replace("{refund_message}", "<h2 class='red'>THIS REGISTRATION HAS BEEN CANCELLED.</h2>", $invoice_info);
+                            $totaldue = '0.00';
+                        } else if ($totaldue >= 0) {
+                            $invoice_info = str_replace("{message_status}", "", $invoice_info);
+                            $invoice_info = str_replace("{totaldue_message}", "Total Owing:", $invoice_info);
+                            $invoice_info = str_replace("{refund_message}", "", $invoice_info);
+                        } else {
+                            $invoice_info = str_replace("{message_status}", "red", $invoice_info);
+                            $invoice_info = str_replace("{totaldue_message}", "Refund Due:", $invoice_info);
+                            $invoice_info = str_replace("{refund_message}", "<h2 class='red'>Changes in your registration have resulted in a refund. <br />Refunds are subject to a $10 processing fee.</h2>", $invoice_info);
+                        }
+                        $totaldue = sprintf("%01.2f", $totaldue);
+                        $invoice_info = str_replace("{totaldue}", $totaldue, $invoice_info);
+
+
+                        echo $invoice_info;
+                        ?>
+                        <!----HQ---- show invoice end -->
                         <h2><strong>An invoice was sent to your email address. </strong></h2>
                         <?php
-                            $insertstmt = "INSERT INTO $tablePaymentSponsor (sid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values ('$vid', '$amount1', '$datepaid', '$timepaid', 'CC', '$response', '$responseId')";
-                            //echo "<p>$insertstmt</p>";
+                        //----HQ---- if not cheque / money order, create paymenthistory
+                        if(!(isset($payOpt) && $payOpt === "RESEND")){
+                            $insertstmt = "INSERT INTO $tablePaymentSponsor (sid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values ('$sid', '$amount1', '$datepaid', '$timepaid', 'CC', '$response', '$responseId')";
                             $insresult = mysql_query($insertstmt) or die("Insert Query failed due to this error: " . mysql_error() . ". <BR><BR>The query data is: " . $insertstmt);
-                            ?>
-                            <p>Please print out your invoice and present it at the Banff/2013 Pipeline Workshop pre-registration desk to eliminate any processing delays.</p>
-
+                        ?>
+                        <p>Please print out your invoice and present it at the Banff/2013 Pipeline Workshop pre-registration desk to eliminate any processing delays.</p>
+                        <?php } else{ ?>
+                         <p>Your sponsorship request has been submitted, but promotion codes was generated at this time. Please print out your invoice and present it at the Banff/2013 Pipeline Workshop pre-registration desk to eliminate any processing delays.</p>
+                        <?php } ?>
                         <div id="conditions">
                             <p><em><strong>Cancellation requests must be received in writing no later than March 8, 2013.  There will be a $10 handling fee assessed for each refund.</strong></em> Please email to <a href="mailto:support@idassociates.ab.ca">support@idassociates.ab.ca</a> for any cancellation requests.
                             </p>
@@ -212,13 +370,13 @@ if(!(isset($payOpt) && $payOpt === "RESEND")){
                         // update with initial approval response
                         $totaldue = $row['totaldue'] - $amount1;
                         $totalpaid = $row['totalpaid'] + $amount1;
-                        $updatestmt = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = '$totalpaid', totaldue = '$totaldue', paytype = 'CC', miraresponse = '$response', miraamt = '$amount1', datepaid = '$datepaid' WHERE '$vid' = vid ";
+                        $updatestmt = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = '$totalpaid', totaldue = '$totaldue', paytype = 'CC', miraresponse = '$response', miraamt = '$amount1', datepaid = '$datepaid' WHERE '$sid' = vid ";
                         //echo "<p>$updatestmt</p>";
                         mysql_query($updatestmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
                         /////////////////////////////////////////
                         // insert initial approved payment into payment table
 
-                        $pay = "INSERT INTO $tablePaymentSponsor (vid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values ('$vid', '$amount1', '$datepaid', '$timepaid', 'CC', '$response', '$responseId')";
+                        $pay = "INSERT INTO $tablePaymentSponsor (vid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values ('$sid', '$amount1', '$datepaid', '$timepaid', 'CC', '$response', '$responseId')";
                         //echo "<p>$insertstmt</p>";
                         $payresult = mysql_query($pay) or die("Insert Query failed due to this error: " . mysql_error() . ". <BR><BR>The query data is: " . $pay);
 
@@ -232,7 +390,7 @@ if(!(isset($payOpt) && $payOpt === "RESEND")){
                         $XPost = "requestType=BACKEND";
                         $XPost .= "&trnType=VP";
                         $XPost .= "&merchant_id=$beanstreamMerchantID";
-                        $XPost .= "&trnOrderNumber=BPS-$vid";
+                        $XPost .= "&trnOrderNumber=BPS-$sid";
                         $XPost .= "&trnAmount=$trnAmount";
                         $XPost .= "&adjId=$trnId";
                         //$XPost .= "&passCode=$beanstreamProfilePass";
@@ -279,12 +437,12 @@ if(!(isset($payOpt) && $payOpt === "RESEND")){
                         }
                         // update table to show 0 charged and mark record as voided
                         //$updateorder = "update $tablesponsor set response='$responseValue', responseCode='$messageId', totalCharged='0.00', responseId='$trnId', ccType='$cardType', responseDate='$today', responseTime='$curTime' where oid='$oid'";
-                        $updateorder = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = totalpaid+$voidAmount, totaldue = totaldue-$voidAmount, paytype = 'VP', miraresponse = '$responseValue', miraamt = '$trnAmount', datepaid = '$datepaid', reg_status='CANCELLED' WHERE '$vid' = vid ";
+                        $updateorder = "UPDATE $tablesponsor SET invoicedate = '$invoicedate', totalpaid = totalpaid+$voidAmount, totaldue = totaldue-$voidAmount, paytype = 'VP', miraresponse = '$responseValue', miraamt = '$trnAmount', datepaid = '$datepaid', reg_status='CANCELLED' WHERE '$sid' = vid ";
                         $orderresult = mysql_query($updateorder) or die("<h2>There was an error updating the purchase response.</h2>" . mysql_error() . "<p>$updateorder</p>");
 
 
                         $up = "INSERT INTO $tablePaymentSponsor (vid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values 
-																	('$vid', '$voidAmount', '$datepaid', '$timepaid', 'VP', '$responseValue', '$trnId')";
+																	('$sid', '$voidAmount', '$datepaid', '$timepaid', 'VP', '$responseValue', '$trnId')";
                         $res = mysql_query($up);
                         // update purchase table to mark certificates as voided
                         //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -305,7 +463,7 @@ if(!(isset($payOpt) && $payOpt === "RESEND")){
                     } else {  //===========DECLINED and CANCELLED
                         $_SESSION['registrationStep'] = 3;
 
-                        $updatestmt = "UPDATE $tablesponsor SET miraresponse = '$response', miraamt = 0, paytype = 'MAIL' WHERE sid = '$vid' ";
+                        $updatestmt = "UPDATE $tablesponsor SET miraresponse = '$response', miraamt = 0, paytype = 'MAIL' WHERE sid = '$sid' ";
                         mysql_query($updatestmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
                         while (list ($key, $val) = each($row)) {
                             if ($val)
@@ -340,76 +498,76 @@ if(!(isset($payOpt) && $payOpt === "RESEND")){
                                 ?>
                                 <TABLE align="center" WIDTH="90%" BORDER="0" CELLSPACING="3" CELLPADDING="10">
                                     <tr>
-                                        <td width="50%" valign="top" align="left"><input type='hidden' name='vid' value='<?php echo $vid; ?>'>
+                                        <td width="50%" valign="top" align="left"><input type='hidden' name='vid' value='<?php echo $sid; ?>'>
                                             <input type='hidden' name='email' value='<?php echo $email; ?>'>
                                             <input type='hidden' name='billing_email' value='<?php echo $billing_email; ?>'>
                                             <input type='hidden' name='totaldue' value='<?php echo $totaldue; ?>'>
-                                            <input type="hidden" name="trnOrderNumber" value="BPS-<?php echo $vid; ?>">
+                                            <input type="hidden" name="trnOrderNumber" value="BPS-<?php echo $sid; ?>">
                                             <input type="hidden" name="ordName" value="<?php
-                                            if ($billing_fname != "" && $billing_lname != "") {
-                                                echo $billing_fname, " ", $billing_lname;
-                                            } else {
-                                                echo $fname, " ", $lname;
-                                            }
-                                            ?>">
+                    if ($billing_fname != "" && $billing_lname != "") {
+                        echo $billing_fname, " ", $billing_lname;
+                    } else {
+                        echo $fname, " ", $lname;
+                    }
+                                ?>">
                                             <input type="hidden" name="trnAmount" value="<?php printf("%.2f", $totaldue); ?>">
                                             <input type="hidden" name="trnReturnCard" value="<?php echo 1; ?>">
                                             <input type="hidden" name="ordPhoneNumber" value="<?php
-                                            if ($billing_phone != "") {
-                                                echo $billing_phoneArea, " ", $billing_phone;
-                                            } else {
-                                                echo $phoneArea, " ", $phone;
-                                            }
-                                            ?>">
+                                       if ($billing_phone != "") {
+                                           echo $billing_phoneArea, " ", $billing_phone;
+                                       } else {
+                                           echo $phoneArea, " ", $phone;
+                                       }
+                                ?>">
                                             <input type="hidden" name="ordAddress1" value="<?php
-                                            if ($billing_address1 != "") {
-                                                echo $billing_address1;
-                                            } else {
-                                                echo $address1;
-                                            }
-                                            ?>">
+                                if ($billing_address1 != "") {
+                                    echo $billing_address1;
+                                } else {
+                                    echo $address1;
+                                }
+                                ?>">
                                             <input type="hidden" name="ordAddress2" value="<?php
-                                            if ($billing_address2 != "") {
-                                                echo $billing_address2;
-                                            } else {
-                                                echo $address2;
-                                            }
-                                            ?>">
+                                if ($billing_address2 != "") {
+                                    echo $billing_address2;
+                                } else {
+                                    echo $address2;
+                                }
+                                ?>">
                                             <input type="hidden" name="ordCity" value="<?php
-                                            if ($billing_city != "") {
-                                                echo $billing_city;
-                                            } else {
-                                                echo $city;
-                                            }
-                                            ?>">
+                                if ($billing_city != "") {
+                                    echo $billing_city;
+                                } else {
+                                    echo $city;
+                                }
+                                ?>">
                                             <input type="hidden" name="ordProvince" value="<?php
-                                            if ($billing_state != "") {
-                                                echo $billing_state;
-                                            } else {
-                                                echo $state;
-                                            }
-                                            ?>">
+                                if ($billing_state != "") {
+                                    echo $billing_state;
+                                } else {
+                                    echo $state;
+                                }
+                                ?>">
                                             <input type="hidden" name="ordCountry" value="<?php
-                                            if ($billing_country != "") {
-                                                echo $billing_country;
-                                            } else {
-                                                echo $country;
-                                            }
-                                            ?>">
+                                if ($billing_country != "") {
+                                    echo $billing_country;
+                                } else {
+                                    echo $country;
+                                }
+                                ?>">
                                             <input type="hidden" name="ordPostalCode" value="<?php
-                                            if ($billing_zip != "") {
-                                                echo $billing_zip;
-                                            } else {
-                                                echo $zip;
-                                            }
-                                            ?>">
+                                if ($billing_zip != "") {
+                                    echo $billing_zip;
+                                } else {
+                                    echo $zip;
+                                }
+                                ?>">
                                             <input type="hidden" name="ordEmailAddress" value="<?php
-                                            if ($billing_email != "") {
-                                                echo $billing_email;
-                                            } else {
-                                                echo $email;
-                                            }
-                                            ?>">
+                                if ($billing_email != "") {
+                                    echo $billing_email;
+                                } else {
+                                    echo $email;
+                                }
+                                ?>">
                                             <input type="hidden" name="errorPage" value="<?php echo $beanstreamReturnAddress; ?>">
                                             <input type="hidden" name="approvedPage" value="<?php echo $beanstreamReturnAddress; ?>">
                                             <input type="hidden" name="declinedPage" value="<?php echo $beanstreamReturnAddress; ?>">
@@ -433,18 +591,18 @@ if(!(isset($payOpt) && $payOpt === "RESEND")){
                                                                     if (checkPay(this.form))
                                                                         document.murapay.submit();
                                                                     return false;' value='Cancel Registration' />
-                                                <?php if (isset($_SESSION['login']) && $_SESSION['login']) { ?>
+                                                       <?php if (isset($_SESSION['login']) && $_SESSION['login']) { ?>
                                                     <input name='logout' type='submit' class="transformButtonStyle" id="logout" style="margin-left:10px;"  onClick='document.murapay.payOpt.value = "LOGOUT";
                                                                             if (checkPay(this.form))
                                                                                 document.murapay.submit();
                                                                             return false;' value='Log Out' />
-            <?php } ?>
+                                                       <?php } ?>
                                             </p></td>
                                     </tr>
                                 </table>
                             <?php } else {
                                 ?>
-                                <input type='hidden' name='vid' value='<?php echo $vid; ?>'>
+                                <input type='hidden' name='vid' value='<?php echo $sid; ?>'>
                                 <input type='hidden' name='email' value='<?php echo $email; ?>'>
                                 <input type='hidden' name='billing_email' value='<?php echo $billing_email; ?>'>
                                 <input type='hidden' name='totaldue' value='<?php echo $totaldue; ?>'>

@@ -3,17 +3,17 @@ $tuesdayAvail = TRUE;
 $mondayAvail = TRUE;
 $wednesdayAvail = TRUE;
 $selectStmt = "select sid from $tablesponsor where sponcode = 'CBTU' and `totaldue`=0";
-$selectresult = mysql_query($selectStmt) or die("Picking VID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
+$selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $tuesdayAvail = FALSE;
 }
 $selectStmt = "select sid from $tablesponsor where sponcode = 'CBMO' and `totaldue`=0";
-$selectresult = mysql_query($selectStmt) or die("Picking VID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
+$selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $mondayAvail = FALSE;
 }
 $selectStmt = "select sid from $tablesponsor where sponcode = 'CBWD' and `totaldue`=0";
-$selectresult = mysql_query($selectStmt) or die("Picking VID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
+$selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $wednesdayAvail = FALSE;
 }
@@ -24,6 +24,7 @@ if (mysql_num_rows($selectresult) > 0) {
 </div>
 <div id="registrantInfo" class="formBlock" style="clear:left; width:100%;">
     <h2>Step 1. Contact Information</h2>
+    <!--
     <div class="leftCol notRequired" style="width:20%;">
         <p>
             <select name="sal" id="sal" class="noreqfield">
@@ -56,6 +57,7 @@ if (mysql_num_rows($selectresult) > 0) {
             </select>
         </p>
     </div>
+    -->
     <div style="clear:left;"></div>
     <div class="leftCol required" style="width:40%;">
         <p>First Name
@@ -80,20 +82,11 @@ if (mysql_num_rows($selectresult) > 0) {
         </p>
     </div>
     <div style="clear:left;"></div>
-    <div class="leftCol required" style="width:auto; margin-left:50px;">
-        <p><strong>First name as you would like it to display on Badge</strong> * (max. 17 characters)</p>
+
+    <div class="leftCol required" style="width:92%;">
+        <p>Company Name (Maximum 50 characters)*</p>
         <p>
-            <input name="nickname" type="text" class="reqfield" id="nickname" value="<?php
-            if (isset($nickname)) {
-                echo $nickname;
-            }
-            ?>" size="40" maxlength="17" style="width:auto;"/>
-        </p>
-    </div>
-    <div class="leftCol notRequired" style="width:92%;">
-        <p>Company Name (Maximum 50 characters)</p>
-        <p>
-            <input name="company" type="text" id="company" value="<?php
+            <input name="company" type="text" class="reqfield" id="company" value="<?php
             if (isset($company)) {
                 echo $company;
             }
@@ -102,7 +95,7 @@ if (mysql_num_rows($selectresult) > 0) {
     </div>
     <div style="clear:left;"></div>
 
-    <div class="leftCol notRequired" style="width:40%;">
+    <div class="leftCol notRequired" style="width:92%;">
         <p>Job Title</p>
         <p>
             <input name="title" type="text" id="title" value="<?php
@@ -112,49 +105,7 @@ if (mysql_num_rows($selectresult) > 0) {
             ?>" maxlength="50" class="noreqfield" />
         </p>
     </div>
-    <div class="leftCol required" style="width:40%;">
-        <p>Business Type
-        </p>
-        <p>
-            <select name="businesstype" id="businesstype" class="reqfield">
-                <option value="" <?php
-                if (!(strcmp("", "$businesstype"))) {
-                    echo "selected=\"selected\"";
-                }
-                ?>>Select a Bussiness Type</option>
-                <option value="Academic" <?php
-                if (!(strcmp("Academic", "$businesstype"))) {
-                    echo "selected=\"selected\"";
-                }
-                ?>>Academic</option>
-                <option value="Consultant" <?php
-                if (!(strcmp("Consultant", "$businesstype"))) {
-                    echo "selected=\"selected\"";
-                }
-                ?>>Consultant</option>
-                <option value="Operator" <?php
-                if (!(strcmp("Operator", "$businesstype"))) {
-                    echo "selected=\"selected\"";
-                }
-                ?>>Operator</option>
-                <option value="Regulator" <?php
-                if (!(strcmp("Regulator", "$businesstype"))) {
-                    echo "selected=\"selected\"";
-                }
-                ?>>Regulator</option>
-                <option value="Vendor" <?php
-                if (!(strcmp("Vendor", "$businesstype"))) {
-                    echo "selected=\"selected\"";
-                }
-                ?>>Vendor</option>
-                <option value="Other" <?php
-                if (!(strcmp("Other", "$businesstype"))) {
-                    echo "selected=\"selected\"";
-                }
-                ?>>Other</option>
-            </select>
-        </p>
-    </div>
+    
     <div style="clear:left;"></div>
 
 
@@ -182,7 +133,7 @@ if (mysql_num_rows($selectresult) > 0) {
         </p>
     </div>
     <div style="clear:left;"></div>
-    <div class="leftCol required" style="width:50%;">
+    <div class="leftCol required" style="width:40%;">
         <p>City
             * </p>
         <p>
@@ -193,7 +144,7 @@ if (mysql_num_rows($selectresult) > 0) {
             ?>" />
         </p>
     </div>
-    <div class="leftCol notRequired" style="width:30%;">
+    <div class="leftCol notRequired" style="width:40%;">
         <p>State/Province</p>
         <p>
             <input name="state" type="text" id="state" value="<?php
@@ -203,12 +154,12 @@ if (mysql_num_rows($selectresult) > 0) {
             ?>"  class="noreqfield"/>
         </p>
     </div>
-    <div class="leftCol required" style="clear:left;">
+    <div class="leftCol required" style="clear:left;width:40%;">
         <p>Country
             * </p>
         <p>
             <?php
-            $countries = "select * from $tableCountries";
+            $countries = "select * from $tableCountriesNew";
             $countriesResult = mysql_query($countries) or die(mysql_error() . "<br>$countries");
             ?>
             <select name="country" id="country" class="reqfield" style="width:auto;">
@@ -218,20 +169,20 @@ if (mysql_num_rows($selectresult) > 0) {
                 }
                 ?>>Select a Country</option>
                         <?php while ($count = mysql_fetch_array($countriesResult)) { ?>
-                    <option value="<?php echo $count['iso2']; ?>" <?php
-                    if (!(strcmp($count['iso2'], "$country"))) {
+                    <option value="<?php echo $count['CountryCode']; ?>" <?php
+                    if (!(strcmp($count['CountryCode'], "$country"))) {
                         echo "selected=\"selected\"";
                     }
-                    ?>><?php echo $count['countryName']; ?></option>
+                    ?>><?php echo $count['CountryName']; ?></option>
                         <?php } ?>
             </select>
         </p>
     </div>
-    <div class="leftCol required">
+    <div class="leftCol required" style="width:40%;">
         <p>Zip/Postal Code
             * </p>
         <p>
-            <input name="zip" type="text" class="reqfield" id="zip" style="width:auto;" value="<?php
+            <input name="zip" type="text" class="reqfield" id="zip"  value="<?php
             if (isset($zip)) {
                 echo $zip;
             }
@@ -239,7 +190,7 @@ if (mysql_num_rows($selectresult) > 0) {
         </p>
     </div>
     <div style="clear:left;"></div>
-    <div class="leftCol required" style="width:30%">
+    <div class="leftCol required" style="width:40%">
         <p>Phone Number (include area code)
             * </p>
         <p>
@@ -250,7 +201,7 @@ if (mysql_num_rows($selectresult) > 0) {
             ?>"/>
         </p>
     </div>
-    <div class="leftCol notRequired" style="width:30%">
+    <div class="leftCol notRequired" style="width:40%">
         <p>Fax Number (include area code) </p>
         <p>
             <input name="fax" type="text" id="fax" value="<?php
@@ -261,10 +212,11 @@ if (mysql_num_rows($selectresult) > 0) {
         </p>
     </div>
     <div style="clear:left;"></div>
-    <div class="leftCol required" style="width:92%;">
+    <div class="leftCol required" style="width:40%;">
         <p>Email
             * </p>
         <p>
+            <!----HQ---- no user_password in database -->
             <input name="user_password" type="hidden" id="user_password" value="<?php
             if (isset($user_password)) {
                 echo $user_password;
@@ -277,16 +229,29 @@ if (mysql_num_rows($selectresult) > 0) {
             ?>" />
         </p>
     </div>
+    <div class="leftCol required" style="width:40%;">
+        <p>Confirm Email
+            * </p>
+        <p>
+            <input name="confirmemail" type="text" class="reqfield" id="confirmemail" value="<?php
+            if (isset($email)) {
+                echo $email;
+            }
+            ?>" />
+        </p>
+    </div>
     <div style="clear:left;"></div>
 </div>
 <p>
     <input name="continuebutton" type="button" class="transformButtonStyle" id="<?php
+    //----HQ---- vid sid ?
     if (!isset($vid) || $vid == "") {
         echo "continuebutton";
     } else {
         echo "savechanges";
     }
     ?>" value="<?php
+            //----HQ---- vid sid ?
            if (!isset($vid) || $vid == "") {
                echo "Continue";
            } else {
@@ -296,6 +261,7 @@ if (mysql_num_rows($selectresult) > 0) {
 </p>
 </div>
 <div id="registrantSummary" class="formBlock" style="display:none" <?php
+//----HQ---- vid sid ?
 if (!isset($vid) || $vid == "") {
     echo "style=\"display:none;\"";
 }
@@ -322,12 +288,14 @@ if (!isset($vid) || $vid == "") {
                                             </div>  -->
     <div style="clear:both;"></div>
     <input name="makeChanges" type="button" class="transformButtonStyle" id="<?php
+    //----HQ---- vid sid ?
     if (!isset($vid) || $vid == "") {
         echo "makeChanges";
     } else {
         echo "editRegistrant";
     }
     ?>" value="<?php
+    //----HQ---- vid sid ?
            if (!isset($vid) || $vid == "") {
                echo "Make Changes";
            } else {
@@ -336,6 +304,7 @@ if (!isset($vid) || $vid == "") {
            ?>" style="width:auto;">
 </div>
 <div id="registrationType" class="formBlock" <?php
+//----HQ---- vid sid ?
 if (!isset($vid) || $vid == "") {
     echo "style=\"display:none;\"";
 }
@@ -343,8 +312,12 @@ if (!isset($vid) || $vid == "") {
     <input name="totalcharged" id="totalcharged" type="hidden" value="<?php echo $totalcharged; ?>">
     <input type="hidden" name="totalpaid"  value="<?php echo $totalpaid; ?>">
     <input type="hidden" name="totaldue"   value="<?php echo $totaldue; ?>">
+    
+    <!----HQ---- vid sid ? -->    
     <input type="hidden" name="vid" value="<?php echo $vid; ?>">
     </td>
+    <!----HQ---- no funccode 
+                sponcode ??? -->
     <h2 id="step2">Step 2. Choose Sponsorship Category <?php echo $funcccode; ?></h2>
     <div id="patron" class="selectType leftCol required" style="width:28%">
         <h3>Patron</h3>
@@ -381,6 +354,7 @@ if (!isset($vid) || $vid == "") {
         <div class="notRequired">
             <p>
                 <label>
+                    <!----HQ---- no CBRK in sponcode -->
                     <input type="radio" name="regType" class="regType"  value="CBRK">
                     $3000 (2 free registrations)</label>
             </p>
@@ -391,6 +365,7 @@ if (!isset($vid) || $vid == "") {
 
 </div>
 <div class="registrationCategories" id="schedule" style="clear:left; <?php
+//----HQ---- vid sid ?
 if (!isset($vid) || $vid == "") {
     echo "display:none;";
 }
@@ -434,6 +409,8 @@ if (!isset($vid) || $vid == "") {
                 <h3 style="float:none;">
                     <label><?php if ($mondayAvail): ?>
                             <input <?php
+           //----HQ---- funccode ? sponcode ? -->
+            //----HQ---- if else : ? --> 
                             if (!(strcmp("$funccode", "CBMO"))) {
                                 echo "checked=\"checked\"";
                             }
@@ -455,6 +432,8 @@ if (!isset($vid) || $vid == "") {
                     <label>
                         <?php if ($tuesdayAvail): ?>
                             <input <?php
+            //----HQ---- funccode ? sponcode ? -->
+            //----HQ---- if else : ? --> 
                             if (!(strcmp("$funccode", "CBTU"))) {
                                 echo "checked=\"checked\"";
                             }
@@ -474,6 +453,8 @@ if (!isset($vid) || $vid == "") {
                     <label>
                         <?php if ($wednesdayAvail): ?>
                             <input <?php
+            //----HQ---- funccode ? sponcode ? -->
+            //----HQ---- if else : ? -->                             
                             if (!(strcmp("$funccode", "CBWD"))) {
                                 echo "checked=\"checked\"";
                             }

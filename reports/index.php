@@ -18,14 +18,18 @@
                     <form method='post' action='' name='invoice' ENCTYPE='multipart/form-data' onSubmit='return false'>
                         <h1> Reporting Console </h1>
                         <h2>Generate Promotion Codes: <a href="promocode.php">Code Manager</a></h2>
+                        <!--
                         <h2>View Comments: <a href="comments.php">Comment Manager</a></h2>
+                        -->
                         <p>&nbsp;</p>
                         <p><strong>Search for an invoice: <A href="invoice.php">Invoice Search</A>.</strong></p>
-                        <p>&nbsp;</p>
+                        <!--
+                        <p>&nbsp;</p>                        
                         <p><strong>Statistical Information: <a href="stats.php">Registration Quick Reference Stats</a>. </strong></p>
+                        -->
                         <p>&nbsp;</p>
                         <p><strong>Budgetary: 
-                                <a href="reportDateAmt.php">Monthly Count and Amounts</a>. </strong></p>
+                                <a href="reportDateAmt.php">Count and Amounts</a>. </strong></p>
                         <p>&nbsp;</p>
                     </form>
                 </div>

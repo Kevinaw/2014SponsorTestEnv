@@ -12,7 +12,7 @@ if (!isset($_SESSION['registrationStep'])) {
 
 
 include('config_include/connect.php');
-
+//----HQ---- vid sid?
 if (isset($_POST['vid']) && $_POST['vid'] != "") {
     $vid = $_POST['vid'];
 

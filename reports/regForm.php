@@ -288,7 +288,7 @@ if (isset($vid) && $vid != "") {
                                         * </p>
                                     <p>
                                         <?php
-                                        $countries = "select * from $tableCountries";
+                                        $countries = "select * from $tableCountriesNew";
                                         $countriesResult = mysql_query($countries) or die(mysql_error() . "<br>$countries");
                                         ?>
                                         <select name="country" id="country" class="reqfield" style="width:auto;">
@@ -298,11 +298,11 @@ if (isset($vid) && $vid != "") {
                                             }
                                             ?>>Select a Country</option>
                                                     <?php while ($count = mysql_fetch_array($countriesResult)) { ?>
-                                                <option value="<?php echo $count['iso2']; ?>" <?php
-                                                if (!(strcmp($count['iso2'], "$country"))) {
+                                                <option value="<?php echo $count['CountryCode']; ?>" <?php
+                                                if (!(strcmp($count['CountryCode'], "$country"))) {
                                                     echo "selected=\"selected\"";
                                                 }
-                                                ?>><?php echo $count['countryName']; ?></option>
+                                                ?>><?php echo $count['CountryName']; ?></option>
                                                     <?php } ?>
                                         </select>
                                     </p>
@@ -501,7 +501,7 @@ if (isset($vid) && $vid != "") {
                                             * </p>
                                         <p>
                                             <?php
-                                            $countries = "select * from $tableCountries";
+                                            $countries = "select * from $tableCountriesNew";
                                             $countriesResult = mysql_query($countries) or die(mysql_error() . "<br>$countries");
                                             ?>
                                             <select name="billing_country" id="billing_country" class="reqfield" style="width:auto;">
@@ -511,11 +511,11 @@ if (isset($vid) && $vid != "") {
                                                 }
                                                 ?>>Select a Country</option>
                                                         <?php while ($count = mysql_fetch_array($countriesResult)) { ?>
-                                                    <option value="<?php echo $count['iso2']; ?>" <?php
-                                                    if (!(strcmp($count['iso2'], "$billing_country"))) {
+                                                    <option value="<?php echo $count['CountryCode']; ?>" <?php
+                                                    if (!(strcmp($count['CountryCode'], "$billing_country"))) {
                                                         echo "selected=\"selected\"";
                                                     }
-                                                    ?>><?php echo $count['countryName']; ?></option>
+                                                    ?>><?php echo $count['CountryName']; ?></option>
                                                         <?php } ?>
                                             </select>
                                         </p>

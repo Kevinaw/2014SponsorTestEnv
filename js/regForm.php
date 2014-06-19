@@ -19,6 +19,7 @@ $verihash = sha1($veristring . $verisalt);
         var totalCost = 0;
         var patronAmount = 5000;
         var sponsorAmount = 3000;
+        //----HQ---- no amazing walk cost
         var amazingWalkCost = 30;
 
         // make stuff happen if they've gone back to make changes
@@ -31,6 +32,7 @@ $verihash = sha1($veristring . $verisalt);
             $('.regDay').hide();
             $('.regType').each(function(index) {
                 if ($(this).is(":checked")) {
+                    //----HQ----no value of FULL
                     if ($(this).val() == "FULL") {
                         $('.regDay').show();
                     } else {
@@ -45,6 +47,8 @@ $verihash = sha1($veristring . $verisalt);
         ////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////
         // show billing fields if checked
+        
+//----HQ---- no billing_check here         
         $('#billing_check').click(function() {
             if ($(this).is(':checked')) {
                 $('#billingInfo').slideDown(250);
@@ -109,6 +113,13 @@ $verihash = sha1($veristring . $verisalt);
                             if (!CyJS_Utils_IsEmailValid($(this).val())) {
                                 if (!$(this).parent().next().hasClass('errorfield')) {
                                     $(this).parent().after("<p class=\"errorfield\" style=\"clear:left;\">email is invalid</p>");
+                                    noSubmit = true;
+                                }
+                            }
+                            
+                            if ($(this).val() != $('#confirmemail').val()) {
+                                if (!$(this).parent().next().hasClass('errorfield')) {
+                                    $(this).parent().after("<p class=\"errorfield\" style=\"clear:left;\">confirm email should be the same</p>");
                                     noSubmit = true;
                                 }
                             }
@@ -252,7 +263,7 @@ $verihash = sha1($veristring . $verisalt);
 
             $('#regEmail').html($('#email').val());
             $('#regPhone').html($('#phone').val());
-
+//----HQ---- no billing fields
             if (!$('#billing_check').is(":checked")) {
                 $('#registrantFields').css("width", "92%");
                 $('#billingFields').hide();
@@ -294,6 +305,7 @@ $verihash = sha1($veristring . $verisalt);
         // registration type
         $('.regType').click(function() {
             var setDelay = 0;
+          //----HQ---- no value of FULL  
             if ($(this).val() == "FULL") {
                 var er = $('#step2').next();
                 if (er.hasClass('errorfield')) {

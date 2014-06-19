@@ -2,14 +2,14 @@
 
 //include 'includes/connectScript.php';
 //include 'mimemail.inc';
-if (!$vid) {
+if (!$sid) {
     echo "Problem with sending invoice, no id available.";
 } else {
-    $holdid = $vid;
-    //if($asme){ $vid = $asme; } 
-    $selectStmt = "select * from $tablesponsor WHERE sid = '$vid' ";
+    $holdid = $sid;
+    //if($asme){ $sid = $asme; } 
+    $selectStmt = "select * from $tablesponsor WHERE sid = '$sid' ";
     $finduser = mysql_query($selectStmt) or die("The main select statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $selectStmt);
-    $vid = $holdid;
+    $sid = $holdid;
 }
 $strName = mysql_result($finduser, 0, "fname") . " " . mysql_result($finduser, 0, "lname");
 $sal = mysql_result($finduser, 0, "sal");
@@ -46,7 +46,7 @@ $paytype = mysql_result($finduser, 0, "paytype");
 $funccode = mysql_result($finduser, 0, "sponcode");
 
 // check to see if they selected the amazing walk
-$check = "select funccode, charged from $tabledetailname where funccode='AMZWLK' and vid='$vid'";
+$check = "select funccode, charged from $tabledetailname where funccode='AMZWLK' and vid='$sid'";
 $checkres = mysql_query($check);
 $checknum = mysql_num_rows($checkres);
 
@@ -70,7 +70,7 @@ $invoice_template_path = $thepath . 'includes/invoice_template2.php';
 
 $invoice_info = implode('', file($invoice_template_path));
 // strip in registrant info, invoice # and date
-$invoice_info = str_replace("{vid}", $vid, $invoice_info);
+$invoice_info = str_replace("{vid}", $sid, $invoice_info);
 $date = date('F j, Y');
 $invoice_info = str_replace("{date}", $date, $invoice_info);
 $invoice_info = str_replace("{fname}", $fname, $invoice_info);
@@ -114,7 +114,7 @@ $invoice_info = str_replace("{full_address}", $full_address, $invoice_info);
 //					$invoice_info = str_replace("{special_notes}", "",$invoice_info);
 //				}
 $invoice_details = "";
-//					$details="select c.*, d.funccode as dfunccode, n.funccode as regtype from $conference c, $tabledetailname d, $tablesponsor n where n.vid=d.vid and d.funccode=c.funccode and d.vid='$vid' order by c.date, c.startTime asc";
+//					$details="select c.*, d.funccode as dfunccode, n.funccode as regtype from $conference c, $tabledetailname d, $tablesponsor n where n.vid=d.vid and d.funccode=c.funccode and d.vid='$sid' order by c.date, c.startTime asc";
 //					$deresult = mysql_query($details) or die("Query failed : " . mysql_error());
 //					
 //						$monday = array();
@@ -201,7 +201,7 @@ $totalpaid = sprintf("%01.2f", $totalpaid);
 
 ////////////////////////////////////////////////////////////////////////////////////
 //////////////////////// grab payment history //////////////////////////////////////		
-$paymenthist = "select * from $tablePaymentSponsor where vid='$vid' order by id asc";
+$paymenthist = "select * from $tablePaymentSponsor where vid='$sid' order by id asc";
 $paymenthistresult = mysql_query($paymenthist) or die("Query failed : " . mysql_error());
 
 $histnum = mysql_numrows($paymenthistresult);

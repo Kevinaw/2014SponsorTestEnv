@@ -202,12 +202,12 @@
                         <?php echo $pagenav; ?>
                         <table width="100%" border="0" cellpadding="5" cellspacing="3">
                             <tr>
-                                <th bgcolor="#006600" colspan="6"><!--p><strong>Active Registrations</strong> (Pending Records in Blue)</p--></th>
+                                <th bgcolor="#006600" colspan="6"><p><strong>Active Registrations</strong> (Pending Records in Blue)</p></th>
                             </tr>
                             <?php for ($i = 0; $i < $goodrecordsnum; $i++) {
                                 ?>
                                 <tr bgcolor="#<?php
-                            if ($goodrecords[$i]['paytype'] != "") {
+                            if ($goodrecords[$i]['datepaid'] != "") {
                                 echo "D6F5BC";
                             } else {
                                 echo "66CCFF";
@@ -217,7 +217,8 @@
                                     <td valign="top"><p><?php echo $goodrecords[$i]['lname'] . ", " . $goodrecords[$i]['fname']; ?></p></td>
                                     <td valign="top"><p><strong>Paid: <?php echo $goodrecords[$i]['totalpaid']; ?></strong></p></td>
                                     <td valign="top"><p><strong>Owing: <?php echo $goodrecords[$i]['totaldue']; ?></strong></p></td>
-                                    <td valign="top"><p><strong>Payment Type: </strong><?php echo $goodrecords[$i]['paytype']; ?> <br></p></td>
+                                    <td valign="top"><p><strong>Payment: </strong><?php echo $goodrecords[$i]['paytype']; ?> <br></p></td>
+                                    <td valign="top"><p><strong>Sponsorship: </strong><?php echo $goodrecords[$i]['sponcode']; ?> <br></p></td>
                                     <td ><p><a href="showInvoice.php?vid=<?php echo $goodrecords[$i]['sid']; ?>" target="_blank">View Invoice</a></p></td>
                                 </tr>
 

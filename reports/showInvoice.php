@@ -713,7 +713,9 @@ var_dump($promoCode);
                             <input type="hidden" name="payOpt" value="<?php echo $paytype; ?>">
                             <input name="back" type="submit" class="transformButtonStyle" onclick="this.form.action = 'invoice.php';" value="Back to List">
                             <input name="email" type="submit" class="transformButtonStyle" onclick="this.form.action = 'emailBoth.php'" value="Email Invoice";>
+                            <!--
                             <input name="change" type="submit" class="transformButtonStyle" onclick="this.form.action = 'changesForm.php';" value="Make Changes">
+                            -->
                             <input name="delete" type="submit" class="transformButtonStyle" onclick="this.form.action = 'invoiceDelete.php';" value="Mark Invoice as Junk">
                         </form>
                         <?php

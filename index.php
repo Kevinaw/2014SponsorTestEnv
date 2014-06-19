@@ -13,7 +13,9 @@ if ($closeit > '2015-05-12')
     {
     header('Location: closed.php');
 } else {
-
+    
+    //----HQ----login gvid vid billing_info user_password 
+    //----HQ----login logic is useless here
     $login = filter_input(INPUT_POST, 'login');
 
     $gvid = filter_input(INPUT_POST, 'gvid');
@@ -58,7 +60,7 @@ if ($closeit > '2015-05-12')
         }
     }
 
-
+    //----HQ----vid should changed to sid, there is no vid in sponsor table 
     if (isset($vid) && $vid != "") {
         $selectstmt = "select * from $tablesponsor where vid = $vid";
         $finduser = mysql_query($selectstmt) or die("Refresh select query failed: " . mysql_error() . ". <BR><BR>The statement is: " . $selectstmt);
@@ -77,6 +79,7 @@ if ($closeit > '2015-05-12')
             }
         }
 
+        //----HQ----table detail seems useless for sponsor, it just here for visitor use
         $details = "select * from $tabledetailname where vid = '$vid'";
         $deresult = mysql_query($details) or die("The collection of old detail records statement failed with error: " . mysql_error() . $details);
 
@@ -96,11 +99,14 @@ if ($closeit > '2015-05-12')
                 //echo "<p>".substr($deline['funccode'],0,2)." is: ".${substr($deline['funccode'],0,2)}."</p>";
             }
         }
+        
+        //----HQ----promotion code works for visitor only.
         // bring back our promo code
         if (isset($_POST['promoCode'])) {
             $promoCode = $_POST['promoCode'];
         }
     }
+    
     if ($login != "Yes" && (!isset($vid) && $vid == "")) {
         // not being passed to the page, kill any open sessions
         session_destroy();
@@ -119,6 +125,7 @@ if ($closeit > '2015-05-12')
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!----HQ----2013 -> 2014 -->
         <title>Banff/2013 Pipeline Workshop Sponsor Registration</title>
         <link href="css/asmebanffstyles.css" rel="stylesheet" type="text/css">
         <script>
@@ -141,6 +148,7 @@ if (isset($vid) && $vid != "") {
         <div id="wrapper">
             <?php include('includes/header.php'); ?>
             <div id="content">
+<!----HQ----2013 -> 2014 -->                
                 <h3>April 8 – 11, 2013 at
                     The Banff Centre, 
                     Banff, Alberta, Canada</h3>
@@ -153,6 +161,7 @@ if (isset($vid) && $vid != "") {
                 </div>
                 <form name="registration" id="registration" method="post" action="">
                     <div id="registerInfo" <?php
+                    //----HQ----vid -> sid
                     if (isset($vid) && $vid != "") {
                         echo "style=\"display:none;\"";
                     }
