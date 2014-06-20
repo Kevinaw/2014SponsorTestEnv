@@ -139,7 +139,9 @@
                                                 if ($row['invoice'] == "") {
                                                     echo "--";
                                                 } else {
-                                                    echo "<a href=\"showInvoice.php?sid=" . $row['invoice'] . "\" target=\"_blank\">BPS-" . $row['invoice'] . "</a>";
+                                                    // Column Fulfilled is corresponding to visitor's invoice, not sponsor's.
+                                                    // echo "<a href=\"showVisitorInvoice.php?vid=" . $row['invoice'] . "\" target=\"_blank\">BPV-" . $row['invoice'] . "</a>";
+                                                    echo "BPV-" . $row['invoice'];
                                                 }
                                                 ?></p></td>
                                         <td align="center" valign="middle" class="dottheline"><p>
