@@ -460,7 +460,7 @@ $verihash = sha1($veristring . $verisalt);
             });
 
             if (regtype == "CBRK") {
-                if ($('#CBRK radio').length == 0) {
+                if ($('#CBRK input').length == 0) {
                     $('#CBRK h3').first().append("<p class=\"errorfield\">All days have been sponsored</p>");
                     $('#processResponse').html("<p class=\"errorfield\">You can not sponsor Coffee Break anymore, because all the three days are sponsored.</p>").delay(250).slideDown(250);
 
