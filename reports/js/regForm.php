@@ -18,7 +18,7 @@ $verihash = sha1($veristring . $verisalt);
         // set a default cost
         var totalCost = 200;
         // make stuff happen if they've gone back to make changes
-        if (vidloaded) {
+        if (sidloaded) {
             //alert("test");
             $('.sessionButtons').each(function(index) {
                 if ($(this).is(":checked")) {

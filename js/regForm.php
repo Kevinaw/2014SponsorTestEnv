@@ -23,7 +23,7 @@ $verihash = sha1($veristring . $verisalt);
         var amazingWalkCost = 30;
 
         // make stuff happen if they've gone back to make changes
-        if (vidloaded) {
+        if (sidloaded) {
             $('.sessionButtons').each(function(index) {
                 if ($(this).is(":checked")) {
                     $(this).parent().parent().parent().addClass("selected");
@@ -236,10 +236,10 @@ $verihash = sha1($veristring . $verisalt);
         ////////////////////////////////////////////////////////////////////////////////////
         // create a summary for review 
         function populateRegistrantSummary() {
-            $('#regName').html($('#sal').val() + " " + $('#fname').val() + " " + $('#lname').val());
-            if ($('#fname').val() != $('#nickname').val()) {
-                $('#regName').html($('#regName').html() + "<br /><b>Badge Name: </b>" + $('#nickname').val() + "<br />");
-            }
+            $('#regName').html(/*$('#sal').val() + " " + */$('#fname').val() + " " + $('#lname').val());
+//            if ($('#fname').val() != $('#nickname').val()) {
+//                $('#regName').html($('#regName').html() + "<br /><b>Badge Name: </b>" + $('#nickname').val() + "<br />");
+//            }
             var thetitle = "";
             if ($('#title').val() != "") {
                 thetitle = $('#title').val() + "<br />";

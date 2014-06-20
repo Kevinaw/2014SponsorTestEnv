@@ -34,6 +34,8 @@ if (!isset($_SESSION['registrationStep'])) {
                 } else {
                 document.murapay.enctype="multipart/form-data";
                 document.murapay.encoding="multipart/form-data";
+                
+                document.murapay.action='paymentResponse.php';
                 if(document.murapay.payOpt.value=="cancel") {
                 document.murapay.action="cancelRegistration.php";
                 } else if(document.murapay.payOpt.value=="LOGOUT"){
@@ -41,7 +43,7 @@ if (!isset($_SESSION['registrationStep'])) {
                 } else if(document.murapay.payOpt.value==""){
                 document.murapay.action="payment.php";
                 }
-                document.murapay.action='paymentResponse.php';
+                
                 }
                 //alert(document.murapay.action);
                 return true; 
@@ -87,9 +89,10 @@ if (!isset($_SESSION['registrationStep'])) {
 
                     if (isset($cardType) && $cardType != "") {
                         $payOpt = $cardType;
-                    } else if (isset($promoCode) && $promoCode != "") {
-                        $payOpt = "PROMO";
-                    }
+                    } 
+//                    else if (isset($promoCode) && $promoCode != "") {
+//                        $payOpt = "PROMO";
+//                    }
                     //echo "</p>";
 //trnApproved: 1
 //trnId: 10000004
@@ -126,7 +129,7 @@ if (!isset($_SESSION['registrationStep'])) {
                     $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed. Please screen print this message and send to heidi@idassocites.ab.ca : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
                     $row = mysql_fetch_assoc($selectresult);
                     $myamt = $row['totalcharged'] . '.00';
-                    $myvid = $row['vid']; //-- no vid, only sid
+                    $mysid = $row['sid']; //-- no vid, only sid
                     $invoicedate = date('Y-m-d');
                     $responseId = $trnId;
                     $datepaid = date('Y-m-d');
@@ -134,7 +137,7 @@ if (!isset($_SESSION['registrationStep'])) {
 
 //	$cvdId="3"; ///////////// uncomment to test cvd failure check
 
-                    if (($trnApproved == 1 && $cvdId == 1 && $messageId == 1) || (isset($promoCode) && $promoCode != "") || (isset($payOpt) && $payOpt === "RESEND")) {  //===========APPROVED //-- money order ??
+                    if (($trnApproved == 1 && $cvdId == 1 && $messageId == 1) || /*(isset($promoCode) && $promoCode != "") || */(isset($payOpt) && $payOpt === "RESEND")) {  //===========APPROVED //-- money order ??
                         // not generate promo codes for cheque option
                         if (!(isset($payOpt) && $payOpt === "RESEND")) {                        
                             $totaldue = $row['totaldue'] - $amount1;
@@ -208,7 +211,6 @@ if (!isset($_SESSION['registrationStep'])) {
                         }
                         $full_address .= ", " . $country . "&nbsp;&nbsp;" . $zip;
                         $invoice_info = str_replace("{full_address}", $full_address, $invoice_info);
-                        //----HQ---- billing_info no use ??
                         $invoice_info = str_replace("{billing_info}", $billing_replace, $invoice_info);
                         //////////////////////////////////////////////////////////////////////////////
                         // strip in invoice details///////////////////////////////////////////////////
@@ -221,7 +223,6 @@ if (!isset($_SESSION['registrationStep'])) {
                         }
                         $invoice_details = "";
 
-//----HQ---- $funccost where is it from?
                         $funccost = number_format($totalcharged, 2);
                         $invoice_details .= "<tr><td colspan=\"3\" align=\"left\">";
                         if ($sponcode == "PTRN") {
@@ -377,7 +378,7 @@ if (!isset($_SESSION['registrationStep'])) {
                         /////////////////////////////////////////
                         // insert initial approved payment into payment table
 
-                        $pay = "INSERT INTO $tablePaymentSponsor (vid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values ('$sid', '$amount1', '$datepaid', '$timepaid', 'CC', '$response', '$responseId')";
+                        $pay = "INSERT INTO $tablePaymentSponsor (sid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values ('$sid', '$amount1', '$datepaid', '$timepaid', 'CC', '$response', '$responseId')";
                         //echo "<p>$insertstmt</p>";
                         $payresult = mysql_query($pay) or die("Insert Query failed due to this error: " . mysql_error() . ". <BR><BR>The query data is: " . $pay);
 
@@ -442,7 +443,7 @@ if (!isset($_SESSION['registrationStep'])) {
                         $orderresult = mysql_query($updateorder) or die("<h2>There was an error updating the purchase response.</h2>" . mysql_error() . "<p>$updateorder</p>");
 
 
-                        $up = "INSERT INTO $tablePaymentSponsor (vid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values 
+                        $up = "INSERT INTO $tablePaymentSponsor (sid, pay_amount, date_paid, time_paid, transaction_type, response, response_id) values 
 																	('$sid', '$voidAmount', '$datepaid', '$timepaid', 'VP', '$responseValue', '$trnId')";
                         $res = mysql_query($up);
                         // update purchase table to mark certificates as voided

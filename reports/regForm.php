@@ -116,9 +116,9 @@ if ($closeit > '2015-05-12') {
         <script>
 <?php
 if (isset($vid) && $vid != "") {
-    echo "var vidloaded = true;";
+    echo "var sidloaded = true;";
 } else {
-    echo "var vidloaded = false; ";
+    echo "var sidloaded = false; ";
 }
 ?>
         </script>

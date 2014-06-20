@@ -24,7 +24,7 @@ $verihash = sha1($veristring . $verisalt);
         var amazingWalkCost = 30;
 
         // make stuff happen if they've gone back to make changes
-        if (vidloaded) {
+        if (sidloaded) {
             $('.sessionButtons').each(function(index) {
                 if ($(this).is(":checked")) {
                     $(this).parent().parent().parent().addClass("selected");

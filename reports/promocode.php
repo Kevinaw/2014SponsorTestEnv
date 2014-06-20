@@ -132,14 +132,14 @@
                                                 if ($row['invoiceSponsor'] == "") {
                                                     echo "--";
                                                 } else {
-                                                    echo "<a href=\"showInvoice.php?vid=" . $row['invoiceSponsor'] . "\" target=\"_blank\">BPS-" . $row['invoiceSponsor'] . "</a>";
+                                                    echo "<a href=\"showInvoice.php?sid=" . $row['invoiceSponsor'] . "\" target=\"_blank\">BPS-" . $row['invoiceSponsor'] . "</a>";
                                                 }
                                                 ?></p></td>
                                         <td align="center" valign="middle" nowrap class="dottheline"><p><?php
                                                 if ($row['invoice'] == "") {
                                                     echo "--";
                                                 } else {
-                                                    echo "<a href=\"showInvoice.php?vid=" . $row['invoice'] . "\" target=\"_blank\">BPS-" . $row['invoice'] . "</a>";
+                                                    echo "<a href=\"showInvoice.php?sid=" . $row['invoice'] . "\" target=\"_blank\">BPS-" . $row['invoice'] . "</a>";
                                                 }
                                                 ?></p></td>
                                         <td align="center" valign="middle" class="dottheline"><p>

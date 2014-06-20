@@ -18,9 +18,9 @@
             <div id="content">
                 <div id="regarea">
                     <h2>
-                        <?php $vid = $_GET['vid']; ?>
+                        <?php $sid = $_GET['sid']; ?>
                     </h2>
-                    <h2>Registration History for Invoice #<?php echo $vid; ?></h2>
+                    <h2>Registration History for Invoice #<?php echo $sid; ?></h2>
                     <table border="0" cellspacing="5" cellpadding="5">
                         <tr>
                             <th bgcolor="#666666">Function Code</th>
@@ -29,7 +29,7 @@
                             <th bgcolor="#666666">Date Changed</th>
                         </tr>
                         <?php
-                        $findreg = "SELECT h.*, v.funccode as regtype FROM $holddetail h, $tablesponsor v WHERE v.vid=h.vid and h.vid=$vid order by id";
+                        $findreg = "SELECT h.*, v.funccode as regtype FROM $holddetail h, $tablesponsor v WHERE v.sid=h.vid and h.vid=$sid order by id";
                         $regresults = mysql_query($findreg) or die(mysql_error());
                         while ($regcats = mysql_fetch_array($regresults)) {
                             ?>

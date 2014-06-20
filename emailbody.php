@@ -42,22 +42,22 @@ $totalpaid = mysql_result($finduser, 0, "totalpaid");
 $totaldue = mysql_result($finduser, 0, "totaldue");
 $datepaid = mysql_result($finduser, 0, "datepaid");
 $paytype = mysql_result($finduser, 0, "paytype");
-//$regstatus = mysql_result($finduser,0,"reg_status");
-$funccode = mysql_result($finduser, 0, "sponcode");
+$regstatus = mysql_result($finduser,0,"reg_status");
+$sponcode = mysql_result($finduser, 0, "sponcode");
 
 // check to see if they selected the amazing walk
-$check = "select funccode, charged from $tabledetailname where funccode='AMZWLK' and vid='$sid'";
-$checkres = mysql_query($check);
-$checknum = mysql_num_rows($checkres);
+//$check = "select funccode, charged from $tabledetailname where funccode='AMZWLK' and vid='$sid'";
+//$checkres = mysql_query($check);
+//$checknum = mysql_num_rows($checkres);
 
 if ($totalcharged < 60) {
     $funccost = "0.00";
 } else {
-    if ($checknum > 0) {
-        $funccost = number_format($totalcharged - 30, 2);
-    } else {
+//    if ($checknum > 0) {
+//        $funccost = number_format($totalcharged - 30, 2);
+//    } else {
         $funccost = $totalcharged;
-    }
+//    }
 }
 
 
@@ -70,7 +70,7 @@ $invoice_template_path = $thepath . 'includes/invoice_template2.php';
 
 $invoice_info = implode('', file($invoice_template_path));
 // strip in registrant info, invoice # and date
-$invoice_info = str_replace("{vid}", $sid, $invoice_info);
+$invoice_info = str_replace("{sid}", $sid, $invoice_info);
 $date = date('F j, Y');
 $invoice_info = str_replace("{date}", $date, $invoice_info);
 $invoice_info = str_replace("{fname}", $fname, $invoice_info);
@@ -201,7 +201,7 @@ $totalpaid = sprintf("%01.2f", $totalpaid);
 
 ////////////////////////////////////////////////////////////////////////////////////
 //////////////////////// grab payment history //////////////////////////////////////		
-$paymenthist = "select * from $tablePaymentSponsor where vid='$sid' order by id asc";
+$paymenthist = "select * from $tablePaymentSponsor where sid='$sid' order by id asc";
 $paymenthistresult = mysql_query($paymenthist) or die("Query failed : " . mysql_error());
 
 $histnum = mysql_numrows($paymenthistresult);

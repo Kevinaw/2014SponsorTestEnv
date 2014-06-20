@@ -14,11 +14,11 @@ if ($closeit > '2015-05-12')
     header('Location: closed.php');
 } else {
     
-    //----HQ----login gvid vid billing_info user_password 
-    //----HQ----login logic is useless here
-    $login = filter_input(INPUT_POST, 'login');
-
-    $gvid = filter_input(INPUT_POST, 'gvid');
+//    //----HQ----login gvid vid billing_info user_password 
+//    //----HQ----login logic is useless here
+//    $login = filter_input(INPUT_POST, 'login');
+//
+//    $gvid = filter_input(INPUT_POST, 'gvid');
     $sid = filter_input(INPUT_POST, 'sid');
 
 //    $billing_info = filter_input(INPUT_POST, 'billing_info');
@@ -33,34 +33,33 @@ if ($closeit > '2015-05-12')
       $billing_info = $_POST['billing_info'];
       $user_password = $_POST['user_password'];
      */
-    if ($login == "yes") {
-        $login_email = $_POST['login_email'];
-        $login_password = $_POST['login_password'];
+//    if ($login == "yes") {
+//        $login_email = $_POST['login_email'];
+//        $login_password = $_POST['login_password'];
+//
+//        $selectstmt = "select * from $tablesponsor where user_password = '$user_password'";
+//        $finduser = mysql_query($selectstmt) or die("Refresh select query failed: " . mysql_error() . ". <BR><BR>The statement is: " . $selectstmt);
+//
+//        $num = mysql_num_rows($finduser);
+//        if ($num == 1) {
+//            $ref = mysql_fetch_assoc($finduser);
+//            while (list ($key, $val) = each($ref)) {
+//                $$key = $val;
+//            }
+//
+//            // until payment is worked out totalpaid will be set to zero
+//            if (!$totalpaid) {
+//                $totalpaid = 0;
+//            }
+//
+//
+//            $msg = "<h1>Thank you, your information has been loaded into the form.</h1>";
+//            $msg2 = "<h2>NOTE:  You are able to make changes to your registration form but please be aware that there is a $50 charge administered if we are required to provide refunds as a result of your changes.</h2>";
+//        } else {
+//            $msg = "<h2 class='red' align='right'>There was an error with your email or password. Please try again.</h2>";
+//        }
+//    }
 
-        $selectstmt = "select * from $tablesponsor where user_password = '$user_password'";
-        $finduser = mysql_query($selectstmt) or die("Refresh select query failed: " . mysql_error() . ". <BR><BR>The statement is: " . $selectstmt);
-
-        $num = mysql_num_rows($finduser);
-        if ($num == 1) {
-            $ref = mysql_fetch_assoc($finduser);
-            while (list ($key, $val) = each($ref)) {
-                $$key = $val;
-            }
-
-            // until payment is worked out totalpaid will be set to zero
-            if (!$totalpaid) {
-                $totalpaid = 0;
-            }
-
-
-            $msg = "<h1>Thank you, your information has been loaded into the form.</h1>";
-            $msg2 = "<h2>NOTE:  You are able to make changes to your registration form but please be aware that there is a $50 charge administered if we are required to provide refunds as a result of your changes.</h2>";
-        } else {
-            $msg = "<h2 class='red' align='right'>There was an error with your email or password. Please try again.</h2>";
-        }
-    }
-
-    //----HQ----vid should changed to sid, there is no vid in sponsor table 
     if (isset($sid) && $sid != "") {
         $selectstmt = "select * from $tablesponsor where sid = $sid";
         $finduser = mysql_query($selectstmt) or die("Refresh select query failed: " . mysql_error() . ". <BR><BR>The statement is: " . $selectstmt);
@@ -71,7 +70,6 @@ if ($closeit > '2015-05-12')
             while (list ($key, $val) = each($ref)) {
                 $$key = $val;
             }
-
 
             // until payment is worked out totalpaid will be set to zero
             if (!isset($totalpaid)) {
@@ -107,7 +105,7 @@ if ($closeit > '2015-05-12')
 //        }
     }
     
-    if ($login != "Yes" && (!isset($sid) && $sid == "")) {
+    if (/*$login != "Yes" && */(!isset($sid) && $sid == "")) {
         // not being passed to the page, kill any open sessions
         session_destroy();
         session_start();
@@ -125,15 +123,14 @@ if ($closeit > '2015-05-12')
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <!----HQ----2013 -> 2014 -->
         <title>Banff/2013 Pipeline Workshop Sponsor Registration</title>
         <link href="css/asmebanffstyles.css" rel="stylesheet" type="text/css">
         <script>
 <?php
 if (isset($sid) && $sid != "") {
-    echo "var vidloaded = true;";
+    echo "var sidloaded = true;";
 } else {
-    echo "var vidloaded = false; ";
+    echo "var sidloaded = false; ";
 }
 ?>
         </script>
@@ -147,8 +144,7 @@ if (isset($sid) && $sid != "") {
     <body>
         <div id="wrapper">
             <?php include('includes/header.php'); ?>
-            <div id="content">
-<!----HQ----2013 -> 2014 -->                
+            <div id="content">                
                 <h3>April 8 – 11, 2013 at
                     The Banff Centre, 
                     Banff, Alberta, Canada</h3>
@@ -161,9 +157,9 @@ if (isset($sid) && $sid != "") {
                 </div>
                 <form name="registration" id="registration" method="post" action="">
                     <div id="registerInfo" <?php
-                    if (isset($sid) && $sid != "") {
-                        //echo "style=\"display:none;\"";
-                    }
+//                    if (isset($sid) && $sid != "") {
+//                        //echo "style=\"display:none;\"";
+//                    }
                     ?>>
                              <?php include('includes/regForm.php'); ?>
                         <p>

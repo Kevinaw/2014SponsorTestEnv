@@ -24,8 +24,8 @@ if (!isset($_SESSION['registrationStep'])) {
     include('config_include/eventVariables.php');
     include('config_include/gatewayConfig.php');
 //    $insertArray = array();
-    $wgArray = array();
-    $wgcArray = array();
+//    $wgArray = array();
+//    $wgcArray = array();
 //    $commentArray = array();
     reset($_POST);
     //echo "<p>Post ///////////////////////////</p>";
@@ -53,9 +53,9 @@ if (!isset($_SESSION['registrationStep'])) {
 //    $insertArrayL = sizeof($insertArray);
 //    $commentArrayL = sizeof($commentArray);
 
-    if (!isset($billing_check)) {
+//    if (!isset($billing_check)) {
         $billing = "No";
-    }
+//    }
     if (isset($regType) && $regType != "") {
         $sponcode = $regType;    
         if ($sponcode == 'CBRK') {
@@ -148,22 +148,18 @@ if (!isset($_SESSION['registrationStep'])) {
 
 
         if ($_SESSION['registrationStep'] == 1) {
-            //----HQ---- useless
             // add invoice number to profile if it exists
-            if ($user_password != "") {
-                $updateprofile = "update $tableprofile set invoicenum='BPS-$sid' where id='$user_password'";
-                $updateprofileR = mysql_query($updateprofile) or die("There was an error updating your login with the invoice number.<br>" . mysql_error() . "<br>$updateprofile");
-            }
+//            if ($user_password != "") {
+//                $updateprofile = "update $tableprofile set invoicenum='BPS-$sid' where id='$user_password'";
+//                $updateprofileR = mysql_query($updateprofile) or die("There was an error updating your login with the invoice number.<br>" . mysql_error() . "<br>$updateprofile");
+//            }
             
-            //----HQ---- useless
-            // insert statements
-            include('includes/insertStmts.php');
-            include('includes/commentStmts.php');
-            //echo "<h3>insert details and comments</h3>";
+//            // insert statements
+//            include('includes/insertStmts.php');
+//            include('includes/commentStmts.php');
+//            //echo "<h3>insert details and comments</h3>";
         }
     } else {
-        
-        //----HQ---- sponsor logic can not reach this point
         $newone = '1';
         $itWentOK = 0;
         $holdid = $sid;
@@ -193,7 +189,6 @@ if (!isset($_SESSION['registrationStep'])) {
         //}		
         $invoicedate = date('Y-m-d');
         
-        //---- no reg_status here
         $pullstatus = "SELECT reg_status, paytype FROM $tablesponsor where sid='$sid'";
         $thestatus = mysql_query($pullstatus) or die("The record could not be found, error: " . mysql_error());
         $getstatus = mysql_fetch_array($thestatus);
@@ -270,105 +265,104 @@ if (!isset($_SESSION['registrationStep'])) {
     }
 
     //----HQ---- no amazing logic
-    if ($amazing == "Yes") {
-        $funccost = number_format($totalcharged - 30, 2);
-    } else {
+//    if ($amazing == "Yes") {
+//        $funccost = number_format($totalcharged - 30, 2);
+//    } else {
         $funccost = number_format($totalcharged, 2);
-    }
+//    }
 
-    //----HQ---- no promotion code usage
-    if (isset($promoCode) && $promoCode != "") {
-        // check if they need to pay for Amazing Walk
-        //echo "promo: $promoCode, sid:$sid";
-
-        $today = date('Y-m-d');
-
-        // sanitize our promo code
-        $promoCode = mysql_real_escape_string($promoCode);
-        // start processing promo code
-        $psel = "select * from $tablepromo where promoCode='$promoCode' order by id desc limit 1";
-        $pres = mysql_query($psel) or die("There was an error retrieving the promotion code" . mysql_error());
-        $n = mysql_num_rows($pres);
-        if ($n != 1) {
-            $promomessage = "<h2 class=\"red\">The Promotional Code was not valid.</h2><p class=\"red\"><strong>If you believe this is in error, click the Make Changes button below and re-enter your promotional code. If you continue to have problems, contact support at <a href=\"mailto:support@idassociates.ab.ca?Subject=Banff/2013 Pipeline Workshop - Trouble with Promotional Code\">support@idassociates.ab.ca</a></strong>";
-        } else {
-            // code was found, start processing
-            $promo = mysql_fetch_array($pres);
-            $pid = $promo['id'];
-            $penable = $promo['enabled'];
-            $pinv = $promo['invoice'];
-
-            if (!$penable) { // not enabled
-                $promomessage = "<h2 class=\"red\">The promotion code is no longer valid.</h2><p class=\"red\">If you believe this is in error, click the Make Changes button below and re-enter your promotional code. If you continue to have trouble, contact support at <a href=\"mailto:support@idassociates.ab.ca?Subject=Banff/2013 Pipeline Workshop - Trouble with Promotional Code\">support@idassociates.ab.ca</a></p>";
-            } else if ($pinv != "" && $pinv != $sid) { // already redeemed
-                // code was used by some one else
-                $promomessage = "<h2 class=\"red\">This Promotional Code has already been redeemed.</h2><p class=\"red\">If you received multiple Promotional Codes, you can click the Make Changes button below and enter a new Promotional Code. If you continue to have trouble, contact support at <a href=\"mailto:support@idassociates.ab.ca?Subject=Banff/2013 Pipeline Workshop - Trouble with Promotional Code\">support@idassociates.ab.ca</a></p>";
-            } else if ($pinv == "" && $penable) { // code is good and hasn't been used yet
-                // hasn't been used, process promo code
-                if ($amazing == "Yes") {
-                    $totalcharged = number_format($totalcharged - 200, 2);
-                    $totaldue = number_format($totalcharged + ($totalcharged * 0.05), 2);
-                    $funccost = "0.00";
-                } else {
-                    $totaldue = "0.00";
-                    $totalcharged = "0.00";
-                    $funccost = "0.00";
-                }
-                // update promo record and mark with the invoice number
-
-
-                $pupdate = "update $tablepromo set invoiceSponsor='$sid' where id='$pid'";
-                $pupres = mysql_query($pupdate) or die("There was an error updating the promotion code." . mysql_error());
-
-                // update registrant information to zero out total charged and total due
-                $vupdate = "update $tablesponsor set totalcharged='$totalcharged', totaldue='$totaldue', datepaid='$today', paytype='PROMO' where sid='$sid'";
-                $vupres = mysql_query($vupdate) or die("There was an error updating the registrant record with the promotional code. " . mysql_error());
-
-                // insert a record into the payment table to track redeemed promo codes
-                $purupdate = "insert into $tablePaymentSponsor (sid, pay_amount, date_paid, time_paid, transaction_type, response, response_id)
-													values
-													('$sid', '0.00', '$today', '', 'PROMO', 'APPROVED', '$promoCode')";
-                $purupres = mysql_query($purupdate) or die("There was an error inserting the promotional code into the payment records. " . mysql_error());
-
-                $promomessage = "<h2>Your Promotional Code has been successfully processed.</h2><h3><em class=\"red\">Please note that this does not complete your registration.</em>  </h3>";
-                if ($totaldue == 0) {
-                    $promomessage.="<p class=\"red\"><strong><em>You must finish the process by clicking the Send Invoice button at the bottom of your registration summary.</em></strong></p>";
-                } else {
-                    $promomessage.="<p class=\"red\"><strong>Your registration still has a balance owing.  <em>Please complete your registration by clicking the Proceed to Payment button at the bottom of your registration summary.</em></strong></p>";
-                }
-            } else if ($pinv == $sid) { // they have already used the promo code
-                // make sure we don't reset their total owing
-                if ($amazing == "Yes") {
-                    $totalcharged = number_format($totalcharged - 200, 2);
-                    $totaldue = number_format($totalcharged + ($totalcharged * 0.05), 2);
-                    $funccost = "0.00";
-                } else {
-                    $totaldue = "0.00";
-                    $totalcharged = "0.00";
-                    $funccost = "0.00";
-                }
-                // update registrant information to zero out total charged and total due
-                $vupdate = "update $tablesponsor set totalcharged='$totalcharged', totaldue='$totaldue', datepaid='$today', paytype='PROMO' where sid='$sid'";
-                $vupres = mysql_query($vupdate) or die("There was an error updating the registrant record with the promotional code. " . mysql_error());
-
-                $promomessage = "<h2>Your Promotional Code has been successfully processed.</h2><h3><em class=\"red\">Please note that this does not complete your registration.</em>  </h3>";
-                if ($totaldue == 0) {
-                    $promomessage.="<p class=\"red\"><strong><em>You must finish the process by clicking the Send Invoice button at the bottom of your registration summary.</em></strong></p>";
-                } else {
-                    $promomessage.="<p class=\"red\"><strong>Your registration still has a balance owing.  <em>Please complete your registration by clicking the Proceed to Payment button at the bottom of your registration summary.</em></strong></p>";
-                }
-            }
-        }
-    } else {
-        //----HQ---- useless here
-        // if a prmo code was orginally entered but they went back and changed their registration and removed the promo code
-        // clear out any promo codes using current sid
-        $promo = "update $tablepromo set invoice='' where invoiceSponsor='$sid'";
-        $promores = mysql_query($promo);
-        // delete any promo codes in payment record
-        $delete = "delete from $tablePaymentSponsor where sid='$sid' and transaction_type='PROMO'";
-        //$deleteres = mysql_query($delete) or die("error deleting promo code");
-    }
+//    if (isset($promoCode) && $promoCode != "") {
+////        // check if they need to pay for Amazing Walk
+////        //echo "promo: $promoCode, sid:$sid";
+////
+////        $today = date('Y-m-d');
+////
+////        // sanitize our promo code
+////        $promoCode = mysql_real_escape_string($promoCode);
+////        // start processing promo code
+////        $psel = "select * from $tablepromo where promoCode='$promoCode' order by id desc limit 1";
+////        $pres = mysql_query($psel) or die("There was an error retrieving the promotion code" . mysql_error());
+////        $n = mysql_num_rows($pres);
+////        if ($n != 1) {
+////            $promomessage = "<h2 class=\"red\">The Promotional Code was not valid.</h2><p class=\"red\"><strong>If you believe this is in error, click the Make Changes button below and re-enter your promotional code. If you continue to have problems, contact support at <a href=\"mailto:support@idassociates.ab.ca?Subject=Banff/2013 Pipeline Workshop - Trouble with Promotional Code\">support@idassociates.ab.ca</a></strong>";
+////        } else {
+////            // code was found, start processing
+////            $promo = mysql_fetch_array($pres);
+////            $pid = $promo['id'];
+////            $penable = $promo['enabled'];
+////            $pinv = $promo['invoice'];
+////
+////            if (!$penable) { // not enabled
+////                $promomessage = "<h2 class=\"red\">The promotion code is no longer valid.</h2><p class=\"red\">If you believe this is in error, click the Make Changes button below and re-enter your promotional code. If you continue to have trouble, contact support at <a href=\"mailto:support@idassociates.ab.ca?Subject=Banff/2013 Pipeline Workshop - Trouble with Promotional Code\">support@idassociates.ab.ca</a></p>";
+////            } else if ($pinv != "" && $pinv != $sid) { // already redeemed
+////                // code was used by some one else
+////                $promomessage = "<h2 class=\"red\">This Promotional Code has already been redeemed.</h2><p class=\"red\">If you received multiple Promotional Codes, you can click the Make Changes button below and enter a new Promotional Code. If you continue to have trouble, contact support at <a href=\"mailto:support@idassociates.ab.ca?Subject=Banff/2013 Pipeline Workshop - Trouble with Promotional Code\">support@idassociates.ab.ca</a></p>";
+////            } else if ($pinv == "" && $penable) { // code is good and hasn't been used yet
+////                // hasn't been used, process promo code
+////                if ($amazing == "Yes") {
+////                    $totalcharged = number_format($totalcharged - 200, 2);
+////                    $totaldue = number_format($totalcharged + ($totalcharged * 0.05), 2);
+////                    $funccost = "0.00";
+////                } else {
+////                    $totaldue = "0.00";
+////                    $totalcharged = "0.00";
+////                    $funccost = "0.00";
+////                }
+////                // update promo record and mark with the invoice number
+////
+////
+////                $pupdate = "update $tablepromo set invoiceSponsor='$sid' where id='$pid'";
+////                $pupres = mysql_query($pupdate) or die("There was an error updating the promotion code." . mysql_error());
+////
+////                // update registrant information to zero out total charged and total due
+////                $vupdate = "update $tablesponsor set totalcharged='$totalcharged', totaldue='$totaldue', datepaid='$today', paytype='PROMO' where sid='$sid'";
+////                $vupres = mysql_query($vupdate) or die("There was an error updating the registrant record with the promotional code. " . mysql_error());
+////
+////                // insert a record into the payment table to track redeemed promo codes
+////                $purupdate = "insert into $tablePaymentSponsor (sid, pay_amount, date_paid, time_paid, transaction_type, response, response_id)
+////													values
+////													('$sid', '0.00', '$today', '', 'PROMO', 'APPROVED', '$promoCode')";
+////                $purupres = mysql_query($purupdate) or die("There was an error inserting the promotional code into the payment records. " . mysql_error());
+////
+////                $promomessage = "<h2>Your Promotional Code has been successfully processed.</h2><h3><em class=\"red\">Please note that this does not complete your registration.</em>  </h3>";
+////                if ($totaldue == 0) {
+////                    $promomessage.="<p class=\"red\"><strong><em>You must finish the process by clicking the Send Invoice button at the bottom of your registration summary.</em></strong></p>";
+////                } else {
+////                    $promomessage.="<p class=\"red\"><strong>Your registration still has a balance owing.  <em>Please complete your registration by clicking the Proceed to Payment button at the bottom of your registration summary.</em></strong></p>";
+////                }
+////            } else if ($pinv == $sid) { // they have already used the promo code
+////                // make sure we don't reset their total owing
+////                if ($amazing == "Yes") {
+////                    $totalcharged = number_format($totalcharged - 200, 2);
+////                    $totaldue = number_format($totalcharged + ($totalcharged * 0.05), 2);
+////                    $funccost = "0.00";
+////                } else {
+////                    $totaldue = "0.00";
+////                    $totalcharged = "0.00";
+////                    $funccost = "0.00";
+////                }
+////                // update registrant information to zero out total charged and total due
+////                $vupdate = "update $tablesponsor set totalcharged='$totalcharged', totaldue='$totaldue', datepaid='$today', paytype='PROMO' where sid='$sid'";
+////                $vupres = mysql_query($vupdate) or die("There was an error updating the registrant record with the promotional code. " . mysql_error());
+////
+////                $promomessage = "<h2>Your Promotional Code has been successfully processed.</h2><h3><em class=\"red\">Please note that this does not complete your registration.</em>  </h3>";
+////                if ($totaldue == 0) {
+////                    $promomessage.="<p class=\"red\"><strong><em>You must finish the process by clicking the Send Invoice button at the bottom of your registration summary.</em></strong></p>";
+////                } else {
+////                    $promomessage.="<p class=\"red\"><strong>Your registration still has a balance owing.  <em>Please complete your registration by clicking the Proceed to Payment button at the bottom of your registration summary.</em></strong></p>";
+////                }
+////            }
+////        }
+//    } else {
+//
+//        // if a prmo code was orginally entered but they went back and changed their registration and removed the promo code
+//        // clear out any promo codes using current sid
+//        $promo = "update $tablepromo set invoice='' where invoiceSponsor='$sid'";
+//        $promores = mysql_query($promo);
+//        // delete any promo codes in payment record
+//        $delete = "delete from $tablePaymentSponsor where sid='$sid' and transaction_type='PROMO'";
+//        //$deleteres = mysql_query($delete) or die("error deleting promo code");
+//    }
     $_SESSION['registrationStep'] = 2;
 
 
@@ -397,7 +391,7 @@ if (!isset($_SESSION['registrationStep'])) {
                 } else {
                 if(document.invoice.payOpt.value=="LOGOUT"){
                 document.invoice.action="logout.php";
-                } else if(document.invoice.payOpt.value=="cancel") { //----HQ---- cancel should be delete ? 
+                } else if(document.invoice.payOpt.value=="cancel") { 
                 document.invoice.action="cancelRegistration.php";
                 }
                 document.invoice.enctype="multipart/form-data";
@@ -421,73 +415,74 @@ if (!isset($_SESSION['registrationStep'])) {
                         <input type='hidden' name='email' value='<?php echo $email; ?>'>
                         <input type='hidden' name='billing_email' value='<?php echo 'Workshop Sponsor Registration_email'; ?>'>
                         <input type='hidden' name='totaldue' value='<?php echo $totaldue; ?>'>
-                        <!----HQ---- useless for sponsor -->
+<!--
                         <input type='hidden' name='promoCode' value='<?php echo $promoCode; ?>'>
+-->
                         <input type="hidden" name="trnOrderNumber" value="BPS-<?php echo $sid; ?>">
                         <input type="hidden" name="ordName" value="<?php
-                        if ($billing_fname != "" && $billing_lname != "") {
-                            echo $billing_fname, " ", $billing_lname;
-                        } else {
+//                        if ($billing_fname != "" && $billing_lname != "") {
+//                            echo $billing_fname, " ", $billing_lname;
+//                        } else {
                             echo $fname, " ", $lname;
-                        }
+//                        }
                         ?>">
                         <input type="hidden" name="trnAmount" value="<?php printf("%.2f", $totaldue); ?>">
                         <input type="hidden" name="trnReturnCard" value="<?php echo 1; ?>">
                         <input type="hidden" name="ordPhoneNumber" value="<?php
-                        if ($billing_phone != "") {
-                            echo $billing_phone;
-                        } else {
+//                        if ($billing_phone != "") {
+//                            echo $billing_phone;
+//                        } else {
                             echo $phone;
-                        }
+//                        }
                         ?>">
                         <input type="hidden" name="ordAddress1" value="<?php
-                        if ($billing_address1 != "") {
-                            echo $billing_address1;
-                        } else {
+//                        if ($billing_address1 != "") {
+//                            echo $billing_address1;
+//                        } else {
                             echo $address1;
-                        }
+//                        }
                         ?>">
                         <input type="hidden" name="ordAddress2" value="<?php
-                        if ($billing_address2 != "") {
-                            echo $billing_address2;
-                        } else {
+//                        if ($billing_address2 != "") {
+//                            echo $billing_address2;
+//                        } else {
                             echo $address2;
-                        }
+//                        }
                         ?>">
                         <input type="hidden" name="ordCity" value="<?php
-                        if ($billing_city != "") {
-                            echo $billing_city;
-                        } else {
+//                        if ($billing_city != "") {
+//                            echo $billing_city;
+//                        } else {
                             echo $city;
-                        }
+//                        }
                         ?>">
                         <input type="hidden" name="ordProvince" value="<?php
-                        if ($billing_state != "") {
-                            echo $billing_state;
-                        } else {
+//                        if ($billing_state != "") {
+//                            echo $billing_state;
+//                        } else {
                             echo $state;
-                        }
+//                        }
                         ?>">
                         <input type="hidden" name="ordCountry" value="<?php
-                        if ($billing_country != "") {
-                            echo $billing_country;
-                        } else {
+//                        if ($billing_country != "") {
+//                            echo $billing_country;
+//                        } else {
                             echo $country;
-                        }
+//                        }
                         ?>">
                         <input type="hidden" name="ordPostalCode" value="<?php
-                        if ($billing_zip != "") {
-                            echo $billing_zip;
-                        } else {
+//                        if ($billing_zip != "") {
+//                            echo $billing_zip;
+//                        } else {
                             echo $zip;
-                        }
+//                        }
                         ?>">
                         <input type="hidden" name="ordEmailAddress" value="<?php
-                        if ($billing_email != "") {
-                            echo $billing_email;
-                        } else {
+//                        if ($billing_email != "") {
+//                            echo $billing_email;
+//                        } else {
                             echo $email;
-                        }
+//                        }
                         ?>">	
                         <input type="hidden" name="errorPage" value="<?php echo $beanstreamReturnAddress; ?>">	
                         <input type="hidden" name="approvedPage" value="<?php echo $beanstreamReturnAddress; ?>">	
@@ -521,28 +516,28 @@ if (!isset($_SESSION['registrationStep'])) {
                         $full_address .= ", " . $country . "&nbsp;&nbsp;" . $zip;
                         $invoice_info = str_replace("{full_address}", $full_address, $invoice_info);
                         // strip in billing info if any
-                        if ($billing_email != "") {
-                            $billing_replace = '<tr>
-																<td width="80" align="left" valign="top" nowrap >
-																	<p><strong>Bill To:</strong> </p>
-																</td><td colspan="3"><p>';
-                            if ($billing_fname != "") {
-                                $billing_replace .= $billing_fname . " " . $billing_lname . "<br>";
-                            }
-                            $billing_replace .= $billing_company . "<br>";
-                            $billing_replace .= $billing_address1;
-                            if ($billing_address2) {
-                                $billing_replace .= ", " . $billing_address2;
-                            }
-                            $billing_replace .= "<br>" . $billing_city;
-                            if ($billing_state) {
-                                $billing_replace .=", " . $billing_state;
-                            }
-                            $billing_replace .= ", " . $billing_country . "&nbsp;&nbsp;" . $billing_zip;
-                            $billing_replace .="</p></td></tr>";
-                        } else {
+//                        if ($billing_email != "") {
+//                            $billing_replace = '<tr>
+//																<td width="80" align="left" valign="top" nowrap >
+//																	<p><strong>Bill To:</strong> </p>
+//																</td><td colspan="3"><p>';
+//                            if ($billing_fname != "") {
+//                                $billing_replace .= $billing_fname . " " . $billing_lname . "<br>";
+//                            }
+//                            $billing_replace .= $billing_company . "<br>";
+//                            $billing_replace .= $billing_address1;
+//                            if ($billing_address2) {
+//                                $billing_replace .= ", " . $billing_address2;
+//                            }
+//                            $billing_replace .= "<br>" . $billing_city;
+//                            if ($billing_state) {
+//                                $billing_replace .=", " . $billing_state;
+//                            }
+//                            $billing_replace .= ", " . $billing_country . "&nbsp;&nbsp;" . $billing_zip;
+//                            $billing_replace .="</p></td></tr>";
+//                        } else {
                             $billing_replace = "";
-                        }
+//                        }
                         $invoice_info = str_replace("{billing_info}", $billing_replace, $invoice_info);
                         //////////////////////////////////////////////////////////////////////////////
                         // strip in invoice details///////////////////////////////////////////////////
@@ -557,22 +552,22 @@ if (!isset($_SESSION['registrationStep'])) {
                         //		$details="select c.*, d.funccode as dfunccode from $conference c, $tabledetailname d where d.funcid=c.id and d.sid='$sid' order by c.date, c.startTime asc";
                         //	$deresult = mysql_query($details) or die("Query failed : " . mysql_error());
 
-                        $monday = array();
-                        $tuesday = array();
-                        $wednesday = array();
-
-                        /* 	while($deline = mysql_fetch_array($deresult)){
-                          if($deline['date']=="2013-04-08") {
-                          array_push($monday,$deline);
-                          } else if($deline['date']=="2013-04-09"){
-                          array_push($tuesday,$deline);
-                          } else if($deline['date']=="2013-04-10") {
-                          array_push($wednesday,$deline);
-                          }
-                          } */
-                        $mondayL = sizeof($monday);
-                        $tuesdayL = sizeof($tuesday);
-                        $wednesdayL = sizeof($wednesday);
+//                        $monday = array();
+//                        $tuesday = array();
+//                        $wednesday = array();
+//
+//                        /* 	while($deline = mysql_fetch_array($deresult)){
+//                          if($deline['date']=="2013-04-08") {
+//                          array_push($monday,$deline);
+//                          } else if($deline['date']=="2013-04-09"){
+//                          array_push($tuesday,$deline);
+//                          } else if($deline['date']=="2013-04-10") {
+//                          array_push($wednesday,$deline);
+//                          }
+//                          } */
+//                        $mondayL = sizeof($monday);
+//                        $tuesdayL = sizeof($tuesday);
+//                        $wednesdayL = sizeof($wednesday);
 
 
 
@@ -586,67 +581,67 @@ if (!isset($_SESSION['registrationStep'])) {
                         }
                         $invoice_details .= "</tr>";
                         //echo "<tr><td>".$mondayL."  ".$confticksL."  ".$conftutsL."</td></tr>";
-                        if ($mondayL > 0) {
-                            $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
-                            $invoice_details .= "<tr><td colspan='4'><p><strong>Monday, " . convertDate($monday[0]['date']) . "</strong></p></td></tr>";
-                            for ($a = 0; $a < $mondayL; $a++) {
-                                $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\" class=\"dottheline\"><p>[" . $monday[$a]['funccode'] . "]</p></td><td colspan=\"2\" align=\"left\" valign=\"top\" class=\"dottheline\"><p> " . $monday[$a]['funcdescr'];
-                                if ($monday[$a]['funccost'] == "--") {
-                                    $thecost = "--";
-                                } else {
-                                    $thecost = number_format($monday[$a]['funccost'], 2);
-                                }
-                                $invoice_details .= "</p></td> <td align='right' class=\"dottheline\"><p>$thecost</p></td></tr>";
-                                if ($monday[$a]['funccode'] != $monday[$a]['dfunccode']) {
-                                    $invoice_details .= "<tr><td class=\"red\" colspan=\"4\"><p>Please note that this session has changed since you registered. The day presented here is the most up to date.</p></td></tr>";
-                                }
-                            }
-                            $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\"><p></p></td><td colspan=\"2\" align=\"left\" valign=\"top\"><p>Lunch</p></td> <td align='right'><p>--</p></td></tr>";
-                        }
-                        if ($tuesdayL > 0) {
-                            $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
-                            $invoice_details .= "<tr><td colspan='4'><p><strong>Tuesday, " . convertDate($tuesday[0]['date']) . "</strong></p></td></tr>";
-                            for ($a = 0; $a < $tuesdayL; $a++) {
-
-                                $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\" class=\"dottheline\"><p>[" . $tuesday[$a]['funccode'] . "]</p></td><td colspan=\"2\" align=\"left\" valign=\"top\" class=\"dottheline\"><p> " . $tuesday[$a]['funcdescr'] . "</p>";
-                                if ($tuesday[$a]['funccost'] == "--") {
-                                    $thecost = "--";
-                                } else {
-                                    $thecost = number_format($tuesday[$a]['funccost'], 2);
-                                }
-                                if ($tuesday[$a]['funccode'] != $tuesday[$a]['dfunccode']) {
-                                    $invoice_details .= "<p class=\"red\">Please note that the session [" . $tuesday[$a]['dfunccode'] . "] has changed to [" . $tuesday[$a]['funccode'] . "] since you registered. The session presented here is the most up to date.</p>";
-                                }
-                                $invoice_details .= "</td>  <td align='right' class=\"dottheline\"><p>$thecost</p></td></tr>";
-                            }
-                            $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\"><p>&nbsp;</p></td><td colspan=\"2\" align=\"left\" valign=\"top\"><p>Lunch</p></td> <td align='right'><p>--</p></td></tr>";
-                        }
-                        if ($wednesdayL > 0) {
-                            $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
-                            $invoice_details .= "<tr><td colspan='4'><p><strong>Wednesday, " . convertDate($wednesday[0]['date']) . "</strong></p></td></tr>";
-                            for ($a = 0; $a < $wednesdayL; $a++) {
-
-                                $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\" class=\"dottheline\"><p>[" . $wednesday[$a]['funccode'] . "]</p></td><td colspan=\"2\" align=\"left\" valign=\"top\" class=\"dottheline\"><p> " . $wednesday[$a]['funcdescr'] . "</p>";
-                                if ($wednesday[$a]['funccost'] == "--") {
-                                    $thecost = "--";
-                                } else {
-                                    $thecost = number_format($wednesday[$a]['funccost'], 2);
-                                }
-                                if ($wednesday[$a]['funccode'] != $wednesday[$a]['dfunccode']) {
-                                    $invoice_details .= "<p class=\"red\">Please note that the session [" . $wednesday[$a]['dfunccode'] . "] has changed to [" . $wednesday[$a]['funccode'] . "] since you registered. The session presented here is the most up to date.</p>";
-                                }
-                                $invoice_details .= "</td>  <td align='right' class=\"dottheline\"><p>$thecost</p></td></tr>";
-                            }
-                            $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\"><p>&nbsp;</p></td><td colspan=\"2\" align=\"left\" valign=\"top\"><p>Lunch</p></td> <td align='right'><p>--</p></td></tr>";
-                        }
-                        if ($sponcode == "FULL") {
-                            $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
-                            $invoice_details .= "<tr><td colspan='4'><p><strong>Thursday, April 11</strong></p></td></tr>";
-                            $invoice_details .= "<tr><td width=\"100\" class=\"dottheline\">&nbsp;</td><td colspan=\"2\" class=\"dottheline\"><p>Working Group Co-Chair Reports and Summaries</p></td>  <td align='right' class=\"dottheline\"><p>--</p></td></tr>";
-                            $invoice_details .= "<tr><td width=\"100\" class=\"dottheline\">&nbsp;</td><td colspan=\"2\" class=\"dottheline\"><p>Coffee Break/Networking</p></td>  <td align='right' class=\"dottheline\"><p>--</p></td></tr>";
-                            $invoice_details .= "<tr><td width=\"100\" class=\"dottheline\">&nbsp;</td><td colspan=\"2\" class=\"dottheline\"><p>Open Forum Discussion</p></td>  <td align='right' class=\"dottheline\"><p>--</p></td></tr>";
-                            $invoice_details .= "<tr><td width=\"100\" class=\"dottheline\">&nbsp;</td><td colspan=\"2\" class=\"dottheline\"><p>Lunch</p></td>  <td align='right' class=\"dottheline\"><p>--</p></td></tr>";
-                        }
+//                        if ($mondayL > 0) {
+//                            $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
+//                            $invoice_details .= "<tr><td colspan='4'><p><strong>Monday, " . convertDate($monday[0]['date']) . "</strong></p></td></tr>";
+//                            for ($a = 0; $a < $mondayL; $a++) {
+//                                $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\" class=\"dottheline\"><p>[" . $monday[$a]['funccode'] . "]</p></td><td colspan=\"2\" align=\"left\" valign=\"top\" class=\"dottheline\"><p> " . $monday[$a]['funcdescr'];
+//                                if ($monday[$a]['funccost'] == "--") {
+//                                    $thecost = "--";
+//                                } else {
+//                                    $thecost = number_format($monday[$a]['funccost'], 2);
+//                                }
+//                                $invoice_details .= "</p></td> <td align='right' class=\"dottheline\"><p>$thecost</p></td></tr>";
+//                                if ($monday[$a]['funccode'] != $monday[$a]['dfunccode']) {
+//                                    $invoice_details .= "<tr><td class=\"red\" colspan=\"4\"><p>Please note that this session has changed since you registered. The day presented here is the most up to date.</p></td></tr>";
+//                                }
+//                            }
+//                            $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\"><p></p></td><td colspan=\"2\" align=\"left\" valign=\"top\"><p>Lunch</p></td> <td align='right'><p>--</p></td></tr>";
+//                        }
+//                        if ($tuesdayL > 0) {
+//                            $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
+//                            $invoice_details .= "<tr><td colspan='4'><p><strong>Tuesday, " . convertDate($tuesday[0]['date']) . "</strong></p></td></tr>";
+//                            for ($a = 0; $a < $tuesdayL; $a++) {
+//
+//                                $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\" class=\"dottheline\"><p>[" . $tuesday[$a]['funccode'] . "]</p></td><td colspan=\"2\" align=\"left\" valign=\"top\" class=\"dottheline\"><p> " . $tuesday[$a]['funcdescr'] . "</p>";
+//                                if ($tuesday[$a]['funccost'] == "--") {
+//                                    $thecost = "--";
+//                                } else {
+//                                    $thecost = number_format($tuesday[$a]['funccost'], 2);
+//                                }
+//                                if ($tuesday[$a]['funccode'] != $tuesday[$a]['dfunccode']) {
+//                                    $invoice_details .= "<p class=\"red\">Please note that the session [" . $tuesday[$a]['dfunccode'] . "] has changed to [" . $tuesday[$a]['funccode'] . "] since you registered. The session presented here is the most up to date.</p>";
+//                                }
+//                                $invoice_details .= "</td>  <td align='right' class=\"dottheline\"><p>$thecost</p></td></tr>";
+//                            }
+//                            $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\"><p>&nbsp;</p></td><td colspan=\"2\" align=\"left\" valign=\"top\"><p>Lunch</p></td> <td align='right'><p>--</p></td></tr>";
+//                        }
+//                        if ($wednesdayL > 0) {
+//                            $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
+//                            $invoice_details .= "<tr><td colspan='4'><p><strong>Wednesday, " . convertDate($wednesday[0]['date']) . "</strong></p></td></tr>";
+//                            for ($a = 0; $a < $wednesdayL; $a++) {
+//
+//                                $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\" class=\"dottheline\"><p>[" . $wednesday[$a]['funccode'] . "]</p></td><td colspan=\"2\" align=\"left\" valign=\"top\" class=\"dottheline\"><p> " . $wednesday[$a]['funcdescr'] . "</p>";
+//                                if ($wednesday[$a]['funccost'] == "--") {
+//                                    $thecost = "--";
+//                                } else {
+//                                    $thecost = number_format($wednesday[$a]['funccost'], 2);
+//                                }
+//                                if ($wednesday[$a]['funccode'] != $wednesday[$a]['dfunccode']) {
+//                                    $invoice_details .= "<p class=\"red\">Please note that the session [" . $wednesday[$a]['dfunccode'] . "] has changed to [" . $wednesday[$a]['funccode'] . "] since you registered. The session presented here is the most up to date.</p>";
+//                                }
+//                                $invoice_details .= "</td>  <td align='right' class=\"dottheline\"><p>$thecost</p></td></tr>";
+//                            }
+//                            $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\"><p>&nbsp;</p></td><td colspan=\"2\" align=\"left\" valign=\"top\"><p>Lunch</p></td> <td align='right'><p>--</p></td></tr>";
+//                        }
+//                        if ($sponcode == "FULL") {
+//                            $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
+//                            $invoice_details .= "<tr><td colspan='4'><p><strong>Thursday, April 11</strong></p></td></tr>";
+//                            $invoice_details .= "<tr><td width=\"100\" class=\"dottheline\">&nbsp;</td><td colspan=\"2\" class=\"dottheline\"><p>Working Group Co-Chair Reports and Summaries</p></td>  <td align='right' class=\"dottheline\"><p>--</p></td></tr>";
+//                            $invoice_details .= "<tr><td width=\"100\" class=\"dottheline\">&nbsp;</td><td colspan=\"2\" class=\"dottheline\"><p>Coffee Break/Networking</p></td>  <td align='right' class=\"dottheline\"><p>--</p></td></tr>";
+//                            $invoice_details .= "<tr><td width=\"100\" class=\"dottheline\">&nbsp;</td><td colspan=\"2\" class=\"dottheline\"><p>Open Forum Discussion</p></td>  <td align='right' class=\"dottheline\"><p>--</p></td></tr>";
+//                            $invoice_details .= "<tr><td width=\"100\" class=\"dottheline\">&nbsp;</td><td colspan=\"2\" class=\"dottheline\"><p>Lunch</p></td>  <td align='right' class=\"dottheline\"><p>--</p></td></tr>";
+//                        }
                         $invoice_info = str_replace("{invoice_details}", $invoice_details, $invoice_info);
                         ///////////////////////// end of invoice details //////////////////////////////////
                         //////////////////////////////////////////////////////////////////////////////
@@ -745,9 +740,9 @@ if (!isset($_SESSION['registrationStep'])) {
 
                         <input type='hidden' name='payOpt' value="CC">
                         <?php
-                        if ($commentArrayL > 0) {
-                            echo "<h3>Thank you for your comments, they have been submitted for review.</h3>";
-                        }
+//                        if ($commentArrayL > 0) {
+//                            echo "<h3>Thank you for your comments, they have been submitted for review.</h3>";
+//                        }
                         ?>
 
                         <?php
@@ -756,13 +751,14 @@ if (!isset($_SESSION['registrationStep'])) {
                             <p>
                                 <input name='Back' type='button' class="transformButtonStyle" onClick="this.form.action = 'index.php';
                                                 this.form.submit();" value='Go Back and Make Changes' />
+<!--                                
                                        <?php if (isset($_SESSION['login']) && $_SESSION['login']) { ?>
                                     <input name="logout" type="button" class="transformButtonStyle" id="logout" style="margin-left:10px;" ONCLICK='document.invoice.payOpt.value = "LOGOUT";
                                                         if (checkPay(this.form))
                                                             document.invoice.submit();
                                                         return false;' value="Log Out">
                                        <?php } ?>
-
+-->
                         <!--	<p>
                         <input type='radio' name='pay' value='CC' onClick="document.invoice.payOpt.value = 'CC'">
                         Credit Card		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -860,7 +856,7 @@ if (!isset($_SESSION['registrationStep'])) {
                                                         document.invoice.submit();
                                                     return false;' value="Log Out">
                                    <?php } ?>
-                               <?php } ?>
+                               <?php } ?> 
                                <?php
                                mysql_close($link);
                                ?>

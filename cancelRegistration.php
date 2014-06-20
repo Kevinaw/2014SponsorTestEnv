@@ -12,21 +12,21 @@ if (!isset($_SESSION['registrationStep'])) {
 
 
 include('config_include/connect.php');
-//----HQ---- vid sid?
-if (isset($_POST['vid']) && $_POST['vid'] != "") {
-    $vid = $_POST['vid'];
+
+if (isset($_POST['sid']) && $_POST['sid'] != "") {
+    $sid = $_POST['sid'];
 
     // check if registration used promo code
-    $update = "update $tablepromo set invoiceSponsor='' where invoiceSponsor='$vid'";
-    $result = mysql_query($update);
+//    $update = "update $tablepromo set invoiceSponsor='' where invoiceSponsor='$sid'";
+//    $result = mysql_query($update);
 
     // udate the record and mark the status as cancelled
-    $update = "update $tablesponsor set reg_status='JUNK' where vid='$vid'";
+    $update = "update $tablesponsor set reg_status='JUNK' where sid='$sid'";
     $result = mysql_query($update);
 
     // remove any payment records associated with promo codes
-    $delete = "delete from $tablePaymentSponsor where vid='$vid' and transaction_type='PROMO'";
-    $result = mysql_query($delete);
+//    $delete = "delete from $tablePaymentSponsor where sid='$sid' and transaction_type='PROMO'";
+//    $result = mysql_query($delete);
 
     session_unset();
     session_destroy();

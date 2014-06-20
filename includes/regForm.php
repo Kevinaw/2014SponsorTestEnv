@@ -30,35 +30,36 @@ if (mysql_num_rows($selectresult) > 0) {
             <select name="sal" id="sal" class="noreqfield">
                 <option value="">Salutation</option>
                 <option value="Mr." <?php
-                if ($sal == 'MR.') {
-                    echo "selected";
-                }
-                ?> >Mr.</option>
+    if ($sal == 'MR.') {
+        echo "selected";
+    }
+    ?> >Mr.</option>
                 <option value="Dr." <?php
-                if ($sal == 'DR.') {
-                    echo "selected";
-                }
-                ?> >Dr.</option>
+    if ($sal == 'DR.') {
+        echo "selected";
+    }
+    ?> >Dr.</option>
                 <option value="Ms." <?php
-                if ($sal == 'MS.') {
-                    echo "selected";
-                }
-                ?> >Ms.</option>
+    if ($sal == 'MS.') {
+        echo "selected";
+    }
+    ?> >Ms.</option>
                 <option value="Mrs." <?php
-                if ($sal == 'MRS.') {
-                    echo "selected";
-                }
-                ?>>Mrs.</option>
+    if ($sal == 'MRS.') {
+        echo "selected";
+    }
+    ?>>Mrs.</option>
                 <option value="Miss" <?php
-                if ($sal == 'MISS.') {
-                    echo "selected";
-                }
-                ?>>Miss.</option>
+    if ($sal == 'MISS.') {
+        echo "selected";
+    }
+    ?>>Miss.</option>
             </select>
         </p>
     </div>
     -->
     <div style="clear:left;"></div>
+
     <div class="leftCol required" style="width:40%;">
         <p>First Name
             * </p>
@@ -105,11 +106,7 @@ if (mysql_num_rows($selectresult) > 0) {
             ?>" maxlength="50" class="noreqfield" />
         </p>
     </div>
-    
     <div style="clear:left;"></div>
-
-
-
 
     <div class="leftCol required" style="width:92%;">
         <p>Address
@@ -133,6 +130,7 @@ if (mysql_num_rows($selectresult) > 0) {
         </p>
     </div>
     <div style="clear:left;"></div>
+
     <div class="leftCol required" style="width:40%;">
         <p>City
             * </p>
@@ -154,6 +152,7 @@ if (mysql_num_rows($selectresult) > 0) {
             ?>"  class="noreqfield"/>
         </p>
     </div>
+
     <div class="leftCol required" style="clear:left;width:40%;">
         <p>Country
             * </p>
@@ -190,6 +189,7 @@ if (mysql_num_rows($selectresult) > 0) {
         </p>
     </div>
     <div style="clear:left;"></div>
+
     <div class="leftCol required" style="width:40%">
         <p>Phone Number (include area code)
             * </p>
@@ -212,16 +212,19 @@ if (mysql_num_rows($selectresult) > 0) {
         </p>
     </div>
     <div style="clear:left;"></div>
+
     <div class="leftCol required" style="width:40%;">
         <p>Email
             * </p>
         <p>
             <!----HQ---- no user_password in database -->
+            <!--
             <input name="user_password" type="hidden" id="user_password" value="<?php
             if (isset($user_password)) {
                 echo $user_password;
             }
             ?>">
+            -->
             <input name="email" type="text" class="reqfield" id="email" value="<?php
             if (isset($email)) {
                 echo $email;
@@ -257,33 +260,38 @@ if (mysql_num_rows($selectresult) > 0) {
            }
            ?>" style="width:auto;">
 </p>
+
+
 </div>
+
+
 <div id="registrantSummary" class="formBlock" style="display:none" <?php
-if (!isset($sid) || $sid == "") {
-    echo "style=\"display:none;\"";
-}
+//if (!isset($sid) || $sid == "") {
+//    echo "style=\"display:none;\"";
+//}
 ?>>
-    				<div id="registrantFields" class="leftCol summaries" style="width:40%;">
-                                                            <h3>Contact / Billing Information</h3>
-                                                            <p id="regName">Name</p>
-                                                            <p id="regCompany">company</p>
-                                                            <p id="regAddress">address<br />
-                                                                            city, province<br />
-                                                                            country&nbsp;&nbsp;Postal</p>
-                                                            <p id="regEmail">email</p>
-                                                            <p id="regPhone">phone</p>
-                                            </div>
-<!--                                            <div id="billingFields" class="leftCol summaries" style="width:40%;">
-                                                            <h3>Billing Information</h3>
-                                                            <p id="billName">Name</p>
-                                                            <p id="billCompany">company</p>
-                                                            <p id="billAddress">address<br />
-                                                                            city, province<br />
-                                                                            country&nbsp;&nbsp;Postal</p>
-                                                            <p id="billEmail">email</p>
-                                                            <p id="billPhone">phone</p>
-                                            </div>  -->
+    <div id="registrantFields" class="leftCol summaries" style="width:40%;">
+        <h3>Contact / Billing Information</h3>
+        <p id="regName">Name</p>
+        <p id="regCompany">company</p>
+        <p id="regAddress">address<br />
+            city, province<br />
+            country&nbsp;&nbsp;Postal</p>
+        <p id="regEmail">email</p>
+        <p id="regPhone">phone</p>
+    </div>
+    <!--                                            <div id="billingFields" class="leftCol summaries" style="width:40%;">
+                                                                <h3>Billing Information</h3>
+                                                                <p id="billName">Name</p>
+                                                                <p id="billCompany">company</p>
+                                                                <p id="billAddress">address<br />
+                                                                                city, province<br />
+                                                                                country&nbsp;&nbsp;Postal</p>
+                                                                <p id="billEmail">email</p>
+                                                                <p id="billPhone">phone</p>
+                                                </div>  -->
     <div style="clear:both;"></div>
+    
     <input name="makeChanges" type="button" class="transformButtonStyle" id="<?php
     if (!isset($sid) || $sid == "") {
         echo "makeChanges";
@@ -300,27 +308,28 @@ if (!isset($sid) || $sid == "") {
 </div>
 <div id="registrationType" class="formBlock" <?php
 //if (!isset($sid) || $sid == "") {
-    echo "style=\"display:none;\"";
+echo "style=\"display:none;\"";
 //}
 ?>>
     <input name="totalcharged" id="totalcharged" type="hidden" value="<?php echo $totalcharged; ?>">
     <input type="hidden" name="totalpaid"  value="<?php echo $totalpaid; ?>">
     <input type="hidden" name="totaldue"   value="<?php echo $totaldue; ?>">
-    
+
     <input type="hidden" name="sid" value="<?php echo $sid; ?>">
+<!--    
     </td>
-    <!----HQ---- no funccode 
-                sponcode ??? -->
-    <h2 id="step2">Step 2. Choose Sponsorship Category <?php echo $funcccode; ?></h2>
+-->
+
+    <h2 id="step2">Step 2. Choose Sponsorship Category</h2>
     <div id="patron" class="selectType leftCol required" style="width:28%">
         <h3>Patron</h3>
         <div class="notRequired">
             <p>
                 <label>
                     <input <?php
-                    if (!(strcmp("$funccode", "PTRN"))) {
-                        echo "checked=\"checked\"";
-                    }
+//                    if (!(strcmp("$sponcode", "PTRN"))) {
+//                        echo "checked=\"checked\"";
+//                    }
                     ?> type="radio" name="regType" class="regType" value="PTRN">
                     $5000+ (3 free registrations)</label>
             </p>
@@ -333,9 +342,9 @@ if (!isset($sid) || $sid == "") {
             <p>
                 <label>
                     <input <?php
-                    if (!(strcmp("$funccode", "SPNS"))) {
-                        echo "checked=\"checked\"";
-                    }
+//                    if (!(strcmp("$sponcode", "SPNS"))) {
+//                        echo "checked=\"checked\"";
+//                    }
                     ?> type="radio" name="regType" class="regType"  value="SPNS">
                     $3000 (2 free registrations)</label>
             </p>
@@ -347,7 +356,6 @@ if (!isset($sid) || $sid == "") {
         <div class="notRequired">
             <p>
                 <label>
-                    <!----HQ---- no CBRK in sponcode -->
                     <input type="radio" name="regType" class="regType"  value="CBRK">
                     $3000 (2 free registrations)</label>
             </p>
@@ -359,7 +367,7 @@ if (!isset($sid) || $sid == "") {
 </div>
 <div class="registrationCategories" id="schedule" style="clear:left; <?php
 //if (!isset($sid) || $sid == "") {
-    echo "display:none;";
+echo "display:none;";
 //}
 ?>">
     <h2 style="float:left;">Sponsorship Details</h2>
@@ -416,8 +424,6 @@ if (!isset($sid) || $sid == "") {
                 </h3>
                 <br>
             </div>
-
-
             <div class="leftCol required" style="width:27%;">
                 <h3 style="float:none;">
                     <label>
@@ -436,12 +442,11 @@ if (!isset($sid) || $sid == "") {
                 <br>
             </div>
 
-
             <div class="leftCol required" style="width:27%;">
                 <h3 style="float:none;">
                     <label>
                         <?php if ($wednesdayAvail): ?>
-                            <input <?php                          
+                            <input <?php
                             if (!(strcmp("$sponcode", "CBWD"))) {
                                 echo "checked=\"checked\"";
                             }
