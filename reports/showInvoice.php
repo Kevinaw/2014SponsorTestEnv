@@ -293,7 +293,6 @@
 //                            $pr = mysql_fetch_assoc($promores);
 //                            $promoCode = $pr['promoCode'];
 //                        }
-
 //                        if ($amazing == "Yes") {
 //                            $funccost = number_format($totalcharged - 30, 2);
 //                        } else {
@@ -383,28 +382,28 @@
                             </p>
                             <h2>DO NOT REFRESH THIS PAGE!! Refreshing may cause a processed payment to be duplicated. </h2>
                             <h1>Sponsorship Summary - Last Payment Type Listed as <?php echo $paytype; ?></h1>
-<!--                            <p><a href="reg_history.php?sid=<?php echo $sid; ?>" onClick="CentreWindow(this.href, 'RegHist', 950, 600);
+    <!--                            <p><a href="reg_history.php?sid=<?php echo $sid; ?>" onClick="CentreWindow(this.href, 'RegHist', 950, 600);
                                         return false;">View Registration History </a>-->
-    <?php
-    $invoice_info = implode('', file('../includes/invoice_template2.php'));
-    // strip in registrant info, invoice # and date
-    $invoice_info = str_replace("{sid}", $sid, $invoice_info);
-    $date = convertDate(date('Y-m-d'));
-    $invoice_info = str_replace("{date}", $date, $invoice_info);
-    $invoice_info = str_replace("{fname}", $fname, $invoice_info);
-    $invoice_info = str_replace("{lname}", $lname, $invoice_info);
-    $invoice_info = str_replace("{company}", $company, $invoice_info);
-    $full_address = $address1;
-    if ($address2) {
-        $full_address .= ", " . $address2;
-    }
-    $full_address .="<br>" . $city;
-    if ($state) {
-        $full_address .= ", " . $state;
-    }
-    $full_address .= ", " . $country . "&nbsp;&nbsp;" . $zip;
-    $invoice_info = str_replace("{full_address}", $full_address, $invoice_info);
-    // strip in billing info if any
+                            <?php
+                            $invoice_info = implode('', file('../includes/invoice_template2.php'));
+                            // strip in registrant info, invoice # and date
+                            $invoice_info = str_replace("{sid}", $sid, $invoice_info);
+                            $date = convertDate(date('Y-m-d'));
+                            $invoice_info = str_replace("{date}", $date, $invoice_info);
+                            $invoice_info = str_replace("{fname}", $fname, $invoice_info);
+                            $invoice_info = str_replace("{lname}", $lname, $invoice_info);
+                            $invoice_info = str_replace("{company}", $company, $invoice_info);
+                            $full_address = $address1;
+                            if ($address2) {
+                                $full_address .= ", " . $address2;
+                            }
+                            $full_address .="<br>" . $city;
+                            if ($state) {
+                                $full_address .= ", " . $state;
+                            }
+                            $full_address .= ", " . $country . "&nbsp;&nbsp;" . $zip;
+                            $invoice_info = str_replace("{full_address}", $full_address, $invoice_info);
+                            // strip in billing info if any
 //                                  if ($billing_email != "") {
 //                                      $billing_replace = '<tr>
 //																<td width="80" align="left" valign="top" nowrap >
@@ -425,19 +424,19 @@
 //                                      $billing_replace .= ", " . $billing_country . "&nbsp;&nbsp;" . $billing_zip;
 //                                      $billing_replace .="</p></td></tr>";
 //                                  } else {
-    $billing_replace = "";
+                            $billing_replace = "";
 //                                  }
-    $invoice_info = str_replace("{billing_info}", $billing_replace, $invoice_info);
-    //////////////////////////////////////////////////////////////////////////////
-    // strip in invoice details///////////////////////////////////////////////////
-    if ($regstatus == "CANCELLED") {
-        $invoice_info = str_replace("{special_notes}", "<p class='red'>THIS REGISTRATION HAS BEEN CANCELLED</p>", $invoice_info);
-    } else if ($regstatus == "JUNK") {
-        $invoice_info = str_replace("{special_notes}", "<p class='red'>THIS REGISTRATION HAS BEEN MARKED AS JUNK</p>", $invoice_info);
-    } else {
-        $invoice_info = str_replace("{special_notes}", "", $invoice_info);
-    }
-    $invoice_details = "";
+                            $invoice_info = str_replace("{billing_info}", $billing_replace, $invoice_info);
+                            //////////////////////////////////////////////////////////////////////////////
+                            // strip in invoice details///////////////////////////////////////////////////
+                            if ($regstatus == "CANCELLED") {
+                                $invoice_info = str_replace("{special_notes}", "<p class='red'>THIS REGISTRATION HAS BEEN CANCELLED</p>", $invoice_info);
+                            } else if ($regstatus == "JUNK") {
+                                $invoice_info = str_replace("{special_notes}", "<p class='red'>THIS REGISTRATION HAS BEEN MARKED AS JUNK</p>", $invoice_info);
+                            } else {
+                                $invoice_info = str_replace("{special_notes}", "", $invoice_info);
+                            }
+                            $invoice_details = "";
 //                                  $details = "select c.*, d.funccode as dfunccode from $conference c, $tabledetailname d where d.funcid=c.id and d.vid='$sid' order by c.date, c.startTime asc";
 //                                  $deresult = mysql_query($details) or die("Query failed : " . mysql_error());
 //
@@ -527,40 +526,40 @@
 //                                      $invoice_details .= "<tr><td width=\"100\" class=\"dottheline\">&nbsp;</td><td colspan=\"2\" class=\"dottheline\"><p>Lunch</p></td>  <td align='right' class=\"dottheline\"><p>--</p></td></tr>";
 //                                  }
 
-    $invoice_details .= "<tr><td colspan=\"3\" align=\"left\">";
-    if ($sponcode == "PTRN") {
-        $invoice_details .= "<p><strong>Patron (includes 3 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
-    } else if ($sponcode == "SPNS") {
-        $invoice_details .= "<p><strong>Sponsor (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
-    } else {
-        $invoice_details .= "<p><strong>Coffee Breaks (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
-    }
-    $invoice_details .= "</tr>";
-    $invoice_info = str_replace("{invoice_details}", $invoice_details, $invoice_info);
-    ///////////////////////// end of invoice details //////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////
-    // remove thousand seps
-    $totalcharged = str_replace(',', '', $totalcharged);
-    if ($totalcharged) {
-        $totaldue = ($totalcharged + ($totalcharged * 0.05)) - $totalpaid;
-    }
-    $gstcharged = sprintf("%01.2f", $totalcharged * 0.05);
-    $totalcharged = sprintf("%01.2f", $totalcharged);
+                            $invoice_details .= "<tr><td colspan=\"3\" align=\"left\">";
+                            if ($sponcode == "PTRN") {
+                                $invoice_details .= "<p><strong>Patron (includes 3 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                            } else if ($sponcode == "SPNS") {
+                                $invoice_details .= "<p><strong>Sponsor (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                            } else {
+                                $invoice_details .= "<p><strong>Coffee Breaks (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                            }
+                            $invoice_details .= "</tr>";
+                            $invoice_info = str_replace("{invoice_details}", $invoice_details, $invoice_info);
+                            ///////////////////////// end of invoice details //////////////////////////////////
+                            //////////////////////////////////////////////////////////////////////////////
+                            // remove thousand seps
+                            $totalcharged = str_replace(',', '', $totalcharged);
+                            if ($totalcharged) {
+                                $totaldue = ($totalcharged + ($totalcharged * 0.05)) - $totalpaid;
+                            }
+                            $gstcharged = sprintf("%01.2f", $totalcharged * 0.05);
+                            $totalcharged = sprintf("%01.2f", $totalcharged);
 
-    $invoice_info = str_replace("{totalcharged}", $totalcharged, $invoice_info);
-    $invoice_info = str_replace("{gstcharged}", $gstcharged, $invoice_info);
-    $totalpaid = sprintf("%01.2f", $totalpaid);
+                            $invoice_info = str_replace("{totalcharged}", $totalcharged, $invoice_info);
+                            $invoice_info = str_replace("{gstcharged}", $gstcharged, $invoice_info);
+                            $totalpaid = sprintf("%01.2f", $totalpaid);
 
 
 ////////////////////////////////////////////////////////////////////////////////////
 //////////////////////// grab payment history //////////////////////////////////////		
-    $paymenthist = "select * from $tablePaymentSponsor where sid='$sid' order by id asc";
-    $paymenthistresult = mysql_query($paymenthist) or die("Query failed : " . mysql_error());
+                            $paymenthist = "select * from $tablePaymentSponsor where sid='$sid' order by id asc";
+                            $paymenthistresult = mysql_query($paymenthist) or die("Query failed : " . mysql_error());
 
-    $histnum = mysql_numrows($paymenthistresult);
-    $payment_line = '';
-    if ($histnum == 0) {
-        $payment_line .= '
+                            $histnum = mysql_numrows($paymenthistresult);
+                            $payment_line = '';
+                            if ($histnum == 0) {
+                                $payment_line .= '
 							<tr>
 								<td colspan="3" align="right">
 									<p><strong>Amount Paid:</strong></p>
@@ -569,28 +568,28 @@
 									<p>' . $totalpaid . '</p>
 								</td>
 							</tr>';
-    } else {
-        while ($hist = mysql_fetch_array($paymenthistresult)) {
-            if ($hist['pay_amount'] < 0) {
-                $payorrefund = '<strong>Refund Issued</strong> ';
-                $selectclass = ' class="red" ';
-                $special = '';
-            } else if ($hist['transaction_type'] == 'CNCLFEE') {
-                $payorrefund = '<strong>Cancellation Fee</strong> ';
-                $selectclass = '';
-                $special = '<tr><td colspan="4" align="right"><em>Please note: When you receive your refund, the fee will already have been taken off the refund total</em></td></tr>';
-                $totaldue = $totaldue + 10;
-            } else if ($hist['transaction_type'] == 'RFNDFEE') {
-                $payorrefund = '<strong>Refund Fee</strong>';
-                $selectclass = '';
-                $special = '<tr><td colspan="4" align="right"><em>Please note: When you receive your refund, the fee will already have been taken off the refund total</em></td></tr>';
-                $totaldue = $totaldue + 10;
-            } else {
-                $payorrefund = '<strong>Payment Received</strong> ';
-                $selectclass = '';
-                $special = '';
-            }
-            $payment_line .= '
+                            } else {
+                                while ($hist = mysql_fetch_array($paymenthistresult)) {
+                                    if ($hist['pay_amount'] < 0) {
+                                        $payorrefund = '<strong>Refund Issued</strong> ';
+                                        $selectclass = ' class="red" ';
+                                        $special = '';
+                                    } else if ($hist['transaction_type'] == 'CNCLFEE') {
+                                        $payorrefund = '<strong>Cancellation Fee</strong> ';
+                                        $selectclass = '';
+                                        $special = '<tr><td colspan="4" align="right"><em>Please note: When you receive your refund, the fee will already have been taken off the refund total</em></td></tr>';
+                                        $totaldue = $totaldue + 10;
+                                    } else if ($hist['transaction_type'] == 'RFNDFEE') {
+                                        $payorrefund = '<strong>Refund Fee</strong>';
+                                        $selectclass = '';
+                                        $special = '<tr><td colspan="4" align="right"><em>Please note: When you receive your refund, the fee will already have been taken off the refund total</em></td></tr>';
+                                        $totaldue = $totaldue + 10;
+                                    } else {
+                                        $payorrefund = '<strong>Payment Received</strong> ';
+                                        $selectclass = '';
+                                        $special = '';
+                                    }
+                                    $payment_line .= '
 									<tr>
 										<td colspan="3" align="right" valign="top"' . $selectclass . '>
 											<p>' . $payorrefund . ' ' . convertDate($hist['date_paid']) . ' (' . $hist['transaction_type'] . ' #' . $hist['response_id'] . ' ' . $hist['response'] . '):</p>
@@ -599,10 +598,10 @@
 											<p>' . $hist['pay_amount'] . '</p>
 										</td>
 									</tr>' . $special;
-        }
-        $todaydate = date('Y-m-d');
+                                }
+                                $todaydate = date('Y-m-d');
 
-        $payment_line .='
+                                $payment_line .='
 								<tr>
 									<td colspan="3" align="right">
 										<h3>Payments Received as of ' . convertDate($todaydate) . ':</h3>
@@ -611,29 +610,29 @@
 										<h3>' . $totalpaid . '</h3>
 									</td>
 								</tr>';
-    }
-    $invoice_info = str_replace("{paymenthistory}", $payment_line, $invoice_info);
+                            }
+                            $invoice_info = str_replace("{paymenthistory}", $payment_line, $invoice_info);
 ///////////////////////end of payment history //////////////////////////////////////	
 
-    if ($regstatus == 'CANCELLED') {
-        $invoice_info = str_replace("{message_status}", "red", $invoice_info);
-        $invoice_info = str_replace("{totaldue_message}", "<em>REGISTRATION CANCELLED</em>&nbsp;&nbsp;&nbsp; Total Owing:", $invoice_info);
-        $invoice_info = str_replace("{refund_message}", "<h2 class='red'>THIS REGISTRATION HAS BEEN CANCELLED.</h2>", $invoice_info);
-        $totaldue = '0.00';
-    } else if ($totaldue >= 0) {
-        $invoice_info = str_replace("{message_status}", "", $invoice_info);
-        $invoice_info = str_replace("{totaldue_message}", "Total Owing:", $invoice_info);
-        $invoice_info = str_replace("{refund_message}", "", $invoice_info);
-    } else {
-        $invoice_info = str_replace("{message_status}", "red", $invoice_info);
-        $invoice_info = str_replace("{totaldue_message}", "Refund Due:", $invoice_info);
-        $invoice_info = str_replace("{refund_message}", "<h2 class='red'>Changes in your registration have resulted in a refund. <br />Refunds are subject to a $10 processing fee.</h2>", $invoice_info);
-    }
-    $totaldue = sprintf("%01.2f", $totaldue);
-    $invoice_info = str_replace("{totaldue}", $totaldue, $invoice_info);
+                            if ($regstatus == 'CANCELLED') {
+                                $invoice_info = str_replace("{message_status}", "red", $invoice_info);
+                                $invoice_info = str_replace("{totaldue_message}", "<em>REGISTRATION CANCELLED</em>&nbsp;&nbsp;&nbsp; Total Owing:", $invoice_info);
+                                $invoice_info = str_replace("{refund_message}", "<h2 class='red'>THIS REGISTRATION HAS BEEN CANCELLED.</h2>", $invoice_info);
+                                $totaldue = '0.00';
+                            } else if ($totaldue >= 0) {
+                                $invoice_info = str_replace("{message_status}", "", $invoice_info);
+                                $invoice_info = str_replace("{totaldue_message}", "Total Owing:", $invoice_info);
+                                $invoice_info = str_replace("{refund_message}", "", $invoice_info);
+                            } else {
+                                $invoice_info = str_replace("{message_status}", "red", $invoice_info);
+                                $invoice_info = str_replace("{totaldue_message}", "Refund Due:", $invoice_info);
+                                $invoice_info = str_replace("{refund_message}", "<h2 class='red'>Changes in your registration have resulted in a refund. <br />Refunds are subject to a $10 processing fee.</h2>", $invoice_info);
+                            }
+                            $totaldue = sprintf("%01.2f", $totaldue);
+                            $invoice_info = str_replace("{totaldue}", $totaldue, $invoice_info);
 
-    echo $invoice_info;
-    ?>
+                            echo $invoice_info;
+                            ?>
                             </p>
                             <h2>DO NOT REFRESH THIS PAGE!! Refreshing may cause a processed payment to be duplicated. </h2>
                             <p>&nbsp;</p>
@@ -732,10 +731,10 @@
                             -->
                             <input name="delete" type="submit" class="transformButtonStyle" onclick="this.form.action = 'invoiceDelete.php';" value="Mark Invoice as Junk">
                         </form>
-    <?php
-    mysql_close($link);
-}
-?>
+                        <?php
+                        mysql_close($link);
+                    }
+                    ?>
                 </div>
             </div>
             <div id="footer">

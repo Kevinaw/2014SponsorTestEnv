@@ -39,7 +39,7 @@
                         $alternate = "2";
                         $row = array();
                         while ($row = mysql_fetch_array($result)) {
-                            $vid = $row['vid'];
+                            $sid = $row['sid'];
                             $fname = $row['fname'];
                             $lname = $row['lname'];
                             $regstatus = $row['reg_status'];
@@ -58,7 +58,7 @@
                             }
                             ?>>
                                 <td >
-                                    <?php echo 'BPS-' . $row['vid']; ?></td>
+                                    <?php echo 'BPS-' . $row['sid']; ?></td>
                                 <td>
                                     <?php echo strtoupper($row['lname']) . ', ' . strtoupper($row['fname']); ?></td>
                                 <td align="center"><?php echo $row['paytype']; ?></td>

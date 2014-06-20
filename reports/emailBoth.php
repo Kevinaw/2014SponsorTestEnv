@@ -9,7 +9,7 @@ include ('../config_include/connect.php');
 include ('../config_include/eventVariables.php');
 include ('../mimemail.inc');
 
-$vid = $_POST['vid'];
+$sid = $_POST['sid'];
 $paytype = $_POST['paytype'];
 
 //if ($paytype == 'CC'){

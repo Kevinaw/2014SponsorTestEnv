@@ -158,7 +158,7 @@
                             if (!(strcmp("$orderby", "sid"))) {
                                 echo "checked=\"checked\"";
                             }
-                        ?> name="orderit" type="radio" id="invoicenum" value="vid" onclick="document.report.submit();">
+                        ?> name="orderit" type="radio" id="invoicenum" value="sid" onclick="document.report.submit();">
                             Invoice #&nbsp;&nbsp;
                             <input <?php
                             if (!(strcmp("$orderby", "lname,fname"))) {

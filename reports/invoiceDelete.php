@@ -18,19 +18,19 @@
             <div id="content">
                 <div id="regarea">
                     <?php
-                    $vid = $_POST['vid'];
+                    $sid = $_POST['sid'];
 
                     if ($_POST['deleteYes']) {
 
-                        $updatestmt = "UPDATE $tablesponsor SET reg_status = 'JUNK' WHERE '$vid' = vid ";
+                        $updatestmt = "UPDATE $tablesponsor SET reg_status = 'JUNK' WHERE '$sid' = sid ";
                         mysql_query($updatestmt) or die("The main update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
 
                         // remove invoice number from promo table if it existed
-                        $update = "update $tablepromo set invoiceSponsor='' where invoiceSponsor='$vid'";
-                        $updateres = mysql_query($update);
+//                        $update = "update $tablepromo set invoiceSponsor='' where invoiceSponsor='$vid'";
+//                        $updateres = mysql_query($update);
 
                         // remove any payment records associated with promo codes
-                        $delete = "delete from $tablePaymentSponsor where vid='$vid' and transaction_type='PROMO'";
+                        $delete = "delete from $tablePaymentSponsor where sid='$sid' and transaction_type='PROMO'";
                         $result = mysql_query($delete);
                         ?>
                         <h1>Delete Invoice </h1>
@@ -45,9 +45,9 @@
                         <?php
                     } else {
 
-                        $selectStmt = "SELECT * FROM $tablesponsor WHERE '$vid' = vid ";
+                        $selectStmt = "SELECT * FROM $tablesponsor WHERE '$sid' = sid ";
 
-                        $selectresult = mysql_query($selectStmt) or die("Picking VID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
+                        $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 
                         $row = mysql_fetch_array($selectresult);
 
@@ -69,9 +69,9 @@
                         ?>
 
                         <form method='post' action='' name='invoice' ENCTYPE='multipart/form-data' >
-                            <input type='hidden' name='vid' value='<?php
-                            if ($vid) {
-                                echo $vid;
+                            <input type='hidden' name='sid' value='<?php
+                            if ($sid) {
+                                echo $sid;
                             }
                             ?>'>
                             <h1>Delete Invoice </h1>
@@ -82,7 +82,7 @@
                                     <td width="443"><?php echo $strName; ?></td>
                                     <td width="70" >
                                         <strong> Invoice #: </strong></td>
-                                    <td width="190" >800<?php echo $vid; ?></td>
+                                    <td width="190" >800<?php echo $sid; ?></td>
                                 </tr>
                                 <tr>
                                     <td>&nbsp;</td>
@@ -145,7 +145,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 //////////////////////// grab payment history //////////////////////////////////////		
 
-                                $paymenthist = "select * from $tablePaymentSponsor where vid='$vid'";
+                                $paymenthist = "select * from $tablePaymentSponsor where sid='$sid'";
                                 $paymenthistresult = mysql_query($paymenthist) or die("Query failed : " . mysql_error());
 
                                 $histnum = mysql_num_rows($paymenthistresult);
@@ -190,7 +190,7 @@
                                 <input name="back" type="submit" class="transformButtonStyle" onclick="this.form.action = 'invoice.php';" value="No - Back to List">
                                 <input name="deleteYes" type="submit" class="transformButtonStyle" value="Mark as Junk">
                             </p>
-                            <p><a href="ipc.php">Back to admin index</a> </p>
+                            <p><a href="index.php">Back to admin index</a> </p>
                         </form>
                         <?php
                         mysql_close($link);
