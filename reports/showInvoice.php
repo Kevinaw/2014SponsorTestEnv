@@ -382,9 +382,9 @@
                                 <input type='hidden' name='promoCode' value='<?php echo $promoCode; ?>'>
                             </p>
                             <h2>DO NOT REFRESH THIS PAGE!! Refreshing may cause a processed payment to be duplicated. </h2>
-                            <h1>Registration Summary - Last Payment Type Listed as <?php echo $paytype; ?></h1>
-                            <p><a href="reg_history.php?sid=<?php echo $sid; ?>" onClick="CentreWindow(this.href, 'RegHist', 950, 600);
-                                        return false;">View Registration History </a>
+                            <h1>Sponsorship Summary - Last Payment Type Listed as <?php echo $paytype; ?></h1>
+<!--                            <p><a href="reg_history.php?sid=<?php echo $sid; ?>" onClick="CentreWindow(this.href, 'RegHist', 950, 600);
+                                        return false;">View Registration History </a>-->
     <?php
     $invoice_info = implode('', file('../includes/invoice_template2.php'));
     // strip in registrant info, invoice # and date

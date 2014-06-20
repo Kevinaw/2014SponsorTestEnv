@@ -63,7 +63,7 @@
                                     <?php echo strtoupper($row['lname']) . ', ' . strtoupper($row['fname']); ?></td>
                                 <td align="center"><?php echo $row['paytype']; ?></td>
                                 <td align="center">
-                                    <a href="showInvoice.php?vid=<?php echo $row['sid']; ?>"><strong>This One</strong></a></td>
+                                    <a href="showInvoice.php?sid=<?php echo $row['sid']; ?>"><strong>This One</strong></a></td>
                                 <td nowrap><?php
                                     if ($regstatus) {
                                         echo $regstatus;

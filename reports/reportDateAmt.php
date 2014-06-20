@@ -219,7 +219,7 @@
                                     <td valign="top"><p><strong>Owing: <?php echo $goodrecords[$i]['totaldue']; ?></strong></p></td>
                                     <td valign="top"><p><strong>Payment: </strong><?php echo $goodrecords[$i]['paytype']; ?> <br></p></td>
                                     <td valign="top"><p><strong>Sponsorship: </strong><?php echo $goodrecords[$i]['sponcode']; ?> <br></p></td>
-                                    <td ><p><a href="showInvoice.php?vid=<?php echo $goodrecords[$i]['sid']; ?>" target="_blank">View Invoice</a></p></td>
+                                    <td ><p><a href="showInvoice.php?sid=<?php echo $goodrecords[$i]['sid']; ?>" target="_blank">View Invoice</a></p></td>
                                 </tr>
 
                                 <tr>
