@@ -7,6 +7,8 @@
 //  Main include doc
 //=============================================
 //error_reporting(0);
+error_reporting( error_reporting() & ~E_NOTICE );
+
 // Declare Section
 
 $username = 'banffpipeline';
