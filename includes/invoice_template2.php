@@ -27,12 +27,12 @@
         </td>
     </tr>
 
-    {billing_info}
+<!--    {billing_info}-->
 </table>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" id="totaling">
     <tr>
         <td width="20">&nbsp; </td>
-        <td>{special_notes}</td>
+        <td>&nbsp; <!--{special_notes}--></td>
         <td width="60" align="center">			</td>
         <td width="77" align="right"> 
             <p><strong>Amount</strong> </p>			</td>
