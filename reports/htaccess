@@ -1,6 +1,6 @@
 AuthName "ipcreg.incentre.net"
 AuthType Basic
-AuthUserFile localhost/2014Sponsor/reports/.htpasswd
+AuthUserFile localhost/2014SponsorTestEnv/reports/.htpasswd
 <Limit GET>
 require valid-user
 </Limit>
