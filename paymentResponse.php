@@ -17,6 +17,7 @@ if (!isset($_SESSION['registrationStep'])) {
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
     <html>
         <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
             <link href="css/asmebanffstyles.css" rel="stylesheet" type="text/css">
             <script type="text/javascript" src="jquery/jquery-1.7.1.min.js"></script>
             <script type="text/javascript" src="jquery/colorbox/jquery.colorbox-min.js"></script>
@@ -227,11 +228,12 @@ if (!isset($_SESSION['registrationStep'])) {
                         $invoice_details .= "<tr><td colspan=\"3\" align=\"left\">";
                         if ($sponcode == "PTRN") {
                             $invoice_details .= "<p><strong>Patron (includes 3 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
-                        } else if ($funccode == "SPNS") {
+                        } else if ($sponcode == "SPNS") {
                             $invoice_details .= "<p><strong>Sponsor (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
                         } else {
                             $invoice_details .= "<p><strong>Coffee Breaks (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
                         }
+                        
                         $invoice_details .= "</tr>";
 
                         $invoice_info = str_replace("{invoice_details}", $invoice_details, $invoice_info);
