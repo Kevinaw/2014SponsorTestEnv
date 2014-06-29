@@ -20,7 +20,7 @@ $verihash = sha1($veristring . $verisalt);
         var patronAmount = 5000;
         var sponsorAmount = 3000;
         //----HQ---- no amazing walk cost
-        var amazingWalkCost = 30;
+        //var amazingWalkCost = 30;
 
         // make stuff happen if they've gone back to make changes
         if (sidloaded) {
@@ -357,6 +357,14 @@ $verihash = sha1($veristring . $verisalt);
         ////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////
         // recalculate cost when amazing walk is clicked
+        // recalculate cost when sponsor category choice is changed
+        $('#TU3').click(function() {
+            calcCost();
+        });
+        $('#TU2').click(function() {
+            calcCost();
+        });
+                
         $('#patronAmount').click(function() {
             $('#TU2').prop('checked', true);
         });
@@ -382,6 +390,9 @@ $verihash = sha1($veristring . $verisalt);
             }
             if ($('#TU2').is(":checked")) {
                 $('#totalcharged').val($('#patronAmount').val());
+            } else if ($('#TU3').is(":checked"))
+            {
+                $('#totalcharged').val(patronAmount);
             }
             $('#costAmount').text("$" + $('#totalcharged').val() + ".00 + GST");
         }

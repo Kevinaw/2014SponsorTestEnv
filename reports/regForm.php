@@ -1,3 +1,5 @@
+<!-- // Mike Zhao, REMOVE -->
+
 <?php
 session_start();
 
