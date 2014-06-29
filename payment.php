@@ -782,7 +782,7 @@ if (!isset($_SESSION['registrationStep'])) {
                                                     document.invoice.submit();
                                                 return false;' value="Cancel Registration">
                             </p>
-                            <p>An invoice or receipt will be sent to the email address you prosided on the previous page.	</p>
+                            <p>An invoice or receipt will be sent to the email address you provided on the previous page.	</p>
                             <div id="conditions">
                                 <p><em><strong>Cancellation requests must be received in writing no later than March 8, 2013.  There will be a $10 handling fee assessed for each refund.</strong></em> Please email to <a href="mailto:support@idassociates.ab.ca">support@idassociates.ab.ca</a> for any cancellation requests.
                                 </p>
