@@ -375,6 +375,7 @@ $verihash = sha1($veristring . $verisalt);
 //
 //            }
             calcCost();
+            CheckFormOnContinueButton2();
         });
 
 
@@ -438,7 +439,6 @@ $verihash = sha1($veristring . $verisalt);
         ////////////////////////////////////////////////////////////////////////////////////
         // check session selections for missing fields
         $('#continuebutton2').click(function() {
-            var noSubmit = false;
             $('#processingHolder').slideDown(250);
             $('#processResponse').slideUp(250);
             $('#registrantSummary').slideUp(500);
@@ -446,7 +446,13 @@ $verihash = sha1($veristring . $verisalt);
             $('.registrationCategories').slideUp(500);
             $('.registrationCategories .errorfield').remove();
             hideConditions();
+            
+            CheckFormOnContinueButton2();
+        });
 
+        function CheckFormOnContinueButton2()
+        {
+            var noSubmit = false;
             var regtype = $('input:radio[name="regType"]:checked').val();
             var obj = "";
             obj = '#' + regtype + ' .sessionButtons';
@@ -474,7 +480,7 @@ $verihash = sha1($veristring . $verisalt);
             if (regtype == "CBRK") {
                 if ($('#CBRK input').length == 0) {
                     $('#CBRK h3').first().append("<p class=\"errorfield\">All days have been sponsored</p>");
-                    $('#processResponse').html("<p class=\"errorfield\">You can not sponsor Coffee Break anymore, because all the three days are sponsored.</p>").delay(250).slideDown(250);
+                    //$('#processResponse').html("<p class=\"errorfield\">You can not sponsor Coffee Break anymore, because all the three days are sponsored.</p>").delay(250).slideDown(250);
 
                     noSubmit = true;
                 }
@@ -483,16 +489,16 @@ $verihash = sha1($veristring . $verisalt);
             var isCustomPatron = $('input:radio[value="customPatron"]').prop("checked");
             var invalidPatronAmount = $('#patronAmount').val() < 5000;
             if ((isCustomPatron == true) && (invalidPatronAmount == true)) {
-                $('#processResponse').html("<p class=\"errorfield\">Then Patron Sponsor Amount is wrong, it must be higher than $5000</p>").delay(250).slideDown(250);
-                $('#step2').after("<p class=\"errorfield\">Patron Sponsor Amount must higher than $5000</p>");
+                //$('#processResponse').html("<p class=\"errorfield\">Patron sponsor amount is wrong, it must be higher than $5000</p>").delay(250).slideDown(250);
+                $('#step2').after("<p class=\"errorfield\">Patron sponsor amount must be higher than $5000</p>");
                 noSubmit = true;
             }
             
             var isCustomPatron = $('input:radio[value="customPatron"]').prop("checked");
             var isNum = $.isNumeric($('#patronAmount').val());
             if ((isCustomPatron == true) && (isNum == false)) {
-                $('#processResponse').html("<p class=\"errorfield\">Then Patron Sponsor Amount is wrong, it must be a valid number</p>").delay(250).slideDown(250);
-                $('#step2').after("<p class=\"errorfield\">Patron Sponsor Amount must valid number</p>");
+                //$('#processResponse').html("<p class=\"errorfield\">Then Patron Sponsor Amount is wrong, it must be a valid number</p>").delay(250).slideDown(250);
+                $('#step2').after("<p class=\"errorfield\">Patron sponsor amount must be a valid number</p>");
                 noSubmit = true;
             }
 //
@@ -536,7 +542,8 @@ $verihash = sha1($veristring . $verisalt);
                 });
 
             }
-        });
+        }
+
         function showConditions() {
             $('#conditions').delay(500).slideDown(0);
             //alert('show');
