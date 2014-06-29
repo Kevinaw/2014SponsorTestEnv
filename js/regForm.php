@@ -308,7 +308,8 @@ $verihash = sha1($veristring . $verisalt);
 
             var selectedDay = $(this).val();
 
-            if ($('.registrationCategories').is(":visible")) {
+            if ($('.registrationCategories').is(":visible")) 
+            {
                 $('.regDay').each(function(index) {
                     if ($(this).attr('id') != selectedDay) {
                         $("#" + $(this).attr('id') + ' input[type=radio]').removeAttr('checked');

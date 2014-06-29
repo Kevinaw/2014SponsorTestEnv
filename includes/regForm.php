@@ -308,7 +308,8 @@ if (mysql_num_rows($selectresult) > 0) {
 </div>
 <div id="registrationType" class="formBlock" <?php
 //if (!isset($sid) || $sid == "") {
-echo "style=\"display:none;\"";
+// Yang Zhao, DEBUG
+echo "style=\"display:block;\"";
 //}
 ?>>
     <input name="totalcharged" id="totalcharged" type="hidden" value="<?php echo $totalcharged; ?>">
@@ -333,6 +334,27 @@ echo "style=\"display:none;\"";
                     ?> type="radio" name="regType" class="regType" value="PTRN">
                     $5000+ (3 free registrations)</label>
             </p>
+            
+            <div  id="PTRN" class="regDay" style="display:none">
+                <div id="billing" >
+                    <p>
+                        <br>
+                        <label>
+                            <!--checked="checked"-->
+                            <input  class="sessionButtons" id="TU3"  type="radio" name='radioPatron'  value="defaultPatron">
+                            $5000
+                        </label>
+                        <br>
+                        <label>
+                            <input class="sessionButtons"  id="TU2"  type="radio" name='radioPatron'  value="customPatron">
+                            Other Amount: <br>
+                        </label>
+                        <label>
+                            &nbsp&nbsp;&nbsp; $ <input name="patronAmount" type="text" class="reqfield" id="patronAmount" style="width:100px" value="5000">
+                        </label>
+                    </p>
+                </div>
+            </div>
         </div>
         <p>&nbsp;</p>
     </div>
@@ -349,6 +371,10 @@ echo "style=\"display:none;\"";
                     $3000 (2 free registrations)</label>
             </p>
         </div>
+        
+        <div id="SPNS" class="regDay" style="display:none">
+            <!--                   Here is the form sponsor-->
+        </div>
         <p>&nbsp;</p>
     </div>
     <div id="coffeebreak" class="selectType leftCol required" style="width:28%">
@@ -359,6 +385,53 @@ echo "style=\"display:none;\"";
                     <input type="radio" name="regType" class="regType"  value="CBRK">
                     $3000 (2 free registrations)</label>
             </p>
+
+            <div id="CBRK" class="regDay" style="display:none">
+                <div id="billing">
+                    <p><br>
+                        Choose a day
+                        <br>
+                        <label><?php if ($mondayAvail): ?>
+                                <input <?php
+                                if (!(strcmp("$sponcode", "CBMO"))) {
+                                    echo "checked=\"checked\"";
+                                }
+                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4" value="CBMO">
+                                <?php else: ?>
+                                (Taken)
+                            <?php endif; ?>
+                            Monday
+                        </label>
+                        <br>
+                        <label>
+                            <?php if ($tuesdayAvail): ?>
+                                <input <?php
+                                if (!(strcmp("$sponcode", "CBTU"))) {
+                                    echo "checked=\"checked\"";
+                                }
+                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU5" value="CBTU">
+                                <?php else: ?>
+                                (Taken)
+                            <?php endif; ?>
+                            Tuesday
+                        </label>
+                        <br>
+                        <label>
+                            <?php if ($wednesdayAvail): ?>
+                                <input <?php
+                                if (!(strcmp("$sponcode", "CBWD"))) {
+                                    echo "checked=\"checked\"";
+                                }
+                                ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU6" value="CBWD">
+                                <?php else: ?>
+                                (Taken)
+                            <?php endif; ?>
+                            Wednesday
+                        </label>
+                        <br>
+                    </p>
+                </div>
+            </div>
         </div>
         <p>&nbsp;</p>
     </div>
@@ -370,6 +443,7 @@ echo "style=\"display:none;\"";
 echo "display:none;";
 //}
 ?>">
+<!--
     <h2 style="float:left;">Sponsorship Details</h2>
     <div  id="PTRN" class="regDay" style="clear:left;">
         <div id="billing" class="formBlock" style="padding:10px 10px 0px 10px; margin: 0px 0px 10px 0px;">
@@ -377,7 +451,7 @@ echo "display:none;";
             <div class="leftCol required" style="width:40%;">
                 <h3 style="float:none;">
                     <label>
-                        <!--checked="checked"-->
+                        checked="checked"
                         <input  class="sessionButtons" id="TU3"  type="radio" name='radioPatron'  value="defaultPatron">
                         $5000
                     </label>
@@ -399,7 +473,7 @@ echo "display:none;";
         </div>
     </div>
     <div id="SPNS" class="regDay">
-        <!--                   Here is the form sponsor-->
+                           Here is the form sponsor
     </div>
     <div id="CBRK" class="regDay">
         <div id="billing" class="formBlock required" style="padding:10px 10px 0px 10px; margin: 0px 0px 10px 0px;">
@@ -462,7 +536,8 @@ echo "display:none;";
 
             <div style="clear:both;"></div>
         </div>
-    </div>
+    </div>-->
+
 
     <?php
 // start a session to check on page 2
