@@ -19,7 +19,7 @@ $verihash = sha1($veristring . $verisalt);
         var totalCost = 0;
         var patronAmount = 5000;
         var sponsorAmount = 3000;
-        var coffeeBreakAmount = 2800;
+        var coffeeBreakAmount = 2500;
         
         //----HQ---- no amazing walk cost
         //var amazingWalkCost = 30;
