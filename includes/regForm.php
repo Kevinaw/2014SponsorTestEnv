@@ -331,8 +331,7 @@ if (mysql_num_rows($selectresult) > 0) {
 </div>
 <div id="registrationType" class="formBlock" <?php
 //if (!isset($sid) || $sid == "") {
-// Yang Zhao, DEBUG
-echo "style=\"display:block;\"";
+echo "style=\"display:none;\"";
 //}
 ?>>
     <input name="totalcharged" id="totalcharged" type="hidden" value="<?php echo $totalcharged; ?>">

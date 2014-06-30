@@ -528,11 +528,11 @@
 
                             $invoice_details .= "<tr><td colspan=\"3\" align=\"left\">";
                             if ($sponcode == "PTRN") {
-                                $invoice_details .= "<p><strong>Patron (includes 3 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                                $invoice_details .= "<p><strong>Patron [$sponcode] (3 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
                             } else if ($sponcode == "SPNS") {
-                                $invoice_details .= "<p><strong>Sponsor (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                                $invoice_details .= "<p><strong>Sponsor [$sponcode] (2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
                             } else {
-                                $invoice_details .= "<p><strong>Coffee Breaks (includes 2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                                $invoice_details .= "<p><strong>[$sponcode] Coffee Breaks (2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
                             }
                             $invoice_details .= "</tr>";
                             $invoice_info = str_replace("{invoice_details}", $invoice_details, $invoice_info);
