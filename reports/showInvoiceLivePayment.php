@@ -99,7 +99,7 @@ session_destroy();
                         // calculate invoice amounts
                         $newtotalpaid = $totals;
 
-                        $newtotaldue = ($totalcharged + ($totalcharged * 0.05)) - $totals + $adjust;
+                        $newtotaldue = ($totalcharged + ($totalcharged * 0.05 * $isChargingGst)) - $totals + $adjust;
 
                         $newtotalpaid = sprintf("%01.2f", $newtotalpaid);
                         $newtotalcharged = sprintf("%01.2f", $newtotalcharged);
@@ -179,7 +179,7 @@ session_destroy();
                             // calculate invoice amounts
                             //$newtotalpaid = $totals;
 
-                            $totaldue = ($totalcharged + ($totalcharged * 0.05)) - $totals + $adjust;
+                            $totaldue = ($totalcharged + ($totalcharged * 0.05 * $isChargingGst)) - $totals + $adjust;
 
 //		$newtotalpaid = sprintf("%01.2f",$newtotalpaid);
 //		$newtotalcharged = sprintf("%01.2f",$newtotalcharged);
@@ -323,7 +323,7 @@ session_destroy();
                             }
                             if ($amazing == "Yes") {
                                 $totalcharged = number_format($totalcharged - 200, 2);
-                                $totaldue = number_format($totalcharged + ($totalcharged * 0.05), 2);
+                                $totaldue = number_format($totalcharged + ($totalcharged * 0.05 * $isChargingGst), 2);
                                 $funccost = "0.00";
                             } else {
                                 $totaldue = "0.00";
@@ -559,9 +559,9 @@ session_destroy();
                                 ///////////////////////// end of invoice details //////////////////////////////////
                                 //////////////////////////////////////////////////////////////////////////////
                                 if ($totalcharged) {
-                                    $totaldue = ($totalcharged + ($totalcharged * 0.05)) - $totalpaid;
+                                    $totaldue = ($totalcharged + ($totalcharged * 0.05 * $isChargingGst)) - $totalpaid;
                                 }
-                                $gstcharged = sprintf("%01.2f", $totalcharged * 0.05);
+                                $gstcharged = sprintf("%01.2f", $totalcharged * 0.05 * $isChargingGst);
                                 $totalcharged = sprintf("%01.2f", $totalcharged);
                                 $invoice_info = str_replace("{totalcharged}", $totalcharged, $invoice_info);
                                 $invoice_info = str_replace("{gstcharged}", $gstcharged, $invoice_info);

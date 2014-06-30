@@ -395,7 +395,7 @@ $verihash = sha1($veristring . $verisalt);
             {
                 $('#totalcharged').val(patronAmount);
             }
-            $('#costAmount').text("$" + $('#totalcharged').val() + ".00 + GST");
+            $('#costAmount').text("$" + $('#totalcharged').val() + ".00" <?php if(!$isChargingGst == 0) echo "+ \" + GST\""; ?>);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////

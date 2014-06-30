@@ -51,4 +51,6 @@ if (!$link) {
 $db = mysql_select_db($databaseName, $link) or die("Connection made. But database '$databaseName' was not found.");
 
 mysql_set_charset('utf8', $link);
+
+$isChargingGst = 0.00; // 1.00;
 ?>

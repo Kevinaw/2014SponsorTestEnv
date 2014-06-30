@@ -242,9 +242,9 @@ if (!isset($_SESSION['registrationStep'])) {
                         ///////////////////////// end of invoice details //////////////////////////////////
                         //////////////////////////////////////////////////////////////////////////////
                         if ($totalcharged) {
-                            $totaldue = ($totalcharged + ($totalcharged * 0.05)) - $totalpaid;
+                            $totaldue = ($totalcharged + ($totalcharged * 0.05 * $isChargingGst)) - $totalpaid;
                         }
-                        $gstcharged = sprintf("%01.2f", $totalcharged * 0.05);
+                        $gstcharged = sprintf("%01.2f", $totalcharged * 0.05 * $isChargingGst);
                         $totalcharged = sprintf("%01.2f", $totalcharged);
                         $invoice_info = str_replace("{totalcharged}", $totalcharged, $invoice_info);
                         $invoice_info = str_replace("{gstcharged}", $gstcharged, $invoice_info);

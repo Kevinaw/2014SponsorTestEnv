@@ -44,10 +44,10 @@
         <td align="right"> 
             <h3>{totalcharged}</h3>			</td>
     </tr>
-    <tr>
+<!--    <tr>
         <td colspan="3" align="right"><p><strong>GST:</strong></p></td>
         <td align="right"><p>{gstcharged}</p></td>
-    </tr>
+    </tr>-->
 
     {paymenthistory}
 
@@ -57,10 +57,10 @@
         <td align="right" class="{message_status}">
             <h3>{totaldue}</h3>			</td>
     </tr>
-    <tr>
+<!--    <tr>
         <td colspan="4" align="right"><p><em><strong>All prices  are in Canadian Funds.</strong></em></p>
             <p>GST# 13745 8360 RT0001			</p>
             <p class="small">&nbsp;</p></td>
-    </tr>
+    </tr>-->
 </table>
 {refund_message}

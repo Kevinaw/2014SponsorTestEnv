@@ -361,7 +361,7 @@ $verihash = sha1($veristring . $verisalt);
             if ($('#amazing').is(":checked")) {
                 $('#totalcharged').val(parseInt($('#totalcharged').val()) + amazingWalkCost);
             }
-            $('#costAmount').text("$" + $('#totalcharged').val() + ".00 + GST");
+            $('#costAmount').text("$" + $('#totalcharged').val() + ".00" <?php if(!$isChargingGst == 0) echo "+ \" + GST\""; ?>);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////

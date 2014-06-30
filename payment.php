@@ -79,7 +79,7 @@ if (!isset($_SESSION['registrationStep'])) {
         // first timers with on SID
         $totalpaid = number_format(0, 2);
         $totalcharged = number_format($totalcharged, 2, '.', '');
-        $totaldue = $totalcharged + ($totalcharged * 0.05);
+        $totaldue = $totalcharged + ($totalcharged * 0.05 * $isChargingGst);
         $invoicedate = date('Y-m-d');
         $paytype = '';
         
@@ -181,7 +181,7 @@ if (!isset($_SESSION['registrationStep'])) {
         // calculate invoice amounts
         //$newtotalpaid = $totals;
 
-        $totaldue = ($totalcharged + ($totalcharged * 0.05)) - $totals + $adjust;
+        $totaldue = ($totalcharged + ($totalcharged * 0.05 * $isChargingGst)) - $totals + $adjust;
 
 //		$newtotalpaid = sprintf("%01.2f",$newtotalpaid);
 //		$newtotalcharged = sprintf("%01.2f",$newtotalcharged);
@@ -646,9 +646,9 @@ if (!isset($_SESSION['registrationStep'])) {
                         ///////////////////////// end of invoice details //////////////////////////////////
                         //////////////////////////////////////////////////////////////////////////////
                         if ($totalcharged) {
-                            $totaldue = ($totalcharged + ($totalcharged * 0.05)) - $totalpaid;
+                            $totaldue = ($totalcharged + ($totalcharged * 0.05 * $isChargingGst)) - $totalpaid;
                         }
-                        $gstcharged = sprintf("%01.2f", $totalcharged * 0.05);
+                        $gstcharged = sprintf("%01.2f", $totalcharged * 0.05 * $isChargingGst);
                         $totalcharged = sprintf("%01.2f", $totalcharged);
                         $invoice_info = str_replace("{totalcharged}", $totalcharged, $invoice_info);
                         $invoice_info = str_replace("{gstcharged}", $gstcharged, $invoice_info);
