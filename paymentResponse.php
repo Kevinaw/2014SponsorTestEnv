@@ -135,6 +135,7 @@ if (!isset($_SESSION['registrationStep'])) {
                     $responseId = $trnId;
                     $datepaid = date('Y-m-d');
                     $timepaid = date('H:i');
+                    $company = $row['company'];
 
 //	$cvdId="3"; ///////////// uncomment to test cvd failure check
 
@@ -159,7 +160,8 @@ if (!isset($_SESSION['registrationStep'])) {
                                 $uuid = substr(uniqid(), -6);
                                 $promoCode = strtoupper($sponcode . $uuid);
                                 $sponsorId = $row['sid'];
-                                $insertPromostmt = "INSERT INTO $tablepromo (promoCode,invoiceSponsor,dateCreated,timeCreated,enabled,company) values ('$promoCode','$sponsorId','$datepaid','$timepaid',1,'$sponcode')";
+                                //$insertPromostmt = "INSERT INTO $tablepromo (promoCode,invoiceSponsor,dateCreated,timeCreated,enabled,company) values ('$promoCode','$sponsorId','$datepaid','$timepaid',1,'$sponcode')";
+                                $insertPromostmt = "INSERT INTO $tablepromo (promoCode,invoiceSponsor,dateCreated,timeCreated,enabled,company,sponcode) values ('$promoCode','$sponsorId','$datepaid','$timepaid',1,'$company','$sponcode')";
                                 mysql_query($insertPromostmt) or die("The update statement failed to execute with error: " . mysql_error() . ". <BR><BR>The statement is: " . $updatestmt);
                             }
                         } else { //----HQ---- if pay by cheque, keep paid zero.
