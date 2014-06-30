@@ -1,23 +1,45 @@
 <?php
-$tuesdayAvail = TRUE;
-$mondayAvail = TRUE;
-$wednesdayAvail = TRUE;
+$availMondayAm = TRUE;
+$availMondayPm = TRUE;
+$availTuesdayAm = TRUE;
+$availTuesdayPm = TRUE;
+$availWednesdayAm = TRUE;
+$availWednesdayPm = TRUE;
+
 //$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTU' and `totaldue`=0";
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTU' and (`totaldue`=0 or paytype='MAIL')";
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBMA' and (`totaldue`=0 or paytype='MAIL')";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
-    $tuesdayAvail = FALSE;
+    $availMondayAm = FALSE;
 }
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBMO' and (`totaldue`=0 or paytype='MAIL')";
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBMP' and (`totaldue`=0 or paytype='MAIL')";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
-    $mondayAvail = FALSE;
+    $availMondayPm = FALSE;
 }
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBWD' and (`totaldue`=0 or paytype='MAIL')";
+
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTA' and (`totaldue`=0 or paytype='MAIL')";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
-    $wednesdayAvail = FALSE;
+    $availTuesdayAm = FALSE;
 }
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTP' and (`totaldue`=0 or paytype='MAIL')";
+$selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
+if (mysql_num_rows($selectresult) > 0) {
+    $availMondayPm = FALSE;
+}
+
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBWA' and (`totaldue`=0 or paytype='MAIL')";
+$selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
+if (mysql_num_rows($selectresult) > 0) {
+    $availWednesdayAm = FALSE;
+}
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBWP' and (`totaldue`=0 or paytype='MAIL')";
+$selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
+if (mysql_num_rows($selectresult) > 0) {
+    $availWednesdayPm = FALSE;
+}
+
 ?>
 
 <div class="formBlock">
@@ -390,44 +412,84 @@ echo "style=\"display:block;\"";
             <div id="CBRK" class="regDay" style="display:none">
                 <div id="billing">
                     <p><br>
-                        Choose a day
+                        Choose the Day and Time:
                         <br>
-                        <label><?php if ($mondayAvail): ?>
+                        <label><?php if ($availMondayAm): ?>
                                 <input <?php
-                                if (!(strcmp("$sponcode", "CBMO"))) {
+                                if (!(strcmp("$sponcode", "CBMA"))) {
                                     echo "checked=\"checked\"";
                                 }
-                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4" value="CBMO">
+                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4" value="CBMA">
                                 <?php else: ?>
                                 (Taken)
                             <?php endif; ?>
-                            Monday
+                            Monday Morning
+                        </label>
+                        <br>
+                        <label><?php if ($availMondayPm): ?>
+                                <input <?php
+                                if (!(strcmp("$sponcode", "CBMP"))) {
+                                    echo "checked=\"checked\"";
+                                }
+                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4P" value="CBMP">
+                                <?php else: ?>
+                                (Taken)
+                            <?php endif; ?>
+                            Monday Afternoon
+                        </label>
+                        <br>
+
+                        <label>
+                            <?php if ($availTuesdayAm): ?>
+                                <input <?php
+                                if (!(strcmp("$sponcode", "CBTA"))) {
+                                    echo "checked=\"checked\"";
+                                }
+                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU5" value="CBTA">
+                                <?php else: ?>
+                                (Taken)
+                            <?php endif; ?>
+                            Tuesday Morning
                         </label>
                         <br>
                         <label>
-                            <?php if ($tuesdayAvail): ?>
+                            <?php if ($availTuesdayPm): ?>
                                 <input <?php
-                                if (!(strcmp("$sponcode", "CBTU"))) {
+                                if (!(strcmp("$sponcode", "CBTP"))) {
                                     echo "checked=\"checked\"";
                                 }
-                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU5" value="CBTU">
+                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU5P" value="CBTP">
                                 <?php else: ?>
                                 (Taken)
                             <?php endif; ?>
-                            Tuesday
+                            Tuesday Afternoon
+                        </label>
+                        <br>
+
+                        <label>
+                            <?php if ($availWednesdayAm): ?>
+                                <input <?php
+                                if (!(strcmp("$sponcode", "CBWA"))) {
+                                    echo "checked=\"checked\"";
+                                }
+                                ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU6" value="CBWA">
+                                <?php else: ?>
+                                (Taken)
+                            <?php endif; ?>
+                            Wednesday Morning
                         </label>
                         <br>
                         <label>
-                            <?php if ($wednesdayAvail): ?>
+                            <?php if ($availWednesdayPm): ?>
                                 <input <?php
-                                if (!(strcmp("$sponcode", "CBWD"))) {
+                                if (!(strcmp("$sponcode", "CBWP"))) {
                                     echo "checked=\"checked\"";
                                 }
-                                ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU6" value="CBWD">
+                                ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU6P" value="CBWP">
                                 <?php else: ?>
                                 (Taken)
                             <?php endif; ?>
-                            Wednesday
+                            Wednesday Afternoon
                         </label>
                         <br>
                     </p>
