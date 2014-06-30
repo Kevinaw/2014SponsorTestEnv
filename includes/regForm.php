@@ -406,7 +406,7 @@ echo "style=\"display:block;\"";
             <p>
                 <label>
                     <input type="radio" name="regType" class="regType"  value="CBRK">
-                    $3000 (2 free registrations)</label>
+                    $2800 (2 free registrations)</label>
             </p>
 
             <div id="CBRK" class="regDay" style="display:none">

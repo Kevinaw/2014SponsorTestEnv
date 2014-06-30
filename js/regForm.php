@@ -19,6 +19,8 @@ $verihash = sha1($veristring . $verisalt);
         var totalCost = 0;
         var patronAmount = 5000;
         var sponsorAmount = 3000;
+        var coffeeBreakAmount = 2800;
+        
         //----HQ---- no amazing walk cost
         //var amazingWalkCost = 30;
 
@@ -386,9 +388,14 @@ $verihash = sha1($veristring . $verisalt);
         function calcCost() {
             if ($("input:radio[name='regType']:checked").val() == "PTRN") {
                 $('#totalcharged').val(patronAmount);
-            } else {
+            } else if ($("input:radio[name='regType']:checked").val() == "SPNS") {
                 $('#totalcharged').val(sponsorAmount);
+            } else if ($("input:radio[name='regType']:checked").val().substring(0, 2) == "CB") {
+                $('#totalcharged').val(coffeeBreakAmount);
+            } else {
+                $('#totalcharged').val(0);
             }
+            
             if ($('#TU2').is(":checked")) {
                 $('#totalcharged').val($('#patronAmount').val());
             } else if ($('#TU3').is(":checked"))
