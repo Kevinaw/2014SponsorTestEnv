@@ -343,13 +343,25 @@ $verihash = sha1($veristring . $verisalt);
                 {
                     $('#TU4').attr('checked', 'checked');
                 }
+                else if ($('#TU4P').length)
+                {
+                    $('#TU4P').attr('checked', 'checked');
+                }
                 else if ($('#TU5').length)
                 {
                     $('#TU5').attr('checked', 'checked');
                 }
+                else if ($('#TU5P').length)
+                {
+                    $('#TU5P').attr('checked', 'checked');
+                }
                 else if ($('#TU6').length)
                 {
                     $('#TU6').attr('checked', 'checked');
+                }
+                else if ($('#TU6P').length)
+                {
+                    $('#TU6P').attr('checked', 'checked');
                 }
             }
 
