@@ -2,17 +2,18 @@
 $tuesdayAvail = TRUE;
 $mondayAvail = TRUE;
 $wednesdayAvail = TRUE;
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTU' and `totaldue`=0";
+//$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTU' and `totaldue`=0";
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTU' and (`totaldue`=0 or paytype='MAIL')";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $tuesdayAvail = FALSE;
 }
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBMO' and `totaldue`=0";
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBMO' and (`totaldue`=0 or paytype='MAIL')";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $mondayAvail = FALSE;
 }
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBWD' and `totaldue`=0";
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBWD' and (`totaldue`=0 or paytype='MAIL')";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $wednesdayAvail = FALSE;
