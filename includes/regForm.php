@@ -288,10 +288,10 @@ if (mysql_num_rows($selectresult) > 0) {
 </div>
 
 
-<div id="registrantSummary" class="formBlock" style="display:none" <?php
-//if (!isset($sid) || $sid == "") {
-//    echo "style=\"display:none;\"";
-//}
+<div id="registrantSummary" class="formBlock" <?php
+if (!isset($sid) || $sid == "") {
+    echo "style=\"display:none;\"";
+}
 ?>>
     <div id="registrantFields" class="leftCol summaries" style="width:40%;">
         <h3>Contact / Billing Information</h3>
@@ -330,9 +330,9 @@ if (mysql_num_rows($selectresult) > 0) {
            ?>" style="width:auto;">
 </div>
 <div id="registrationType" class="formBlock" <?php
-//if (!isset($sid) || $sid == "") {
-echo "style=\"display:none;\"";
-//}
+if (!isset($sid) || $sid == "") {
+    echo "style=\"display:none;\"";
+}
 ?>>
     <input name="totalcharged" id="totalcharged" type="hidden" value="<?php echo $totalcharged; ?>">
     <input type="hidden" name="totalpaid"  value="<?php echo $totalpaid; ?>">
@@ -350,9 +350,9 @@ echo "style=\"display:none;\"";
             <p>
                 <label>
                     <input <?php
-//                    if (!(strcmp("$sponcode", "PTRN"))) {
-//                        echo "checked=\"checked\"";
-//                    }
+                    if (!(strcmp("$sponcode", "PTRN"))) {
+                        echo "checked=\"checked\"";
+                    }
                     ?> type="radio" name="regType" class="regType" value="PTRN">
                     $5000+ (3 free registrations)</label>
             </p>
@@ -363,16 +363,24 @@ echo "style=\"display:none;\"";
                         <br>
                         <label>
                             <!--checked="checked"-->
-                            <input  class="sessionButtons" id="TU3"  type="radio" name='radioPatron'  value="defaultPatron">
+                            <input <?php
+                                if ($totalcharged == 5000) {
+                                    echo "checked=\"checked\"";
+                                }
+                            ?> class="sessionButtons" id="TU3"  type="radio" name='radioPatron'  value="defaultPatron">
                             $5000
                         </label>
                         <br>
                         <label>
-                            <input class="sessionButtons"  id="TU2"  type="radio" name='radioPatron'  value="customPatron">
+                            <input  <?php
+                                if ($totalcharged > 5000) {
+                                    echo "checked=\"checked\"";
+                                }
+                            ?>  class="sessionButtons"  id="TU2"  type="radio" name='radioPatron'  value="customPatron">
                             Other Amount: <br>
                         </label>
                         <label>
-                            &nbsp&nbsp;&nbsp; $ <input name="patronAmount" type="text" class="reqfield" id="patronAmount" style="width:100px" value="5000">
+                            &nbsp&nbsp;&nbsp; $ <input name="patronAmount" type="text" class="reqfield" id="patronAmount" style="width:100px" value=" <?php if ($totalcharged > 5000) echo $totalcharged; ?> ">
                         </label>
                     </p>
                 </div>
@@ -386,9 +394,9 @@ echo "style=\"display:none;\"";
             <p>
                 <label>
                     <input <?php
-//                    if (!(strcmp("$sponcode", "SPNS"))) {
-//                        echo "checked=\"checked\"";
-//                    }
+                    if (!(strcmp("$sponcode", "SPNS"))) {
+                        echo "checked=\"checked\"";
+                    }
                     ?> type="radio" name="regType" class="regType"  value="SPNS">
                     $3000 (2 free registrations)</label>
             </p>
@@ -404,7 +412,11 @@ echo "style=\"display:none;\"";
         <div class="notRequired">
             <p>
                 <label>
-                    <input type="radio" name="regType" class="regType"  value="CBRK">
+                    <input <?php
+                        if (!(strcmp(substr($sponcode, 0, 2), "CB"))) {
+                            echo "checked=\"checked\"";
+                        }
+                    ?> type="radio" name="regType" class="regType"  value="CBRK">
                     $2500 (2 free registrations)</label>
             </p>
 
@@ -501,9 +513,9 @@ echo "style=\"display:none;\"";
 
 </div>
 <div class="registrationCategories" id="schedule" style="clear:left; <?php
-//if (!isset($sid) || $sid == "") {
-echo "display:none;";
-//}
+if (!isset($sid) || $sid == "") {
+    echo "display:none;";
+}
 ?>">
 <!--
     <h2 style="float:left;">Sponsorship Details</h2>

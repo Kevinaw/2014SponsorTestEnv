@@ -34,12 +34,7 @@ $verihash = sha1($veristring . $verisalt);
             $('.regDay').hide();
             $('.regType').each(function(index) {
                 if ($(this).is(":checked")) {
-                    //----HQ----no value of FULL
-                    if ($(this).val() == "FULL") {
-                        $('.regDay').show();
-                    } else {
-                        $('#' + $(this).attr('value')).show();
-                    }
+                    $('#' + $(this).attr('value')).show();
                 }
             });
             totalCost = $('#totalcharged').val();
@@ -399,21 +394,19 @@ $verihash = sha1($veristring . $verisalt);
         // calculate cost
         function calcCost() {
             if ($("input:radio[name='regType']:checked").val() == "PTRN") {
-                $('#totalcharged').val(patronAmount);
+                $('#totalcharged').val(patronAmount);            
+                if ($('#TU2').is(":checked")) {
+                    $('#totalcharged').val($('#patronAmount').val());
+                }
             } else if ($("input:radio[name='regType']:checked").val() == "SPNS") {
                 $('#totalcharged').val(sponsorAmount);
-            } else if ($("input:radio[name='regType']:checked").val().substring(0, 2) == "CB") {
+            } else if ($("input:radio[name='regType']:checked").val() == "CBRK") {
                 $('#totalcharged').val(coffeeBreakAmount);
             } else {
                 $('#totalcharged').val(0);
             }
             
-            if ($('#TU2').is(":checked")) {
-                $('#totalcharged').val($('#patronAmount').val());
-            } else if ($('#TU3').is(":checked"))
-            {
-                $('#totalcharged').val(patronAmount);
-            }
+
             $('#costAmount').text("$" + $('#totalcharged').val() + ".00" <?php if(!$isChargingGst == 0) echo "+ \" + GST\""; ?>);
         }
 

@@ -157,9 +157,9 @@ if (isset($sid) && $sid != "") {
                 </div>
                 <form name="registration" id="registration" method="post" action="">
                     <div id="registerInfo" <?php
-//                    if (isset($sid) && $sid != "") {
-//                        //echo "style=\"display:none;\"";
-//                    }
+                    if (isset($sid) && $sid != "") {
+                        echo "style=\"display:none;\"";
+                    }
                     ?>>
                              <?php include('includes/regForm.php'); ?>
                         <p>
