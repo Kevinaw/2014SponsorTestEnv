@@ -380,7 +380,7 @@ if (!isset($sid) || $sid == "") {
                             Other Amount: <br>
                         </label>
                         <label>
-                            &nbsp&nbsp;&nbsp; $ <input name="patronAmount" type="text" class="reqfield" id="patronAmount" style="width:100px" value=" <?php if ($totalcharged > 5000) echo $totalcharged; ?> ">
+                            &nbsp&nbsp;&nbsp; $ <input name="patronAmount" type="text" class="reqfield" id="patronAmount" style="width:100px" value=" <?php if ($totalcharged > 5000) echo trim(intval($totalcharged));?>">
                         </label>
                     </p>
                 </div>

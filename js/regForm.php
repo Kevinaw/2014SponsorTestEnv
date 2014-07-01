@@ -459,8 +459,34 @@ $verihash = sha1($veristring . $verisalt);
             $('.registrationCategories .errorfield').remove();
             hideConditions();
             
-            CheckFormOnContinueButton2();
+            var noSubmit = CheckFormOnContinueButton2();
+            
+            if (!noSubmit) {
+                //alert('form is good send it off');
+                // process all the comment fields to prepare for sending
+                $('.combinedfields').each(function(index) {
+                    var wg = $(this).parent().attr('id');
+                    var wgv = $('#' + wg + ' .wgselection').val();
+                    var wgcv = $('#' + wg + ' .comment').val();
+
+                    var divider = "*|*";
+                    if (wgv != "" && wgcv != "") {
+                        $(this).val(wgv + divider + wgcv);
+                    }
+                    //alert($(this).val());
+                });
+
+                $('#processingHolder').delay(500).slideUp(250, function() {
+                    $('#registration').attr('action', 'payment.php').submit();
+                });
+
+            }
         });
+        
+        function isInteger(n) {
+            var isInt = n % 1 === 0;
+            return isInt;
+        }
 
         function CheckFormOnContinueButton2()
         {
@@ -508,9 +534,10 @@ $verihash = sha1($veristring . $verisalt);
             
             var isCustomPatron = $('input:radio[value="customPatron"]').prop("checked");
             var isNum = $.isNumeric($('#patronAmount').val());
-            if ((isCustomPatron == true) && (isNum == false)) {
+            var isInt = isInteger($('#patronAmount').val());
+            if ((isCustomPatron == true) && (isNum == false || isInt == false)) {
                 //$('#processResponse').html("<p class=\"errorfield\">Then Patron Sponsor Amount is wrong, it must be a valid number</p>").delay(250).slideDown(250);
-                $('#step2').after("<p class=\"errorfield\">Patron sponsor amount must be a valid number</p>");
+                $('#step2').after("<p class=\"errorfield\">Patron sponsor amount must be a valid integer number</p>");
                 noSubmit = true;
             }
 //
@@ -533,27 +560,9 @@ $verihash = sha1($veristring . $verisalt);
                 $('#registrationType').delay(500).slideDown(500);
                 $('#registrantSummary').delay(500).slideDown(500, showConditions());
                 $('#processingHolder').delay(500).slideUp(250);
-
-            } else {
-                //alert('form is good send it off');
-                // process all the comment fields to prepare for sending
-                $('.combinedfields').each(function(index) {
-                    var wg = $(this).parent().attr('id');
-                    var wgv = $('#' + wg + ' .wgselection').val();
-                    var wgcv = $('#' + wg + ' .comment').val();
-
-                    var divider = "*|*";
-                    if (wgv != "" && wgcv != "") {
-                        $(this).val(wgv + divider + wgcv);
-                    }
-                    //alert($(this).val());
-                });
-
-                $('#processingHolder').delay(500).slideUp(250, function() {
-                    $('#registration').attr('action', 'payment.php').submit();
-                });
-
             }
+            
+            return noSubmit;
         }
 
         function showConditions() {
