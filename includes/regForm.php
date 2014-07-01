@@ -7,34 +7,35 @@ $availWednesdayAm = TRUE;
 $availWednesdayPm = TRUE;
 
 //$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTU' and `totaldue`=0";
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBMA' and (`totaldue`=0 or paytype='MAIL')";
+//$selectStmt = "select sid from $tablesponsor where sponcode = 'CBMA' and (`totaldue`=0 or paytype='MAIL')";
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBMA' and reg_status = ''";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $availMondayAm = FALSE;
 }
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBMP' and (`totaldue`=0 or paytype='MAIL')";
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBMP' and reg_status = ''";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $availMondayPm = FALSE;
 }
 
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTA' and (`totaldue`=0 or paytype='MAIL')";
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTA' and reg_status = ''";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $availTuesdayAm = FALSE;
 }
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTP' and (`totaldue`=0 or paytype='MAIL')";
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBTP' and reg_status = ''";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $availMondayPm = FALSE;
 }
 
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBWA' and (`totaldue`=0 or paytype='MAIL')";
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBWA' and reg_status = ''";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $availWednesdayAm = FALSE;
 }
-$selectStmt = "select sid from $tablesponsor where sponcode = 'CBWP' and (`totaldue`=0 or paytype='MAIL')";
+$selectStmt = "select sid from $tablesponsor where sponcode = 'CBWP' and reg_status = ''";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
     $availWednesdayPm = FALSE;
