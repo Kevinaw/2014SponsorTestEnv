@@ -490,6 +490,7 @@ $verihash = sha1($veristring . $verisalt);
 
         function CheckFormOnContinueButton2()
         {
+            $('.errorfield').remove();
             var noSubmit = false;
             var regtype = $('input:radio[name="regType"]:checked').val();
             var obj = "";
@@ -537,8 +538,11 @@ $verihash = sha1($veristring . $verisalt);
             var isInt = isInteger($('#patronAmount').val());
             if ((isCustomPatron == true) && (isNum == false || isInt == false)) {
                 //$('#processResponse').html("<p class=\"errorfield\">Then Patron Sponsor Amount is wrong, it must be a valid number</p>").delay(250).slideDown(250);
-                $('#step2').after("<p class=\"errorfield\">Patron sponsor amount must be a valid integer number</p>");
+                $('#step2').after("<p class=\"errorfield\">Patron sponsor amount must be a valid number</p>");
                 noSubmit = true;
+            } else if ((isCustomPatron == true) && ($('#patronAmount').val().indexOf(".")!=-1)) {
+                var number = $('#patronAmount').val();
+                $('#patronAmount').val(number | 0);
             }
 //
 //            $('.wgselection').each(function(index) {
