@@ -244,7 +244,7 @@ if (!isset($_SESSION['registrationStep'])) {
                         $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
                         $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\" class=\"dottheline\" colspan=\"4\">";
                         if ($n == 0) { // no promotion code
-                            $invoice_details .= "<p><strong>The Promotional Code was not generated now.</strong></p>";
+                            $invoice_details .= "<p><strong>The promotion codes will be generated when we receive your payment.</strong></p>";
                         } else {
                             $invoice_details .= "<p><strong>Promotion Codes: ";
                             while($row = mysql_fetch_array($pres)){
