@@ -235,8 +235,26 @@ if (!isset($_SESSION['registrationStep'])) {
                         } else {
                             $invoice_details .= "<p><strong>[$sponcode] Coffee Breaks (2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
                         }
-                        
                         $invoice_details .= "</tr>";
+                        
+                        // add promo code in one new line
+                        $psel = "select * from $tablepromo where invoiceSponsor='$sid'";
+                        $pres = mysql_query($psel) or die("There was an error retrieving the promotion code" . mysql_error());
+                        $n = mysql_num_rows($pres);
+                        $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
+                        $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\" class=\"dottheline\" colspan=\"4\">";
+                        if ($n == 0) { // no promotion code
+                            $invoice_details .= "<p><strong>The Promotional Code was not generated now.</strong></p>";
+                        } else {
+                            $invoice_details .= "<p><strong>Promotion Codes: ";
+                            while($row = mysql_fetch_array($pres)){
+                                $promoCode = $row['promoCode'];
+                                $invoice_details .= "$promoCode ";
+                            }
+                            $invoice_details .= "</strong></p>";
+                        }
+                        $invoice_details .= "</td></tr>";
+                        
 
                         $invoice_info = str_replace("{invoice_details}", $invoice_details, $invoice_info);
                         ///////////////////////// end of invoice details //////////////////////////////////

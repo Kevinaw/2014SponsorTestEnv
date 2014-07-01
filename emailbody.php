@@ -113,7 +113,40 @@ $invoice_info = str_replace("{full_address}", $full_address, $invoice_info);
 //				} else {
 //					$invoice_info = str_replace("{special_notes}", "",$invoice_info);
 //				}
-$invoice_details = "";
+                        $invoice_details = "";
+
+                        $funccost = number_format($totalcharged, 2);
+                        $invoice_details .= "<tr><td colspan=\"3\" align=\"left\">";
+                        if ($sponcode == "PTRN") {
+                            $invoice_details .= "<p><strong>Patron [$sponcode] (3 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                        } else if ($sponcode == "SPNS") {
+                            $invoice_details .= "<p><strong>Sponsor [$sponcode] (2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                        } else {
+                            $invoice_details .= "<p><strong>[$sponcode] Coffee Breaks (2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+                        }
+     
+                        $invoice_details .= "</tr>";
+  
+                        
+                        // add promo code in one new line
+                        $psel = "select * from $tablepromo where invoiceSponsor='$sid'";
+                        $pres = mysql_query($psel) or die("There was an error retrieving the promotion code" . mysql_error());
+                        $n = mysql_num_rows($pres);
+                        $invoice_details .= "<tr><td colspan='4'><hr /></td></tr>";
+                        $invoice_details .= "<tr><td align=\"left\" valign=\"top\" width=\"100\" class=\"dottheline\" colspan=\"4\">";
+                        if ($n == 0) { // no promotion code
+                            $invoice_details .= "<p><strong>The Promotional Code was not generated now.</strong></p>";
+                        } else {
+                            $invoice_details .= "<p><strong>Promotion Codes: ";
+                            while($row = mysql_fetch_array($pres)){
+                                $promoCode = $row['promoCode'];
+                                $invoice_details .= "$promoCode ";
+                            }
+                            $invoice_details .= "</strong></p>";
+                        }
+                        $invoice_details .= "</td></tr>";
+
+                        $invoice_info = str_replace("{invoice_details}", $invoice_details, $invoice_info);
 //					$details="select c.*, d.funccode as dfunccode, n.funccode as regtype from $conference c, $tabledetailname d, $tablesponsor n where n.vid=d.vid and d.funccode=c.funccode and d.vid='$sid' order by c.date, c.startTime asc";
 //					$deresult = mysql_query($details) or die("Query failed : " . mysql_error());
 //					
@@ -364,7 +397,7 @@ if ($billing_email != "") {
     //$mail->to = "heidi@idassociates.ab.ca";
     $mail->subject = "Banff/2013 Pipeline Workshop Invoice for " . $fname . " " . $lname;
     $mail->body = $html_header . $billing_message . $html_invoice . $html_footer . $html_closingfooter;
-    $mail->send();
+    $mail-> send();
     //echo $html_header.$billing_message.$html_invoice.$html_footer.$html_closingfooter;
 }
 

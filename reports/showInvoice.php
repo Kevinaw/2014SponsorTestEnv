@@ -656,6 +656,12 @@
                                                     </p></td>
                                                 <td width="198"><p>Credit Card</p></td>
                                             </tr>
+                                            <tr>
+                                                <td width="5"><p>
+                                                        <input name="payment_type" type="radio" value="RESEND">
+                                                    </p></td>
+                                                <td width="198"><p>Cheque/Money Order</p></td>
+                                            </tr>                                            
                                         </table></td>
                                     <td colspan="2" align="left"><table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" class="tableOutline">
                                             <tr>
