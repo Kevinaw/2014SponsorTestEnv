@@ -368,6 +368,7 @@ $verihash = sha1($veristring . $verisalt);
         // recalculate cost when amazing walk is clicked
         // recalculate cost when sponsor category choice is changed
         $('#choicePTRN').click(function() {
+            $('.errorfield').remove();
             calcCost();
         });
         $('#choicePTRM').click(function() {
@@ -384,7 +385,10 @@ $verihash = sha1($veristring . $verisalt);
 //
 //            }
             calcCost();
-            CheckFormOnContinueButton2();
+            if($('#choicePTRM').is(':checked'))
+            {
+                CheckFormOnContinueButton2();
+            }
         });
 
 
