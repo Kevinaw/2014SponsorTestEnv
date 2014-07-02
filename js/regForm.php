@@ -330,33 +330,33 @@ $verihash = sha1($veristring . $verisalt);
 
             if (selectedDay == 'PTRN')
             {
-                $('#TU3').attr('checked', 'checked');
+                $('#choicePTRN').attr('checked', 'checked');
             }
             else if (selectedDay == 'CBRK')
             {
-                if ($('#TU4').length)
+                if ($('#choiceCBMA').length)
                 {
-                    $('#TU4').attr('checked', 'checked');
+                    $('#choiceCBMA').attr('checked', 'checked');
                 }
-                else if ($('#TU4P').length)
+                else if ($('#choiceCBMP').length)
                 {
-                    $('#TU4P').attr('checked', 'checked');
+                    $('#choiceCBMP').attr('checked', 'checked');
                 }
-                else if ($('#TU5').length)
+                else if ($('#choiceCBTA').length)
                 {
-                    $('#TU5').attr('checked', 'checked');
+                    $('#choiceCBTA').attr('checked', 'checked');
                 }
-                else if ($('#TU5P').length)
+                else if ($('#choiceCBTP').length)
                 {
-                    $('#TU5P').attr('checked', 'checked');
+                    $('#choiceCBTP').attr('checked', 'checked');
                 }
-                else if ($('#TU6').length)
+                else if ($('#choiceCBWA').length)
                 {
-                    $('#TU6').attr('checked', 'checked');
+                    $('#choiceCBWA').attr('checked', 'checked');
                 }
-                else if ($('#TU6P').length)
+                else if ($('#choiceCBWP').length)
                 {
-                    $('#TU6P').attr('checked', 'checked');
+                    $('#choiceCBWP').attr('checked', 'checked');
                 }
             }
 
@@ -367,15 +367,15 @@ $verihash = sha1($veristring . $verisalt);
         ////////////////////////////////////////////////////////////////////////////////////
         // recalculate cost when amazing walk is clicked
         // recalculate cost when sponsor category choice is changed
-        $('#TU3').click(function() {
+        $('#choicePTRN').click(function() {
             calcCost();
         });
-        $('#TU2').click(function() {
+        $('#choicePTRM').click(function() {
             calcCost();
         });
                 
         $('#patronAmount').click(function() {
-            $('#TU2').prop('checked', true);
+            $('#choicePTRM').prop('checked', true);
         });
 
         $('#patronAmount').blur(function() {
@@ -395,7 +395,7 @@ $verihash = sha1($veristring . $verisalt);
         function calcCost() {
             if ($("input:radio[name='regType']:checked").val() == "PTRN") {
                 $('#totalcharged').val(patronAmount);            
-                if ($('#TU2').is(":checked")) {
+                if ($('#choicePTRM').is(":checked")) {
                     $('#totalcharged').val($('#patronAmount').val());
                 }
             } else if ($("input:radio[name='regType']:checked").val() == "SPNS") {
@@ -417,14 +417,14 @@ $verihash = sha1($veristring . $verisalt);
             var itemvalue = $(this).value();
 
             if (itemvalue == "defaultPatron") {
-                $('#TU2').removeAttr("checked");
-                $('#TU2').parent().parent().parent().removeClass("selected");
+                $('#choicePTRM').removeAttr("checked");
+                $('#choicePTRM').parent().parent().parent().removeClass("selected");
                 calcCost();
             }
 
             if (itemvalue == "customPatron") {
-                $('#TU3').removeAttr("checked");
-                $('#TU3').parent().parent().parent().removeClass("selected");
+                $('#choicePTRN').removeAttr("checked");
+                $('#choicePTRN').parent().parent().parent().removeClass("selected");
                 calcCost();
 
             }

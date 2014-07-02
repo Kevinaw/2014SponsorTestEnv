@@ -368,7 +368,7 @@ if (!isset($sid) || $sid == "") {
                                 if ($totalcharged == 5000) {
                                     echo "checked=\"checked\"";
                                 }
-                            ?> class="sessionButtons" id="TU3"  type="radio" name='radioPatron'  value="defaultPatron">
+                            ?> class="sessionButtons" id="choicePTRN"  type="radio" name='radioPatron'  value="defaultPatron">
                             $5000
                         </label>
                         <br>
@@ -377,7 +377,7 @@ if (!isset($sid) || $sid == "") {
                                 if ($totalcharged > 5000) {
                                     echo "checked=\"checked\"";
                                 }
-                            ?>  class="sessionButtons"  id="TU2"  type="radio" name='radioPatron'  value="customPatron">
+                            ?>  class="sessionButtons"  id="choicePTRM"  type="radio" name='radioPatron'  value="customPatron">
                             Other Amount: <br>
                         </label>
                         <label>
@@ -431,7 +431,7 @@ if (!isset($sid) || $sid == "") {
                                 if (!(strcmp("$sponcode", "CBMA"))) {
                                     echo "checked=\"checked\"";
                                 }
-                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4" value="CBMA">
+                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="choiceCBMA" value="CBMA">
                                 <?php else: ?>
                                 (Taken)
                             <?php endif; ?>
@@ -443,7 +443,7 @@ if (!isset($sid) || $sid == "") {
                                 if (!(strcmp("$sponcode", "CBMP"))) {
                                     echo "checked=\"checked\"";
                                 }
-                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4P" value="CBMP">
+                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="choiceCBMP" value="CBMP">
                                 <?php else: ?>
                                 (Taken)
                             <?php endif; ?>
@@ -457,7 +457,7 @@ if (!isset($sid) || $sid == "") {
                                 if (!(strcmp("$sponcode", "CBTA"))) {
                                     echo "checked=\"checked\"";
                                 }
-                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU5" value="CBTA">
+                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="choiceCBTA" value="CBTA">
                                 <?php else: ?>
                                 (Taken)
                             <?php endif; ?>
@@ -470,7 +470,7 @@ if (!isset($sid) || $sid == "") {
                                 if (!(strcmp("$sponcode", "CBTP"))) {
                                     echo "checked=\"checked\"";
                                 }
-                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU5P" value="CBTP">
+                                ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="choiceCBTP" value="CBTP">
                                 <?php else: ?>
                                 (Taken)
                             <?php endif; ?>
@@ -484,7 +484,7 @@ if (!isset($sid) || $sid == "") {
                                 if (!(strcmp("$sponcode", "CBWA"))) {
                                     echo "checked=\"checked\"";
                                 }
-                                ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU6" value="CBWA">
+                                ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="choiceCBWA" value="CBWA">
                                 <?php else: ?>
                                 (Taken)
                             <?php endif; ?>
@@ -497,7 +497,7 @@ if (!isset($sid) || $sid == "") {
                                 if (!(strcmp("$sponcode", "CBWP"))) {
                                     echo "checked=\"checked\"";
                                 }
-                                ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU6P" value="CBWP">
+                                ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="choiceCBWP" value="CBWP">
                                 <?php else: ?>
                                 (Taken)
                             <?php endif; ?>
@@ -513,107 +513,8 @@ if (!isset($sid) || $sid == "") {
 
 
 </div>
-<div class="registrationCategories" id="schedule" style="clear:left; <?php
-if (!isset($sid) || $sid == "") {
-    echo "display:none;";
-}
-?>">
-<!--
-    <h2 style="float:left;">Sponsorship Details</h2>
-    <div  id="PTRN" class="regDay" style="clear:left;">
-        <div id="billing" class="formBlock" style="padding:10px 10px 0px 10px; margin: 0px 0px 10px 0px;">
-            <h3 style="float:none;">Patron</h3>
-            <div class="leftCol required" style="width:40%;">
-                <h3 style="float:none;">
-                    <label>
-                        checked="checked"
-                        <input  class="sessionButtons" id="TU3"  type="radio" name='radioPatron'  value="defaultPatron">
-                        $5000
-                    </label>
-                </h3>
-                <br>
-            </div>
-            <div class="leftCol required" style="width:40%;">
-                <h3 style="float:none;">
-                    <label>
-                        <input class="sessionButtons"  id="TU2"  type="radio" name='radioPatron'  value="customPatron">
-                        Other Amount:
-                    </label>
-                </h3>
-                <label>
-                    <input name="patronAmount" type="text" class="reqfield" id="patronAmount" style="width:200px" value="5000">
-                </label>
-            </div>
-            <div style="clear:both;"></div>
-        </div>
-    </div>
-    <div id="SPNS" class="regDay">
-                           Here is the form sponsor
-    </div>
-    <div id="CBRK" class="regDay">
-        <div id="billing" class="formBlock required" style="padding:10px 10px 0px 10px; margin: 0px 0px 10px 0px;">
-            <h3 style="float:none;"><p>Coffee Break</p></h3>
-            <p>Choose a day</p>
-
-            <div class="leftCol required" style="width:27%;">
-                <h3 style="float:none;">
-                    <label><?php if ($mondayAvail): ?>
-                            <input <?php
-                            if (!(strcmp("$sponcode", "CBMO"))) {
-                                echo "checked=\"checked\"";
-                            }
-                            ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU4" value="CBMO">
-                            <?php else: ?>
-                            (Taken)
-                        <?php endif; ?>
-
-                        Monday
-
-                    </label>
-                </h3>
-                <br>
-            </div>
-            <div class="leftCol required" style="width:27%;">
-                <h3 style="float:none;">
-                    <label>
-                        <?php if ($tuesdayAvail): ?>
-                            <input <?php
-                            if (!(strcmp("$sponcode", "CBTU"))) {
-                                echo "checked=\"checked\"";
-                            }
-                            ?>  type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU5" value="CBTU">
-                            <?php else: ?>
-                            (Taken)
-                        <?php endif; ?>
-                        Tuesday
-                    </label>
-                </h3>
-                <br>
-            </div>
-
-            <div class="leftCol required" style="width:27%;">
-                <h3 style="float:none;">
-                    <label>
-                        <?php if ($wednesdayAvail): ?>
-                            <input <?php
-                            if (!(strcmp("$sponcode", "CBWD"))) {
-                                echo "checked=\"checked\"";
-                            }
-                            ?> type="radio" class="tutorials sessionButtons" name="tutorialB" id="TU6" value="CBWD">
-                            <?php else: ?>
-                            (Taken)
-                        <?php endif; ?>
-                        Wednesday
-                    </label>
-                </h3>
-                <br>
-            </div>
-
-            <div style="clear:both;"></div>
-        </div>
-    </div>-->
-
-
+<div class="registrationCategories" id="schedule" 
+     style="clear:left; <?php if (!isset($sid) || $sid == "") {echo "display:none;";}?>">
     <?php
 // start a session to check on page 2
     $_SESSION['registrationStep'] = 1;
