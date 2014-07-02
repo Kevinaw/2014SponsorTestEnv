@@ -31,7 +31,7 @@ $verihash = sha1($veristring . $verisalt);
                     $(this).parent().parent().parent().addClass("selected");
                 }
             });
-            $('.regDay').hide();
+            $('.sponCategory').hide();
             $('.regType').each(function(index) {
                 if ($(this).is(":checked")) {
                     $('#' + $(this).attr('value')).show();
@@ -309,7 +309,7 @@ $verihash = sha1($veristring . $verisalt);
 
             if ($('.registrationCategories').is(":visible")) 
             {
-                $('.regDay').each(function(index) {
+                $('.sponCategory').each(function(index) {
                     if ($(this).attr('id') != selectedDay) {
                         $("#" + $(this).attr('id') + ' input[type=radio]').removeAttr('checked');
                         $("#" + $(this).attr('id') + ' input[type=radio]').parent().parent().parent().removeClass('selected');
@@ -319,13 +319,13 @@ $verihash = sha1($veristring . $verisalt);
                 });
                 //$('.registrationCategories input[type=radio]').removeAttr('checked');
                 $('.registrationCategories').slideUp(500, function() {
-                    $('.regDay').hide();
+                    $('.sponCategory').hide();
                     $('#' + selectedDay).show();
                     setDelay = 500;
                 });
                 hideConditions();
             } else {
-                $('.regDay').hide();
+                $('.sponCategory').hide();
                 $('#' + $(this).val()).show();
             }
             $('.registrationCategories').delay(setDelay).slideDown(500, showConditions());

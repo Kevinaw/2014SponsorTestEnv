@@ -778,7 +778,7 @@ if (isset($vid) && $vid != "") {
 
 
                             <h2>Step 3. Choose your sessions.</h2>
-                            <div  id="MON" class="regDay" style="clear:left;">
+                            <div  id="MON" class="sponCategory" style="clear:left;">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <th colspan="4" align="left"><h1 align="center">Monday, April 8 — Tutorials</h1></th>
@@ -874,7 +874,7 @@ if (isset($vid) && $vid != "") {
                                     </tr>
                                 </table>
                             </div>
-                            <div id="TUE" class="regDay">
+                            <div id="TUE" class="sponCategory">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <th colspan="5" align="left"><h1 align="center">Tuesday, April 9 — Workshops</h1></th>
@@ -1126,7 +1126,7 @@ if (isset($vid) && $vid != "") {
                                     </tr>
                                 </table>
                             </div>
-                            <div id="WED" class="regDay">
+                            <div id="WED" class="sponCategory">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <th colspan="5"><h1  align="center">Wednesday, April 10 — Workshops</h1></th>
@@ -1406,7 +1406,7 @@ if (isset($vid) && $vid != "") {
                                     </tr>
                                 </table>
                             </div>
-                            <div id="thursday" class="regDay">
+                            <div id="thursday" class="sponCategory">
                                 <table width="750" border="0" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <th colspan="5" align="left"><h1 align="center">Thursday, April 11 (included in your registration)</h1></th>

@@ -358,7 +358,7 @@ if (!isset($sid) || $sid == "") {
                     $5000+ (3 free registrations)</label>
             </p>
             
-            <div  id="PTRN" class="regDay" style="display:none">
+            <div  id="PTRN" class="sponCategory" style="display:none">
                 <div id="billing" >
                     <p>
                         <br>
@@ -403,7 +403,7 @@ if (!isset($sid) || $sid == "") {
             </p>
         </div>
         
-        <div id="SPNS" class="regDay" style="display:none">
+        <div id="SPNS" class="sponCategory" style="display:none">
             <!--                   Here is the form sponsor-->
         </div>
         <p>&nbsp;</p>
@@ -421,7 +421,7 @@ if (!isset($sid) || $sid == "") {
                     $2500 (2 free registrations)</label>
             </p>
 
-            <div id="CBRK" class="regDay" style="display:none">
+            <div id="CBRK" class="sponCategory" style="display:none">
                 <div id="billing">
                     <p><br>
                         Choose the Day and Time:
