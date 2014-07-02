@@ -183,6 +183,7 @@ if (isset($sid) && $sid != "") {
             </div>
             <div id="footer">&nbsp;
             </div>
+<!-- missing a closing div here:        </div>-->
         </div>
     </body>
 </html>

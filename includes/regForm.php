@@ -515,10 +515,10 @@ if (!isset($sid) || $sid == "") {
 </div>
 <div class="registrationCategories" id="schedule" 
      style="clear:left; <?php if (!isset($sid) || $sid == "") {echo "display:none;";}?>">
-    <?php
-// start a session to check on page 2
+<?php
+    // start a session to check on page 2
     $_SESSION['registrationStep'] = 1;
-    ?>
+?>
     <div id="billing" class="formBlock" style="padding:10px 10px 0px 10px; margin: 0px 0px 10px 0px;">
         <div id="displayCost">
             <p>
