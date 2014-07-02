@@ -301,6 +301,8 @@ $verihash = sha1($veristring . $verisalt);
         ////////////////////////////////////////////////////////////////////////////////////
         // registration type
         $('.regType').click(function() {
+            $('.errorfield').remove();
+            
             var setDelay = 0;
 
             var selectedDay = $(this).val();
