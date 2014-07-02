@@ -393,6 +393,12 @@ $verihash = sha1($veristring . $verisalt);
             }
         });
 
+        $('#patronAmount').keyup(function() {
+            calcCost();
+        });
+        $('#patronAmount').click(function() {
+            calcCost();
+        });
 
 
         ////////////////////////////////////////////////////////////////////////////////////
