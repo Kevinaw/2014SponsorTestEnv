@@ -27,7 +27,7 @@ if (mysql_num_rows($selectresult) > 0) {
 $selectStmt = "select sid from $tablesponsor where sponcode = 'CBTP' and reg_status = '' and (`totaldue`=0 or paytype='RESEND')";
 $selectresult = mysql_query($selectStmt) or die("Picking SID Query failed : " . mysql_error() . "<BR><BR>The statement being executed is: " . $selectStmt);
 if (mysql_num_rows($selectresult) > 0) {
-    $availMondayPm = FALSE;
+    $availTuesdayPm = FALSE;
 }
 
 $selectStmt = "select sid from $tablesponsor where sponcode = 'CBWA' and reg_status = '' and (`totaldue`=0 or paytype='RESEND')";
