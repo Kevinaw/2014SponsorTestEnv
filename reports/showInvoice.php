@@ -565,7 +565,7 @@
     } else if ($sponcode == "SPNS") {
         $invoice_details .= "<p><strong>Sponsor [$sponcode] (2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
     } else {
-        $invoice_details .= "<p><strong>[$sponcode] Coffee Breaks (2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
+        $invoice_details .= "<p><strong>Coffee Breaks [$sponcode] (2 complementary workshop registrations)</strong></p></td><td align=\"right\">$funccost</td>";
     }
     $invoice_details .= "</tr>";
 
