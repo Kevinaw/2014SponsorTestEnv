@@ -96,7 +96,7 @@
                         // calculate invoice amounts
                         $newtotalpaid = $totals;
 
-                        $newtotaldue = ($totalcharged + ($totalcharged * 0.05 * $isChargingGst)) - $totals + $adjust;
+                        $newtotaldue = ($totalcharged + ($totalcharged * 0.05 * 0.00)) - $totals + $adjust;
 
                         $newtotalpaid = sprintf("%01.2f", $newtotalpaid);
                         $newtotalcharged = sprintf("%01.2f", $newtotalcharged);
@@ -199,7 +199,7 @@
 
                             // calculate invoice amounts
                             //$newtotalpaid = $totals;
-                            $totaldue = ($totalcharged + ($totalcharged * 0.05 * $isChargingGst)) - $totals + $adjust;
+                            $totaldue = ($totalcharged + ($totalcharged * 0.05 * 0.00)) - $totals + $adjust;
 //		$newtotalpaid = sprintf("%01.2f",$newtotalpaid);
 //		$newtotalcharged = sprintf("%01.2f",$newtotalcharged);
                             //$totaldue = $totalcharged - $totalpaid;
@@ -593,9 +593,9 @@
     // remove thousand seps
     $totalcharged = str_replace(',', '', $totalcharged);
     if ($totalcharged) {
-        $totaldue = ($totalcharged + ($totalcharged * 0.05 * $isChargingGst)) - $totalpaid;
+        $totaldue = ($totalcharged + ($totalcharged * 0.05 * 0.00)) - $totalpaid;
     }
-    $gstcharged = sprintf("%01.2f", $totalcharged * 0.05 * $isChargingGst);
+    $gstcharged = sprintf("%01.2f", $totalcharged * 0.05 * 0.00);
     $totalcharged = sprintf("%01.2f", $totalcharged);
 
     $invoice_info = str_replace("{totalcharged}", $totalcharged, $invoice_info);

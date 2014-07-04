@@ -82,8 +82,8 @@ class mime_mail {
      *      Send the mail (last class-function to be called)
      */
 
-    function send() {
 ///////////////////// Recover below before deployment //////////////////////////
+//    function send() {
 //        $mime = "";
 //        if (!empty($this->from))
 //            $mime .= "From: " . $this->from . "\n";
@@ -96,37 +96,45 @@ class mime_mail {
 //        //$this->add_attachment($this->body, "", "text/plain");   
 //            $this->add_attachment($this->body, "", "text/html");
 //        $mime .= "MIME-Version: 1.0\n" . $this->build_multipart();
-//        mail($this->to, $this->subject, "", $mime);
+//        mail($this->to, $this->subject, "", $mime);        
+//    }
+///////////////////// Recover above before deployment //////////////////////////
 
-///////////////////// Remove below before deployment //////////////////////////        
-require_once "Mail.php";
-$from = 'computer.7807108966@gmail.com';
-$to = 'computer.7807108966@gmail.com';
-$subject = $this->subject;
-$body = $this->body;
-$contantType = "text/html; charset=utf-8";
-$headers = array(
-    'From' => $from,
-    'To' => $to,
-    'Subject' => $subject,
-    'Content-type' => $contantType    
-);
-$smtp = Mail::factory('smtp', array(
-        'host' => 'ssl://smtp.gmail.com',
-        'port' => '465',
-        'auth' => true,
-        'username' => 'computer.7807108966@gmail.com',
-        'password' => 'l3tmeinl3tmein'
-    ));
-$mail = $smtp->send($to, $headers, $body);
-if (PEAR::isError($mail)) {
-    echo('<p>' . $mail->getMessage() . '</p>');
-} else {
-    echo('<p>Message successfully sent!</p>');
-}
-///////////////////// Remove above before deployment //////////////////////////        
+/////////////////// Remove below before deployment ///////////////////////////
+    function send() {
+        $tmp_error_reporting = error_reporting();
+        error_reporting(0);
+        require_once "Mail.php";
+        $from = 'computer.7807108966@gmail.com';
+        $to = 'computer.7807108966@gmail.com';
+        $subject = $this->subject;
+        $body = $this->body;
+        $contantType = "text/html; charset=utf-8";
+        $headers = array(
+            'From' => $from,
+            'To' => $to,
+            'Subject' => $subject,
+            'Content-type' => $contantType    
+        );
+        $smtp = Mail::factory('smtp', array(
+                'host' => 'ssl://smtp.gmail.com',
+                'port' => '465',
+                'auth' => true,
+                'username' => 'computer.7807108966@gmail.com',
+                'password' => 'l3tmeinl3tmein'
+            ));
+        $mail = $smtp->send($to, $headers, $body);
+        if (PEAR::isError($mail)) {
+            echo('<p>' . $mail->getMessage() . '</p>');
+        } else {
+            echo('<p>Message successfully sent!</p>');
+        }
+        
+        error_reporting($tmp_error_reporting);
+    }
+/////////////////// Remove above before deployment //////////////////////////        
 
-}
+
 
 }
 
